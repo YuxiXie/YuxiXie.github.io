@@ -4,6 +4,9 @@ title: "Publication"
 author_profile: true
 ---
 
+{% include base_path %}
+{% include toc %}
+
 See also my [Google Scholar Profile](https://scholar.google.com/citations?user=LNLECx0AAAAJ&hl).
 
 ---
@@ -11,16 +14,16 @@ See also my [Google Scholar Profile](https://scholar.google.com/citations?user=L
 ### 2021
 **CANVASEMB: Learning Layout Representation with Large-scale Pre-training for Graphic Design** (ACM MM 2021)    
 Yuxi Xie, Danqing Huang, Jinpeng Wang, Chin-Yew Lin   
-[[<u>slides</u>](https://docs.google.com/presentation/d/1JxozAgOTkF3cqHXK7r34ihlTy-nvxwIfXtCSZs9mz7U/edit?usp=sharing)]
+[[slides](https://docs.google.com/presentation/d/1JxozAgOTkF3cqHXK7r34ihlTy-nvxwIfXtCSZs9mz7U/edit?usp=sharing)]
 
 ### 2020
 **Exploring Question-Specific Rewards for Generating Deep Questions** (COLING 2020, Oral)   
 Yuxi Xie, Liangming Pan, Dongzhe Wang, Min-Yen Kan, Yansong Feng    
-[[<u>paper</u>](https://aclanthology.org/2020.coling-main.228.pdf)] [[<u>codes</u>](https://github.com/YuxiXie/RL-for-Question-Generation)] [[<u>slides</u>](https://github.com/YuxiXie/RL-for-Question-Generation/blob/main/doc/%E3%80%90SLIDES%E3%80%91Exploring%20Question-Specific%20Rewards%20for%20Generating%20Deep%20Questions.pdf)]      
+[[paper](https://aclanthology.org/2020.coling-main.228.pdf)] [[codes](https://github.com/YuxiXie/RL-for-Question-Generation)] [[slides](https://github.com/YuxiXie/RL-for-Question-Generation/blob/main/doc/%E3%80%90SLIDES%E3%80%91Exploring%20Question-Specific%20Rewards%20for%20Generating%20Deep%20Questions.pdf)]      
 
 **Semantic Graphs for Generating Deep Questions** (ACL 2021)    
 Liangming Pan, Yuxi Xie, Yansong Feng, Tat-Seng Chua, Min-Yen Kan   
-[[<u>paper</u>](https://aclanthology.org/2020.acl-main.135.pdf)] [[<u>codes</u>](https://github.com/YuxiXie/SG-Deep-Question-Generation)] [[<u>video</u>](http://slideslive.com/38929018)]       
+[[paper](https://aclanthology.org/2020.acl-main.135.pdf)] [[codes](https://github.com/YuxiXie/SG-Deep-Question-Generation)] [[video](http://slideslive.com/38929018)]       
 
 
 ### 2019

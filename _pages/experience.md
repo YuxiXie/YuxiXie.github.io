@@ -10,21 +10,17 @@ author_profile: true
 
 Education
 ---
-**B.S. in Data Science and Big Data Technology**    
+**B.S. in Data Science and Big Data Technology** <span style="float:right;">Sep. 2016 - Jul. 2020</span>     
   *School of Electronics Engineering and Computer Science, Peking University* (EECS-PKU)   
-  Sept. 2016 - Jul. 2020
 
-**Bachelor of Economics**   
+**Bachelor of Economics** <span style="float:right;">Sep. 2017 - Jul. 2020</span>   
   *National School of Development, Peking University* (NSD-PKU)     
-  Sept. 2017 - Jul. 2020
 
 
 Professional Experience
 ---
-**Research Intern**   
+**Research Intern** <span style="float:right;">Oct. 2019 - Oct. 2020</span>   
   *Knowledge Computing Group, Microsoft Research Asia* (KC-MSRA)    
-  Oct. 2019 - Oct. 2020
 
-**Summer Intern**   
+**Summer Intern** <span style="float:right;">Jun. - Oct. 2018</span>   
   *Department of Intelligent Cloud Technology, Baidu*     
-  Jun. - Oct. 2018

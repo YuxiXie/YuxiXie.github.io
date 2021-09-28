@@ -22,7 +22,7 @@ See also my [Google Scholar Profile](https://scholar.google.com/citations?user=L
 **Yuxi Xie**, Liangming Pan, Dongzhe Wang, Min-Yen Kan, Yansong Feng    
 [[paper](https://aclanthology.org/2020.coling-main.228.pdf)] [[codes](https://github.com/YuxiXie/RL-for-Question-Generation)] [[slides](https://github.com/YuxiXie/RL-for-Question-Generation/blob/main/doc/%E3%80%90SLIDES%E3%80%91Exploring%20Question-Specific%20Rewards%20for%20Generating%20Deep%20Questions.pdf)]      
 
-**Semantic Graphs for Generating Deep Questions** (ACL 2021)    
+**Semantic Graphs for Generating Deep Questions** (ACL 2020)    
 Liangming Pan, **Yuxi Xie**, Yansong Feng, Tat-Seng Chua, Min-Yen Kan   
 [[paper](https://aclanthology.org/2020.acl-main.135.pdf)] [[codes](https://github.com/YuxiXie/SG-Deep-Question-Generation)] [[video](http://slideslive.com/38929018)]       
 

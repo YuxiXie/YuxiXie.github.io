@@ -9,7 +9,8 @@ author_profile: true
 {% include toc %}
 ---
 
-## EDUCATION
+EDUCATION BACKGROUND
+===
 **B.S. in Data Science and Big Data Technology**    
   *School of Electronics Engineering and Computer Science, Peking University* (EECS-PKU)   
   Sept. 2016 - Jul. 2020
@@ -19,7 +20,8 @@ author_profile: true
   Sept. 2017 - Jul. 2020
 
 
-## PROFESSIONAL EXPERIENCE
+PROFESSIONAL EXPERIENCE
+===
 **Research Intern**   
   *Knowledge Computing Group, Microsoft Research Asia* (KC-MSRA)    
   Oct. 2019 - Oct. 2020

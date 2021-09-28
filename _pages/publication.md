@@ -2,9 +2,6 @@
 permalink: /publication/
 title: "Publication"
 author_profile: true
-redirect_from: 
-  - "/publication/"
-  - "/publication.html"
 ---
 
 See also my [Google Scholar Profile](https://scholar.google.com/citations?user=LNLECx0AAAAJ&hl).

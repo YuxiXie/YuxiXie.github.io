@@ -1,4 +1,5 @@
 ---
+layout: archive
 permalink: /experience/
 title: "Experience"
 author_profile: true
@@ -6,7 +7,6 @@ author_profile: true
 
 {% include base_path %}
 {% include toc %}
-
 ---
 
 ## EDUCATION

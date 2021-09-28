@@ -16,7 +16,7 @@ main:
   #   url: /year-archive/
     
   - title: "Publication"
-    url: /publication/
+    url: /cv/
     
   - title: "Experience"
-    url: /experience/
+    url: /markdown/

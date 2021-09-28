@@ -17,4 +17,6 @@ Prior to that, I worked with [Prof. Yansong Feng](https://sites.google.com/site/
 My primary research interests lie in Multimodal Commonsense Reasoning, particularly about distilling and integrating complementary knowledge from visual and textual information to conduct commonsense reasoning. 
 I've also been interested in Natural Language Generation, especially about generating deep questions which require complex reasoning on textual or multimodal data.
 
-My name written in Chinese characters is 谢雨汐.
+My name written in Chinese is 谢雨汐.
+
+Contact: `yuxixie [at] comp.nus.edu.sg`

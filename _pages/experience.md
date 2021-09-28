@@ -27,4 +27,4 @@ Professional Experience
 
 **Summer Intern**   
   *Department of Intelligent Cloud Technology, Baidu*     
-  Jun.- Oct. 2018
+  Jun. - Oct. 2018

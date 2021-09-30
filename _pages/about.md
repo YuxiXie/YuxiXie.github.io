@@ -10,9 +10,9 @@ redirect_from:
 
 ---
 
-I am a first-year Ph.D. student in [Wangxuan Institute of Computer Technology (WING)](https://wing.comp.nus.edu.sg/) at [National University of Singapore](https://www.nus.edu.sg/). I am fortunate to be advised by [Prof. Min-Yen Kan](https://www.comp.nus.edu.sg/~kanmy/). 
+I am a first-year Ph.D. student in [Web Information Retrieval / Natural Language Processing Group (WING)](https://wing.comp.nus.edu.sg/) at [National University of Singapore](https://www.nus.edu.sg/). I am fortunate to be advised by [Prof. Min-Yen Kan](https://www.comp.nus.edu.sg/~kanmy/). 
 
-Prior to that, I worked with [Prof. Yansong Feng](https://sites.google.com/site/ysfeng/home) at [WICT](https://www.icst.pku.edu.cn/) and received B.S. in Data Science and Big Data Technology from the [School of Electronics Engineering and Computer Science](https://eecs.pku.edu.cn/) at [Peking University](https://www.pku.edu.cn/).
+Prior to that, I worked with [Prof. Yansong Feng](https://sites.google.com/site/ysfeng/home) at [Wangxuan Institute of Computer Technology (WICT)](https://www.icst.pku.edu.cn/) and received B.S. in Data Science and Big Data Technology from the [School of Electronics Engineering and Computer Science](https://eecs.pku.edu.cn/) at [Peking University](https://www.pku.edu.cn/).
 
 My primary research interests lie in Multimodal Commonsense Reasoning, particularly about distilling and integrating complementary knowledge from visual and textual information to conduct commonsense reasoning. 
 I've also been interested in Natural Language Generation, especially about generating deep questions which require complex reasoning on textual or multimodal data.

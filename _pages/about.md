@@ -10,7 +10,7 @@ redirect_from:
 
 ---
 
-I am a first-year Ph.D. student in [WING](https://wing.comp.nus.edu.sg/) at [National University of Singapore](https://www.nus.edu.sg/). I am fortunate to be advised by [Prof. Min-Yen Kan](https://www.comp.nus.edu.sg/~kanmy/). 
+I am a first-year Ph.D. student in [Wangxuan Institute of Computer Technology (WING)](https://wing.comp.nus.edu.sg/) at [National University of Singapore](https://www.nus.edu.sg/). I am fortunate to be advised by [Prof. Min-Yen Kan](https://www.comp.nus.edu.sg/~kanmy/). 
 
 Prior to that, I worked with [Prof. Yansong Feng](https://sites.google.com/site/ysfeng/home) at [WICT](https://www.icst.pku.edu.cn/) and received B.S. in Data Science and Big Data Technology from the [School of Electronics Engineering and Computer Science](https://eecs.pku.edu.cn/) at [Peking University](https://www.pku.edu.cn/).
 
@@ -19,4 +19,4 @@ I've also been interested in Natural Language Generation, especially about gener
 
 My name written in Chinese is 谢雨汐.
 
-Contact: `yuxixie [at] comp.nus.edu.sg`
+Contact: `yuxixie [at] comp.nus.edu.sg` or `xieyuxi [at] u.nus.edu`

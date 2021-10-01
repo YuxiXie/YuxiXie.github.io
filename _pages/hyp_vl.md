@@ -6,7 +6,7 @@ author_profile: false
 ---
 
 ```HTML
-<video width:100% height:auto controls>
+<video width:80% height:auto controls>
     <source src="https://www.youtube.com/embed/OO9kSxcT9Rg?start=790&end=793&version=3" type="video/mp4">
 </video>
 ```

@@ -1,12 +1,16 @@
 ---
 layout: case-study
 permalink: /hyp-vl/
-title: "Hypothetical Visual-Linguistic Tasks on VidSitu"
+title: "Hypothetical Visual-Linguistic Tasks on [VidSitu](https://vidsitu.org/)"
 author_profile: false
 ---
 
-```HTML
-<video width:70% height:auto controls>
-    <source src="https://www.youtube.com/embed/OO9kSxcT9Rg?start=790&end=793&version=3" type="video/mp4">
-</video>
-```
+<iframe src="https://www.youtube.com/embed/OO9kSxcT9Rg?start=790&end=793&version=3"
+scrolling="no" 
+border="0" 
+frameborder="no" 
+framespacing="0" 
+allowfullscreen="false"
+width:60%
+height:auto controls> 
+</iframe>

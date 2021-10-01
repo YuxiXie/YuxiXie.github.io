@@ -12,6 +12,8 @@ layout: compress
   </head>
 
   <body>
+    
+    {% include browser-upgrade.html %}
 
     {{ content }}
 
@@ -21,6 +23,8 @@ layout: compress
         {% include footer.html %}
       </footer>
     </div>
+
+    {% include scripts.html %}
 
   </body>
 </html>

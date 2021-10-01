@@ -1,5 +1,5 @@
 ---
-layout: single
+layout: compress
 permalink: /hyp-vl/
 title: "Hypothetical Visual-Linguistic Tasks on VidSitu"
 author_profile: false

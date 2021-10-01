@@ -1,5 +1,5 @@
 ---
-layout: compress
+layout: case-study
 permalink: /hyp-vl/
 title: "Hypothetical Visual-Linguistic Tasks on VidSitu"
 author_profile: false

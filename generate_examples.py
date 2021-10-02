@@ -23,12 +23,12 @@ def get_cmd(sample):
     movie, clip, desc = sample['movie_name'], sample['clip_name'], sample['text']
     genres = [] if sample['genres'] == 'NA' else json.loads(sample['genres'].replace("'", '"'))
     genres = ''.join([f'<code>{gen}</code>' for gen in genres])
-    head_cmd = f'<strong><font color=DodgerBlue>[Movie]</font>{movie}<font color=DodgerBlue>[Clip]</font>{clip}</strong>{genres}<br/>' \
-        + f'<strong><font color=DodgerBlue>[Desc]</font></strong>{desc}<br/>' \
+    head_cmd = f'<strong><font color=DodgerBlue>[Movie]</font> {movie}  <font color=DodgerBlue>[Clip]</font> {clip} </strong> {genres}<br/>' \
+        + f'<strong><font color=DodgerBlue>[Desc]</font></strong> {desc}<br/>' \
         + f'<strong><font color=YellowGreen>[10s-Clip]</font></strong> <br/>'
 
     iframe_cmd = f'<iframe src="https://www.youtube.com/embed/{vid_seg_int[1]}?start={vid_seg_int[3]}&end={vid_seg_int[4]}&version=3" ' \
-        + f'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width=600 height=400></iframe>'
+        + f'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width=600 height=400></iframe> <br/>'
 
     ev_table = '<strong><font color=BlueViolet>[Events]</font> 2s-long each </strong> <br/>' \
         + '<table><tr><td width="30"></td><td width="40"><strong>Rel-Ev3</strong></td><td><strong>Verb</td><td><strong>Narrative Semantic Roles</td></tr>'
@@ -49,15 +49,15 @@ def load_data(filename):
         for idx, sample in enumerate(reader):
             cmd = get_cmd(sample)
             _id = idx + 1
-            outfile = f'_exampletrain/example-train-{_id}.html'
+            outfile = f'_examplevalid/example-valid-{_id}.html'
             fileini = f'''---
 title: "Hyp-VL Reasoning Example {_id}"
-collection: exampletrain
+collection: examplevalid
 ---
 
 '''
             write_file(fileini + cmd, outfile)
 
 if __name__ == '__main__':
-    filename = 'files/toy-train.jsonl'
+    filename = 'files/toy-valid.jsonl'
     load_data(filename)

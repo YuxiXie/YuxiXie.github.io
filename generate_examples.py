@@ -50,9 +50,7 @@ def load_data(filename):
             cmd = get_cmd(sample)
             _id = idx + 1
             outfile = f'_exampletrain/example-train-{_id}.html'
-            fileini = f'''
----
-layout: case-study
+            fileini = f'''---
 title: "Hyp-VL Reasoning Example {_id}"
 collection: exampletrain
 ---

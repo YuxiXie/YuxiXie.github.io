@@ -6,42 +6,40 @@ author_profile: false
 ---
 
 
-**<font color=DodgerBlue>[Movie]</font> Wet Hot American Summer <font color=DodgerBlue>[Clip]</font> Going into Town Scene**      
-`Comedy` `Romance`      
-Beth (Janeane Garofalo) takes the gang to town where they have a drug filled time.      
-<iframe src="https://www.youtube.com/embed/OO9kSxcT9Rg?start=790&end=793&version=3" scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width=450 height=300></iframe> 
-
-
-<di style="width:100%,float:left">
-    <table width="50%">
-        <tr>
-            <td><strong>Rel-Ev3</strong></td>
-            <td><strong>Verb & Args</td>
-        </tr>
-        <tr>
-            <td rowspan="6"><strong>Ev1</strong> </br> (Enables)</td>
-            <td><code>run (walk quickly, a course or contest)</code></td>
-        </tr>
-        <tr><td><code>Arg0 (runner)</code> four teenagers in summer attire</td></tr>
-        <tr><td><code>Arg1 (course, race, distance)</code> across lawn</td></tr>
-        <tr><td><code>ArgM (direction)</code> forward</td></tr>
-        <tr><td><code>ArgM (goal)</code> pickup truck</td></tr>
-        <tr><td><code>Scene of the Event</code> rural road</td></tr>
-    </table>
-    <table width="50%">
-        <tr>
-            <td><strong>Rel-Ev3</strong></td>
-            <td><strong>Verb & Args</td>
-        </tr>
-        <tr>
-            <td rowspan="6"><strong>Ev1</strong> </br> (Enables)</td>
-            <td><code>run (walk quickly, a course or contest)</code></td>
-        </tr>
-        <tr><td><code>Arg0 (runner)</code> four teenagers in summer attire</td></tr>
-        <tr><td><code>Arg1 (course, race, distance)</code> across lawn</td></tr>
-        <tr><td><code>ArgM (direction)</code> forward</td></tr>
-        <tr><td><code>ArgM (goal)</code> pickup truck</td></tr>
-        <tr><td><code>Scene of the Event</code> rural road</td></tr>
-    </table>
-    
-</di>
+<p>
+    <strong><font color=DodgerBlue>[Movie]</font> Wet Hot American Summer <font color=DodgerBlue>[Clip]</font> Going into Town Scene</strong> <code>Comedy</code> <code>Romance</code> <br/>
+    <strong><font color=DodgerBlue>[Desc]</font> </strong>> Beth (Janeane Garofalo) takes the gang to town where they have a drug filled time. <br/><br/>
+    <iframe src="https://www.youtube.com/embed/OO9kSxcT9Rg?start=790&end=793&version=3" scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width=450 height=300></iframe> <br/>
+    <di>
+        <table width="100">
+            <tr>
+                <td><strong>Rel-Ev3</strong></td>
+                <td><strong>Verb & Args</td>
+            </tr>
+            <tr>
+                <td rowspan="6"><strong>Ev1</strong> </br> (Enables)</td>
+                <td><code>run (walk quickly, a course or contest)</code></td>
+            </tr>
+            <tr><td><code>Arg0 (runner)</code> four teenagers in summer attire</td></tr>
+            <tr><td><code>Arg1 (course, race, distance)</code> across lawn</td></tr>
+            <tr><td><code>ArgM (direction)</code> forward</td></tr>
+            <tr><td><code>ArgM (goal)</code> pickup truck</td></tr>
+            <tr><td><code>Scene of the Event</code> rural road</td></tr>
+        </table>
+        <table width="100">
+            <tr>
+                <td><strong>Rel-Ev3</strong></td>
+                <td><strong>Verb & Args</td>
+            </tr>
+            <tr>
+                <td rowspan="6"><strong>Ev1</strong> </br> (Enables)</td>
+                <td><code>run (walk quickly, a course or contest)</code></td>
+            </tr>
+            <tr><td><code>Arg0 (runner)</code> four teenagers in summer attire</td></tr>
+            <tr><td><code>Arg1 (course, race, distance)</code> across lawn</td></tr>
+            <tr><td><code>ArgM (direction)</code> forward</td></tr>
+            <tr><td><code>ArgM (goal)</code> pickup truck</td></tr>
+            <tr><td><code>Scene of the Event</code> rural road</td></tr>
+        </table>
+    </di>
+</p>

@@ -187,10 +187,7 @@ collections:
   talks:
     output: true
     permalink: /:collection/:path/
-  exampletrain:
-    output: true
-    permalink: /:collection/:path/
-  examplevalid:
+  example:
     output: true
     permalink: /:collection/:path/
 
@@ -250,19 +247,10 @@ defaults:
       layout: talk
       author_profile: true
       share: true
-  # _exampletrain
+  # _example
   - scope:
       path: ""
-      type: exampletrain
-    values:
-      layout: case-study
-      author_profile: false
-      share: true
-      comment: true
-  # _examplevalid
-  - scope:
-      path: ""
-      type: _examplevalid
+      type: example
     values:
       layout: case-study
       author_profile: false

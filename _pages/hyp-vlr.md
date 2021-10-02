@@ -6,17 +6,9 @@ author_profile: false
 ---
 
 {% include base_path %}
-{% include toc %}
 
-Train
 ---
-{% for post in site.exampletrain reversed %}
-  {% include case-study-single.html %}
-{% endfor %}
 
-
-Validation
----
-{% for post in site.examplevalid reversed %}
+{% for post in site.example reversed %}
   {% include case-study-single.html %}
 {% endfor %}

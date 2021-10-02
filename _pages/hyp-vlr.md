@@ -11,12 +11,12 @@ author_profile: false
 Train
 ---
 {% for post in site.exampletrain reversed %}
-  {% include case-study.html %}
+  {% include case-study-single.html %}
 {% endfor %}
 
 
 Validation
 ---
 {% for post in site.examplevalid reversed %}
-  {% include case-study.html %}
+  {% include case-study-single.html %}
 {% endfor %}

@@ -55,8 +55,8 @@ def get_task_cmd_abd(task, vid):
     obv_cmd = '<li><strong>[observations]</strong><br/> <font color=YellowGreen>[1] <code>(background)</code></font> ' \
         + f'<table>{frames}</table> <font color=DodgerBlue>[2] <code>(end state)</code></font> {end} </li>'
     
-    hyp = ''.join([f'<tr>{h}</tr>' for h in task['hypotheses']])
-    hyp_cmd = f'<li><strong><font color=BlueViolet>[hypotheses]</font></strong><br/> <table><td>{hyp}</td></table> </li>'
+    hyp = '<br/>'.join(['({x}) {h}'.format(x=i, h=h) for i, h in enumerate(task['hypotheses'])])
+    hyp_cmd = f'<li><strong><font color=BlueViolet>[hypotheses]</font></strong><br/> {hyp} </li>'
 
     cmd = label_cmd + obv_cmd + hyp_cmd
     return cmd
@@ -102,8 +102,8 @@ def get_cmd(sample):
         + f'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width="450" height="300"></iframe> <br/>'
     
     task_cnt = sample['task']['count']
-    task_brief = f'<strong><font color=BlueViolet>[Tasks]</font></strong> {task_cnt} reasoning tasks in total'
-    tasks_cmd = task_brief + '<table><td>' + ''.join([get_task_cmd(task, sample['vid_seg_int']) for task in sample['task']['tasks']]) + '</td></table>'
+    task_brief = f'<strong><font color=BlueViolet>[Tasks]</font></strong> {task_cnt} reasoning tasks in total <br/>'
+    tasks_cmd = task_brief + '<br/><hr/><br/>'.join([get_task_cmd(task, sample['vid_seg_int']) for task in sample['task']['tasks']])
 
     return ''.join(['<p>', head_cmd, iframe_cmd, tasks_cmd, '</p>'])
 

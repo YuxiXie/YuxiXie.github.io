@@ -57,7 +57,7 @@ def get_cmd(sample):
     head_cmd = f'<strong><font color=DodgerBlue>[Movie]</font> {movie}  <font color=DodgerBlue>[Clip]</font> {clip} </strong> {genres}<br/>' \
         + f'<strong><font color=DodgerBlue>[Desc]</font></strong> {desc}<br/>' \
         + f'<strong><font color=YellowGreen>[10s-Clip]</font></strong> <br/>' \
-        + f'<strong><font color=BlueViolet>[VL CSR Task]</font></strong> <a href="{tasklink}" rel="permalink">{vid}</a> <br/>'
+        + f'<strong><font color=BlueViolet>[VL CSR Task]</font></strong> <a href="{tasklink}" rel="permalink">  click to view </a> <br/>'
 
     iframe_cmd = f'<iframe src="https://www.youtube.com/embed/{vid_seg_int[1]}?start={vid_seg_int[3]}&end={vid_seg_int[4]}&version=3" ' \
         + f'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width="600" height="400"></iframe> <br/>'

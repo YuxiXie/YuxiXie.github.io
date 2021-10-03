@@ -53,7 +53,7 @@ def get_task_cmd_abd(task, vid):
     frames = ['https://yuxixie.github.io/files/toy_examples/video_frames_dir/' + vid + '.' + frm + '.jpg' for frm in task['observation']['background']]
     frames = ''.join([f'<td><img src="{frm}" width="360" height="240"></td>' for frm in frames])
     obv_cmd = '<li><strong>observation</strong><br/> <code>background</code> <br/>' \
-        + f'<table>{frames}</table><br/> <code>end state</code> {end} </li>'
+        + f'<table>{frames}</table> <code>end state</code> {end} </li>'
     
     hyp = ''.join([f'<tr>{h}</tr>' for h in task['hypotheses']])
     hyp_cmd = f'<li><strong>hypotheses</strong><br/> <table>{hyp}</table> </li>'
@@ -68,13 +68,13 @@ def get_task_cmd_prd(task, vid):
     frames = ['https://yuxixie.github.io/files/toy_examples/video_frames_dir/' + vid + '.' + frm + '.jpg' for frm in task['premise']]
     frames = ''.join([f'<td><img src="{frm}" width="360" height="240"></td>' for frm in frames])
     bg_cmd = '<li><strong>premise</strong> <code>background</code> <br/>' \
-        + f'<table>{frames}</table><br/> </li>'
+        + f'<table>{frames}</table> </li>'
     
     hyp = task['hypothese']
     hyp_cmd = f'<li><strong>hypothese</strong> <code>activation</code> {hyp} </li>'
 
     prd = task['prediction']
-    prd_cmd = f'<li><strong>hypothese</strong> <code>activation</code> {prd} </li>'
+    prd_cmd = f'<li><strong>prediction</strong> {prd} </li>'
 
     cmd = '<ul>' + label_cmd + bg_cmd + hyp_cmd + prd_cmd + '</ul>'
     return cmd
@@ -83,9 +83,9 @@ def get_task_cmd_prd(task, vid):
 def get_task_cmd(task, vid):
     label = task['label']
     if label == 'abductive':
-        return get_task_cmd_abd(task, vid)
+        return '<tr>' + get_task_cmd_abd(task, vid) + '</tr>'
     else:
-        return get_task_cmd_prd(task, vid)
+        return '<tr>' + get_task_cmd_prd(task, vid) + '</tr>'
 
 
 def get_cmd(sample):
@@ -102,8 +102,8 @@ def get_cmd(sample):
         + f'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width="600" height="400"></iframe> <br/>'
     
     task_cnt = sample['task']['count']
-    task_brief = f'<strong><font color=BlueViolet>[Tasks]</font></strong> {task_cnt} reasoning tasks in total <br/>'
-    tasks_cmd = task_brief + '<br/>'.join([get_task_cmd(task, sample['vid_seg_int']) for task in sample['task']['tasks']])
+    task_brief = f'<strong><font color=BlueViolet>[Tasks]</font></strong> {task_cnt} reasoning tasks in total'
+    tasks_cmd = task_brief + '<table>' + ''.join([get_task_cmd(task, sample['vid_seg_int']) for task in sample['task']['tasks']]) + '</table>'
 
     return ''.join(['<p>', head_cmd, iframe_cmd, tasks_cmd, '</p>'])
 
@@ -117,8 +117,9 @@ def load_data(filename):
             vid = sample['vid_seg_int']
             outfile = f'tasks/task-{vid}.html'
             fileini = f'''---
-title: "Visual-Linguistic Commonsense Reasoning Task ({vid})"
-collection: example
+title: "Visual-Linguistic Commonsense Reasoning Task"
+author_profile: false
+layout: case-study
 ---
 
 '''

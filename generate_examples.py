@@ -30,7 +30,7 @@ def frame_cmd(frames, vid_id):
     assert isinstance(frames, list)
     framenames = [vid_id + '.' + f + '.jpg' for f in frames[:4]]
     framelinks = ['https://yuxixie.github.io/files/toy_examples/video_frames_dir/' + f for f in framenames]
-    cmds = [f'<img src="{fl}" width="300" height="200">' for fl in framelinks]
+    cmds = [f'<img src="{fl}" width="360" height="240">' for fl in framelinks]
     return '<td>' + '</td><td>'.join(cmds) + '</td>'
 
 
@@ -60,7 +60,7 @@ def get_cmd(sample):
         + f'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width="600" height="400"></iframe> <br/>'
 
     ev_table = '<strong><font color=BlueViolet>[Events]</font></strong> 2s-long each <br/>' \
-        + '<table><tr><td width="30"></td><td width="40"><strong>RelToEv3</strong></td><td colspan="4"><strong>Frame</strong></td>' \
+        + '<table><tr><td width="30"></td><td width="40"><strong>RelToEv3</strong></td><td colspan="4"><strong>Frames</strong></td>' \
         + '<td><strong>Narrative Semantic Roles</strong></td></tr>'
     for evt, val in sample['events'].items():
         frame_info, srl_text = frame_cmd(val['Frames'], sample['vid_seg_int']), srl_process(val['SRL'])

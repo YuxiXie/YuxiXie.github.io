@@ -33,7 +33,7 @@ def frame_cmd(frames, vid_id):
         return ''
     framename = vid_id + '.' + framename + '.jpg'
     framelink = 'https://yuxixie.github.io/files/toy_examples/frames/' + framename
-    cmd = f'<img src="{framelink}" width="300" height="200">'
+    cmd = f'<img src="{framelink}" width="360" height="240">'
     return cmd
 
 
@@ -42,8 +42,10 @@ def srl_process(srl):
     for k, v in srl.items():
         text, desc = v['text'], v['desc']
         color = COLOR_SRL[k]
-        txt_cmd = f'<u><font color={color}>{text}</font> {desc}</u>'
-        spans.append(txt_cmd)
+        txt_cmd = f'<font color={color} size="6">{text}</font>'
+        if desc and len(desc) > 2:
+            txt_cmd += f' <font size="4">{desc}</font>'
+        spans.append('<u>' + txt_cmd + '</u>')
     return '  '.join(spans)
 
 
@@ -58,7 +60,7 @@ def get_cmd(sample):
         + f'<strong><font color=YellowGreen>[10s-Clip]</font></strong> <br/>'
 
     iframe_cmd = f'<iframe src="https://www.youtube.com/embed/{vid_seg_int[1]}?start={vid_seg_int[3]}&end={vid_seg_int[4]}&version=3" ' \
-        + f'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width=600 height=400></iframe> <br/>'
+        + f'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width="600" height="400"></iframe> <br/>'
 
     ev_table = '<strong><font color=BlueViolet>[Events]</font></strong> 2s-long each <br/>' \
         + '<table><tr><td width="30"></td><td width="40">RelToEv3</td><td>Frame</td><td>Narrative Semantic Roles</td></tr>'

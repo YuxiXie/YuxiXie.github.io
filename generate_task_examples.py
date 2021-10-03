@@ -47,7 +47,7 @@ def srl_process(srl):
 
 
 def get_task_cmd_abd(task, vid, tid):
-    label_cmd = f'<h4> task {tid} </h4><br/>' \
+    label_cmd = f'<strong><font size="4"> task {tid} </font></strong><br/>' \
         + '<li><strong>[task type]</strong> <font color=DarkRed>ABDUCTIVE</font> </li>'
 
     end = '<br/>'.join(['({x}) {es}'.format(x=i+1, es=es) for i, es in enumerate(task['observation']['end state'])])
@@ -64,7 +64,7 @@ def get_task_cmd_abd(task, vid, tid):
 
 
 def get_task_cmd_prd(task, vid, tid):
-    label_cmd = f'<h4> task {tid} </h4><br/>' \
+    label_cmd = f'<strong><font size="4"> task {tid} </font></strong> <br/>' \
         + '<li><strong>[task type]</strong> <font color=DarkGreen>PREDICTION</font> </li>'
 
     frames = ['https://yuxixie.github.io/files/toy_examples/video_frames_dir/' + vid + '.' + frm + '.jpg' for frm in task['premise']]

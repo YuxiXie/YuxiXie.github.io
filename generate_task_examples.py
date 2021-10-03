@@ -47,16 +47,16 @@ def srl_process(srl):
 
 
 def get_task_cmd_abd(task, vid, tid):
-    label_cmd = f'<h3> task {tid} </h3><br/>' \
+    label_cmd = f'<h4> task {tid} </h4><br/>' \
         + '<li><strong>[task type]</strong> <font color=DarkRed>ABDUCTIVE</font> </li>'
 
-    end = task['observation']['end state']
+    end = '<br/>'.join(['({x}) {es}'.format(x=i+1, es=es) for i, es in enumerate(task['observation']['end state'])])
     frames = ['https://yuxixie.github.io/files/toy_examples/video_frames_dir/' + vid + '.' + frm + '.jpg' for frm in task['observation']['background']]
     frames = ''.join([f'<td><img src="{frm}" width="360" height="240"></td>' for frm in frames])
     obv_cmd = '<li><strong>[observations]</strong><br/> <font color=YellowGreen>[1] <code>(background)</code></font> ' \
-        + f'<table>{frames}</table> <font color=DodgerBlue>[2] <code>(end state)</code></font> {end} </li>'
+        + f'<table>{frames}</table> <font color=DodgerBlue>[2] <code>(end state)</code></font><br/> {end} </li>'
     
-    hyp = '<br/>'.join(['({x}) {h}'.format(x=i, h=h) for i, h in enumerate(task['hypotheses'])])
+    hyp = '<br/>'.join(['({x}) {h}'.format(x=i+1, h=h) for i, h in enumerate(task['hypotheses'])])
     hyp_cmd = f'<li><strong><font color=BlueViolet>[hypotheses]</font></strong><br/> {hyp} </li>'
 
     cmd = label_cmd + obv_cmd + hyp_cmd
@@ -64,7 +64,7 @@ def get_task_cmd_abd(task, vid, tid):
 
 
 def get_task_cmd_prd(task, vid, tid):
-    label_cmd = f'<h3> task {tid} </h3><br/>' \
+    label_cmd = f'<h4> task {tid} </h4><br/>' \
         + '<li><strong>[task type]</strong> <font color=DarkGreen>PREDICTION</font> </li>'
 
     frames = ['https://yuxixie.github.io/files/toy_examples/video_frames_dir/' + vid + '.' + frm + '.jpg' for frm in task['premise']]
@@ -75,8 +75,8 @@ def get_task_cmd_prd(task, vid, tid):
     hyp = task['hypothese']
     hyp_cmd = f'<li><strong><font color=DodgerBlue>[hypothese]</font></strong> <code>(activation)</code> {hyp} </li>'
 
-    prd = task['prediction']
-    prd_cmd = f'<li><strong><font color=BlueViolet>[prediction]</font></strong> {prd} </li>'
+    prd = '<br/>'.join(['({x}) {p}'.format(x=i+1, p=p) for i, p in enumerate(task['prediction'])])
+    prd_cmd = f'<li><strong><font color=BlueViolet>[prediction]</font></strong><br/> {prd} </li>'
 
     cmd = label_cmd + bg_cmd + hyp_cmd + prd_cmd
     return cmd
@@ -128,5 +128,5 @@ layout: case-study
             write_file(fileini + cmd, outfile)
 
 if __name__ == '__main__':
-    filename = 'files/toy_examples/toy-task.jsonl'
+    filename = 'files/toy_examples/task.jsonl'
     load_data(filename)

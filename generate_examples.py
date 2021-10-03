@@ -42,7 +42,7 @@ def srl_process(srl):
     for k, v in srl.items():
         text, desc = v['text'], v['desc']
         color = COLOR_SRL[k]
-        txt_cmd = f'<font color={color} size="6">{text}</font>'
+        txt_cmd = f'<font color={color} size="5">{text}</font>'
         if desc and len(desc) > 2:
             txt_cmd += f' <font size="4">{desc}</font>'
         spans.append('<u>' + txt_cmd + '</u>')

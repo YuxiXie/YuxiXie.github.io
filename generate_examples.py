@@ -28,7 +28,7 @@ def write_file(data, filename):
 
 def frame_cmd(frames, vid_id):
     if isinstance(frames, list):
-        framenames = [vid_id + '/' + f + '.jpg' for f in frames]
+        framenames = [vid_id + '.' + f + '.jpg' for f in frames]
     else:
         return '<td></td><td></td><td></td>'
     framelinks = ['https://yuxixie.github.io/files/toy_examples/video_frames_dir/' + f for f in framenames]

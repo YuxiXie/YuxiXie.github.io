@@ -28,13 +28,13 @@ def write_file(data, filename):
 
 def frame_cmd(frames, vid_id):
     if isinstance(frames, list):
-        framename = frames[0]
+        framenames = [vid_id + '.' + f + '.jpg' for f in frames]
     else:
-        return ''
-    framename = vid_id + '.' + framename + '.jpg'
-    framelink = 'https://yuxixie.github.io/files/toy_examples/frames/' + framename
-    cmd = f'<img src="{framelink}" width="480" height="360">'
-    return cmd
+        return '<td></td><td></td><td></td>'
+    framelinks = ['https://yuxixie.github.io/files/toy_examples/frames/' + f for f in framenames]
+    cmds = [f'<img src="{fl}" width="480" height="360">' for fl in framelinks]
+    cmds += [''] * (3 - len(cmds))
+    return '<td>' + '</td><td>'.join(cmds) + '</td>'
 
 
 def srl_process(srl):
@@ -63,15 +63,14 @@ def get_cmd(sample):
         + f'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width="600" height="400"></iframe> <br/>'
 
     ev_table = '<strong><font color=BlueViolet>[Events]</font></strong> 2s-long each <br/>' \
-        + '<table><tr><td width="30"></td><td width="40"><strong>RelToEv3</strong></td><td><strong>Frame</strong></td>' \
+        + '<table><tr><td width="30"></td><td width="40"><strong>RelToEv3</strong></td><td colspan="3"><strong>Frame</strong></td>' \
         + '<td><strong>Narrative Semantic Roles</strong></td></tr>'
     for evt, val in sample['events'].items():
         frame_info, srl_text = frame_cmd(val['Frames'], sample['vid_seg_int']), srl_process(val['SRL'])
         rel = val['EvRel'] if val['EvRel'] else 'N/A'
         rel = COLOR_REL[rel]
         event_ini = f'<tr><td><strong>{evt}</strong> </td>' + rel \
-            + f'<td>{frame_info}</td>' \
-            + f'<td>{srl_text}</td></tr>'
+            + frame_info + f'<td>{srl_text}</td></tr>'
         ev_table += event_ini
     ev_table += '</table>'
 
@@ -83,9 +82,9 @@ def load_data(filename):
         for idx, sample in enumerate(reader):
             cmd = get_cmd(sample)
             _id = idx + 1
-            outfile = f'_example/example-train-{_id}.html'
+            outfile = f'_example/example-valid-{_id}.html'
             fileini = f'''---
-title: "Hyp-VL Reasoning Example Train {_id}"
+title: "Hyp-VL Reasoning Example Valid {_id}"
 collection: example
 ---
 
@@ -93,5 +92,5 @@ collection: example
             write_file(fileini + cmd, outfile)
 
 if __name__ == '__main__':
-    filename = 'files/toy_examples/train.jsonl'
+    filename = 'files/toy_examples/valid.jsonl'
     load_data(filename)

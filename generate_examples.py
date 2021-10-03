@@ -54,7 +54,7 @@ def get_cmd(sample):
     genres = [] if sample['genres'] == 'NA' else json.loads(sample['genres'].replace("'", '"'))
     genres = ''.join([f'<code>{gen}</code>' for gen in genres])
     vid = sample['vid_seg_int']
-    if os.path.exists('files/tasks/task-{vid}.html'):
+    if os.path.exists(f'tasks/task-{vid}.html'):
         tasklink = f"https://yuxixie.github.io/tasks/task-{vid}"
         taskdesc = f'<a href="{tasklink}" rel="permalink">  click to view </a>'
     else:

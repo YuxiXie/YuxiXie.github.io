@@ -1,5 +1,6 @@
 import jsonlines
 import json
+import os
 
 COLOR_REL = {
     'Reaction To': '<td bgcolor=LightBlue><strong>Reaction</strong></td>',
@@ -53,11 +54,16 @@ def get_cmd(sample):
     genres = [] if sample['genres'] == 'NA' else json.loads(sample['genres'].replace("'", '"'))
     genres = ''.join([f'<code>{gen}</code>' for gen in genres])
     vid = sample['vid_seg_int']
-    tasklink = f"https://yuxixie.github.io/tasks/task-{vid}"
+    if os.path.exists('files/tasks/task-{vid}.html'):
+        tasklink = f"https://yuxixie.github.io/tasks/task-{vid}"
+        taskdesc = f'<a href="{tasklink}" rel="permalink">  click to view </a>'
+    else:
+        taskdesc = 'N/A'
+
     head_cmd = f'<strong><font color=DodgerBlue>[Movie]</font> {movie}  <font color=DodgerBlue>[Clip]</font> {clip} </strong> {genres}<br/>' \
         + f'<strong><font color=DodgerBlue>[Desc]</font></strong> {desc}<br/>' \
         + f'<strong><font color=YellowGreen>[10s-Clip]</font></strong> <br/>' \
-        + f'<strong><font color=BlueViolet>[VL CSR Task]</font></strong> <a href="{tasklink}" rel="permalink">  click to view </a> <br/>'
+        + f'<strong><font color=BlueViolet>[VL CSR Task]</font></strong> {taskdesc} <br/>'
 
     iframe_cmd = f'<iframe src="https://www.youtube.com/embed/{vid_seg_int[1]}?start={vid_seg_int[3]}&end={vid_seg_int[4]}&version=3" ' \
         + f'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width="600" height="400"></iframe> <br/>'

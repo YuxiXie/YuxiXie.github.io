@@ -46,8 +46,9 @@ def srl_process(srl):
     return '  '.join(spans)
 
 
-def get_task_cmd_abd(task, vid):
-    label_cmd = '<li><strong>[task type]</strong> <font color=DarkRed>ABDUCTIVE</font> </li>'
+def get_task_cmd_abd(task, vid, tid):
+    label_cmd = f'<h3> task {tid} </h3><br/>' \
+        + '<li><strong>[task type]</strong> <font color=DarkRed>ABDUCTIVE</font> </li>'
 
     end = task['observation']['end state']
     frames = ['https://yuxixie.github.io/files/toy_examples/video_frames_dir/' + vid + '.' + frm + '.jpg' for frm in task['observation']['background']]
@@ -62,8 +63,9 @@ def get_task_cmd_abd(task, vid):
     return cmd
 
 
-def get_task_cmd_prd(task, vid):
-    label_cmd = '<li><strong>[task type]</strong> <font color=DarkGreen>PREDICTION</font> </li>'
+def get_task_cmd_prd(task, vid, tid):
+    label_cmd = f'<h3> task {tid} </h3><br/>' \
+        + '<li><strong>[task type]</strong> <font color=DarkGreen>PREDICTION</font> </li>'
 
     frames = ['https://yuxixie.github.io/files/toy_examples/video_frames_dir/' + vid + '.' + frm + '.jpg' for frm in task['premise']]
     frames = ''.join([f'<td><img src="{frm}" width="360" height="240"></td>' for frm in frames])
@@ -80,12 +82,12 @@ def get_task_cmd_prd(task, vid):
     return cmd
 
 
-def get_task_cmd(task, vid):
+def get_task_cmd(task, vid, tid):
     label = task['label']
     if label == 'abductive':
-        return '<tr>' + get_task_cmd_abd(task, vid) + '</tr>'
+        return '<tr>' + get_task_cmd_abd(task, vid, tid + 1) + '</tr>'
     else:
-        return '<tr>' + get_task_cmd_prd(task, vid) + '</tr>'
+        return '<tr>' + get_task_cmd_prd(task, vid, tid + 1) + '</tr>'
 
 
 def get_cmd(sample):
@@ -103,7 +105,7 @@ def get_cmd(sample):
     
     task_cnt = sample['task']['count']
     task_brief = f'<strong><font color=BlueViolet>[Tasks]</font></strong> {task_cnt} reasoning tasks in total <br/>'
-    tasks_cmd = task_brief + '<br/><hr/><br/>'.join([get_task_cmd(task, sample['vid_seg_int']) for task in sample['task']['tasks']])
+    tasks_cmd = task_brief + '<br/><hr/><br/>'.join([get_task_cmd(task, sample['vid_seg_int'], tid) for tid, task in enumerate(sample['task']['tasks'])])
 
     return ''.join(['<p>', head_cmd, iframe_cmd, tasks_cmd, '</p>'])
 

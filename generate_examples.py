@@ -52,9 +52,12 @@ def get_cmd(sample):
     movie, clip, desc = sample['movie_name'], sample['clip_name'], sample['text']
     genres = [] if sample['genres'] == 'NA' else json.loads(sample['genres'].replace("'", '"'))
     genres = ''.join([f'<code>{gen}</code>' for gen in genres])
+    vid = sample['vid_seg_int']
+    tasklink = f"https://yuxixie.github.io/tasks/task-{vid}"
     head_cmd = f'<strong><font color=DodgerBlue>[Movie]</font> {movie}  <font color=DodgerBlue>[Clip]</font> {clip} </strong> {genres}<br/>' \
         + f'<strong><font color=DodgerBlue>[Desc]</font></strong> {desc}<br/>' \
-        + f'<strong><font color=YellowGreen>[10s-Clip]</font></strong> <br/>'
+        + f'<strong><font color=YellowGreen>[10s-Clip]</font></strong> <br/>' \
+        + f'<strong><font color=BlueViolet>[VL CSR Task]</font></strong> <a href="{tasklink}" rel="permalink"></a> <br/>'
 
     iframe_cmd = f'<iframe src="https://www.youtube.com/embed/{vid_seg_int[1]}?start={vid_seg_int[3]}&end={vid_seg_int[4]}&version=3" ' \
         + f'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width="600" height="400"></iframe> <br/>'
@@ -82,7 +85,7 @@ def load_data(filename):
             _id = idx + 1
             outfile = f'_example/example-{_id:02d}.html'
             fileini = f'''---
-title: "Hyp-VL Reasoning Example {_id:02d}"
+title: "VidSitu Example {_id:02d}"
 collection: example
 ---
 

@@ -1,7 +1,7 @@
 ---
 layout: case-study
 permalink: /hyp-vlr/
-title: "Hypothetical Visual-Linguistic Reasoning"
+title: "VidSitu: Visual Semantic Role Labeling"
 author_profile: false
 ---
 

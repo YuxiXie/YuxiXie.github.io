@@ -33,7 +33,7 @@ def frame_cmd(frames, vid_id):
         return ''
     framename = vid_id + '.' + framename + '.jpg'
     framelink = 'https://yuxixie.github.io/files/toy_examples/frames/' + framename
-    cmd = f'<img src="{framelink}" width="360" height="240">'
+    cmd = f'<img src="{framelink}" width="480" height="360">'
     return cmd
 
 
@@ -63,7 +63,8 @@ def get_cmd(sample):
         + f'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width="600" height="400"></iframe> <br/>'
 
     ev_table = '<strong><font color=BlueViolet>[Events]</font></strong> 2s-long each <br/>' \
-        + '<table><tr><td width="30"></td><td width="40">RelToEv3</td><td>Frame</td><td>Narrative Semantic Roles</td></tr>'
+        + '<table><tr><td width="30"></td><td width="40"><strong>RelToEv3</strong></td><td><strong>Frame</strong></td>' \
+        + '<td><strong>Narrative Semantic Roles</strong></td></tr>'
     for evt, val in sample['events'].items():
         frame_info, srl_text = frame_cmd(val['Frames'], sample['vid_seg_int']), srl_process(val['SRL'])
         rel = val['EvRel'] if val['EvRel'] else 'N/A'

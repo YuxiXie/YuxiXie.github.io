@@ -81,7 +81,7 @@ def load_data(filename):
             _id = idx + 1
             outfile = f'_example/example-{_id:02d}.html'
             fileini = f'''---
-title: "Hyp-VL Reasoning Example {_id}"
+title: "Hyp-VL Reasoning Example {_id:02d}"
 collection: example
 ---
 

@@ -47,7 +47,7 @@ def srl_process(srl):
 
 
 def get_task_cmd_abd(task, vid, tid):
-    label_cmd = f'<strong><font size="4"> task {tid} </font></strong><br/>' \
+    label_cmd = f'<strong><font size="4"> task {tid} </font></strong>' \
         + '<li><strong>[task type]</strong> <font color=DarkRed>ABDUCTIVE</font> </li>'
 
     end = '<br/>'.join(['({x}) {es}'.format(x=i+1, es=es) for i, es in enumerate(task['observation']['end state'])])
@@ -64,7 +64,7 @@ def get_task_cmd_abd(task, vid, tid):
 
 
 def get_task_cmd_prd(task, vid, tid):
-    label_cmd = f'<strong><font size="4"> task {tid} </font></strong> <br/>' \
+    label_cmd = f'<strong><font size="4"> task {tid} </font></strong>' \
         + '<li><strong>[task type]</strong> <font color=DarkGreen>PREDICTION</font> </li>'
 
     frames = ['https://yuxixie.github.io/files/toy_examples/video_frames_dir/' + vid + '.' + frm + '.jpg' for frm in task['premise']]
@@ -104,7 +104,7 @@ def get_cmd(sample):
         + f'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width="450" height="300"></iframe> <br/>'
     
     task_cnt = sample['task']['count']
-    task_brief = f'<strong><font color=BlueViolet>[Tasks]</font></strong> {task_cnt} reasoning tasks in total <br/>'
+    task_brief = f'<strong><font color=BlueViolet>[Tasks]</font></strong> {task_cnt} reasoning tasks in total <br/><br/>'
     tasks_cmd = task_brief + '<br/><hr/><br/>'.join([get_task_cmd(task, sample['vid_seg_int'], tid) for tid, task in enumerate(sample['task']['tasks'])])
 
     return ''.join(['<p>', head_cmd, iframe_cmd, tasks_cmd, '</p>'])

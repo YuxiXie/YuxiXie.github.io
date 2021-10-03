@@ -32,7 +32,7 @@ def frame_cmd(frames, vid_id):
     else:
         return '<td></td><td></td><td></td>'
     framelinks = ['https://yuxixie.github.io/files/toy_examples/frames/' + f for f in framenames]
-    cmds = [f'<img src="{fl}" width="480" height="360">' for fl in framelinks]
+    cmds = [f'<img src="{fl}" width="300" height="200">' for fl in framelinks]
     cmds += [''] * (3 - len(cmds))
     return '<td>' + '</td><td>'.join(cmds) + '</td>'
 

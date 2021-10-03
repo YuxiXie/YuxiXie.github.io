@@ -83,9 +83,9 @@ def load_data(filename):
         for idx, sample in enumerate(reader):
             cmd = get_cmd(sample)
             _id = idx + 1
-            outfile = f'_example/example-valid-{_id}.html'
+            outfile = f'_example/example-train-{_id}.html'
             fileini = f'''---
-title: "Hyp-VL Reasoning Example Valid {_id}"
+title: "Hyp-VL Reasoning Example Train {_id}"
 collection: example
 ---
 
@@ -93,5 +93,5 @@ collection: example
             write_file(fileini + cmd, outfile)
 
 if __name__ == '__main__':
-    filename = 'files/toy_examples/valid.jsonl'
+    filename = 'files/toy_examples/train.jsonl'
     load_data(filename)

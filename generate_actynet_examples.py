@@ -81,5 +81,5 @@ collection: example
             write_file(fileini + cmd, outfile)
 
 if __name__ == '__main__':
-    filename = 'files/actynet-toy.jsonl'
+    filename = 'files/actynet/toy.jsonl'
     load_data(filename)

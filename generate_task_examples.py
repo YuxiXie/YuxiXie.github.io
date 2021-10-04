@@ -99,11 +99,11 @@ def get_task_cmd(task, vid, tid):
     hyp_cmd = f'<li><strong><font color=DodgerBlue>[hypothese]</font></strong> <code>(observation 2)</code> {hyp} </li>'
 
     qu = task['question']
-    qu_ans = f'<strong>Q</strong>: {qu} <br/> <strong>A</strong>: <br/>' \
-        + '<br/>'.join(['({x}) {a}'.format(x=i+1, a=a) for i, a in enumerate(task['answers'])])
-    ans_cmd = f'<li><strong><font color=BlueViolet>[question-answers]</font></strong><br/> {qu_ans} </li>'
+    ans = ''.join(['<tr><td><strong>A{x}</strong></td><td>{a}</td></tr>'.format(x=i+1, a=a) for i, a in enumerate(task['answers'])])
+    qu_ans = f'<table><tr><td width="30"><strong>Q</strong></td><td>{qu}</td></tr>{ans}</table>'
+    qa_cmd = f'<li><strong><font color=BlueViolet>[question-answers]</font></strong><br/> {qu_ans} </li>'
 
-    return ' '.join(['<tr>', label_cmd, pm_cmd, hyp_cmd, ans_cmd, '</tr>'])
+    return ' '.join(['<tr>', label_cmd, pm_cmd, hyp_cmd, qa_cmd, '</tr>'])
 
 
 def get_cmd(sample):

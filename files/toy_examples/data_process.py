@@ -116,7 +116,7 @@ def srl_portion(e1, e2):
 
 def get_abductive(events):
     verb_list = ['might have', 'may have', 'has possibly']
-    time_list = ['before', 'in the interval', 'ealier']
+    time_list = ['before', 'in the interval', 'ealier', 'previously']
 
     def get_qa_pair(evh, ev3):
         evh_args = [v['text'] for _,v in evh.items()]
@@ -187,7 +187,7 @@ def get_abductive(events):
 
 def get_prediction(events):
     verb_list = ['is likely to', 'would', 'will', 'might', 'may', 'is gonna', 'is going to', 'is about to']
-    time_list = ['next', 'after that', 'right after that', 'immediately after that', 'then', 'later']
+    time_list = ['next', 'afterwards', 'right after the hypothetical event', 'immediately after the hypothetical event', 'then', 'later']
 
     def get_qa_pair(evp, ev3):
         ev3_args = [v['text'] for _,v in ev3.items()]

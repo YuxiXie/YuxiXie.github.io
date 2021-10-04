@@ -29,12 +29,19 @@ def write_file(data, filename):
 
 
 def get_caption(cap, i, ids):
+
+    def digital(time):
+        minute = time // 60
+        second = time % 60
+        return f'{minute:02d}:{second:02d}'
+
     _id = i + 1
     color = 'LemonChiffon' if i in ids else 'White'
     sent = cap['sentence']
     s, e = math.floor(cap['timestamp'][0]), math.ceil(cap['timestamp'][1])
     dur = e - s
-    cap_cmd = f'<td>{_id}</td><td>{s}s</td><td>{e}s</td><td>{dur}s</td><td bgcolor={color}>{sent}</td>'
+    s, e = digital(s), digital(e)
+    cap_cmd = f'<td>{_id}</td><td>{s}</td><td>{e}</td><td>{dur}s</td><td bgcolor={color}>{sent}</td>'
     return cap_cmd
 
 

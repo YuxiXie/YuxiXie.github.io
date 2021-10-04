@@ -131,12 +131,11 @@ def get_abductive(events):
             key, arg = args[0]
 
             tags = [t[1] for t in pos_tag(arg.split())]
-            if key in ['Arg0', 'Arg1']:
-                if tags[0] not in ['DT', 'IN', 'PDT', 'PRP', 'PRP$', 'TO', 'WDT', 'WP', 'WP$', 'WRB']:
-                    arg = ' '.join(['the', arg])
-            elif key in ['Arg2']:
-                if tags[0] not in ['IN', 'TO'] and not arg.split()[0].endswith('wards'):
-                    arg = ' '.join(['towards', arg])
+            if tags[0] in ['IN', 'TO'] or arg.split()[0].endswith('wards'):
+                arg = ' '.join(arg.split()[1:])
+                tags = tags[1:]
+            if tags[0] not in ['PDT', 'PRP', 'PRP$', 'TO', 'WDT', 'WP', 'WP$', 'WRB']:
+                arg = ' '.join(['the', arg])
 
             if key == 'Arg0':
                 random_verb = random_verb.split()
@@ -212,12 +211,12 @@ def get_prediction(events):
                 if random_verb.startswith('is'):
                     random_verb = random_verb.lstrip('is').strip()
                     q = f'what is {arg} {random_verb} do {random_time} ?'
-                    _id = key + ' ' + arg
                 else:
                     q = f'what {random_verb} {arg} do {random_time} ?'
-                    _id = 'others ' + arg
+                _id = key + ' ' + arg
             else:
                 q = f'what {random_verb} happen to {arg} {random_time} ?'
+                _id = 'others ' + arg
         return {'question': q, 'answer': srl_to_text(evp), 'id': _id}
 
     def prediction_sample(evps):

@@ -50,7 +50,7 @@ def get_task_cmd_abd(task, vid, tid):
     label_cmd = f'<strong><font size="4"> task {tid} </font></strong>' \
         + '<li><strong>[task type]</strong> <font color=DarkRed>ABDUCTIVE</font> </li>'
 
-    end = '<br/>'.join(['({x}) {es}'.format(x=i+1, es=es) for i, es in enumerate(task['observation']['end state'])])
+    end = task['observation']['end state']
     frames = ['https://yuxixie.github.io/files/toy_examples/video_frames_dir/' + vid + '.' + frm + '.jpg' for frm in task['observation']['background']]
     frames = ''.join([f'<td><img src="{frm}" width="360" height="240"></td>' for frm in frames])
     obv_cmd = '<li><strong>[observations]</strong><br/> <font color=YellowGreen>[1] <code>(background)</code></font> ' \

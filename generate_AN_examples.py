@@ -33,7 +33,7 @@ def get_caption(cap, i):
     sent = cap['sentence']
     s, e = math.floor(cap['timestamp'][0]), math.ceil(cap['timestamp'][1])
     dur = e - s
-    cap_cmd = f'<td>{_id}</td><td>{s}s</td><td>{e}s</td><td>{dur}</td><td>{sent}</td>'
+    cap_cmd = f'<td>{_id}</td><td>{s}s</td><td>{e}s</td><td>{dur}s</td><td>{sent}</td>'
     return cap_cmd
 
 def get_cmd(sample):

@@ -28,12 +28,13 @@ def write_file(data, filename):
         f.write(data)
 
 
-def get_caption(cap, i):
+def get_caption(cap, i, ids):
     _id = i + 1
+    color = 'LemonChiffon' if i in ids else 'White'
     sent = cap['sentence']
     s, e = math.floor(cap['timestamp'][0]), math.ceil(cap['timestamp'][1])
     dur = e - s
-    cap_cmd = f'<td>{_id}</td><td>{s}s</td><td>{e}s</td><td>{dur}s</td><td>{sent}</td>'
+    cap_cmd = f'<td>{_id}</td><td>{s}s</td><td>{e}s</td><td>{dur}s</td><td bgcolor={color}>{sent}</td>'
     return cap_cmd
 
 def get_cmd(sample):
@@ -47,7 +48,7 @@ def get_cmd(sample):
 
     ids = sample['captions']['selected_ids']
     sents = sample['captions']['captions']
-    captions = '<tr>' + '</tr><tr>'.join([get_caption(sents[_id], i) for i, _id in enumerate(ids)]) + '</tr>'
+    captions = '<tr>' + '</tr><tr>'.join([get_caption(sent, i, ids) for i, sent in enumerate(sents)]) + '</tr>'
     cap_cmd = f'<strong><font color=DodgerBlue>[Desc]</font></strong> <br/>' \
         + '<table><tr><td width="30"><strong>ID</strong></td><td width="30"><strong>StartPoint</strong></td>' \
         + f'<td width="30"><strong>EndPoint</strong><td width="30"><strong>Duration</strong></td></td><td><strong>Sentence</strong></td></tr>{captions}</table>'

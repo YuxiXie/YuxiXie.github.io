@@ -1,0 +1,15 @@
+{"vid_seg_int": "v_kEnK0ZdMThc_seg_0_10", "movie_name": "Spectre", "genres": "NA", "clip_name": "Blowing Up the Block Scene", "text": "Bond (Daniel Craig) takes out a city block while trying to take out Marco Sciarra (Alessandro Cremona).", 
+    "task": {"count": 2, "tasks": 
+    [
+        [
+            {
+                "label": "abductive", 
+                "premise": ["v_kEnK0ZdMThc_seg_0_10_000002", "v_kEnK0ZdMThc_seg_0_10_000004", "v_kEnK0ZdMThc_seg_0_10_000006", "v_kEnK0ZdMThc_seg_0_10_000008"], 
+                "hypothese": "the man in black suit walk swiftly on a rooftop", 
+                "question": "what might man in black suit have done or been doing in the interval ?", 
+                "answers": ["the man in black suit adjust his cuffs casually on a rooftop"]
+            }
+        ], 
+        {
+            "label": "prediction", 
+            "premise": ["v_kEnK0ZdMThc_seg_0_10_000002", "v_kEnK0ZdMThc_seg_0_10_000004", "v_kEnK0ZdMThc_seg_0_10_000006", "v_kEnK0ZdMThc_seg_0_10_000008"], "hypothese": "the man in black suit adjust his cuffs casually on a rooftop", "question": "what will man in black suit do right after that ?", "answers": ["the man in black suit walk swiftly on a rooftop"]}]}}

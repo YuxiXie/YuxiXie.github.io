@@ -83,11 +83,27 @@ def get_task_cmd_prd(task, vid, tid):
 
 
 def get_task_cmd(task, vid, tid):
-    label = task['label']
-    if label == 'abductive':
-        return '<tr>' + get_task_cmd_abd(task, vid, tid + 1) + '</tr>'
-    else:
-        return '<tr>' + get_task_cmd_prd(task, vid, tid + 1) + '</tr>'
+    tid = tid + 1
+
+    label = task['label'].upper()
+    label_color = 'DarkGreen' if task['label'] == 'abductive' else 'DarkRed'
+    label_cmd = f'<strong><font size="4"> task {tid} </font></strong>' \
+        + f'<li><strong>[task type]</strong> <font color={label_color}>{label}</font> </li>'
+    
+    frames = ['https://yuxixie.github.io/files/toy_examples/video_frames_dir/' + vid + '.' + frm + '.jpg' for frm in task['premise']]
+    frames = ''.join([f'<td><img src="{frm}" width="360" height="240"></td>' for frm in frames])
+    pm_cmd = '<li><strong><font color=YellowGreen>[premise]</font></strong> <code>(observation 1)</code> <br/>' \
+        + f'<table>{frames}</table> </li>'
+    
+    hyp = task['hypothese']
+    hyp_cmd = f'<li><strong><font color=DodgerBlue>[hypothese]</font></strong> <code>(observation 2)</code> {hyp} </li>'
+
+    qu = task['question']
+    qu_ans = f'<strong>Q</strong>: {qu} <br/> <strong>A</strong>: <br/>' \
+        + '<br/>'.join(['({x}) {a}'.format(x=i+1, a=a) for i, a in enumerate(task['answers'])])
+    ans_cmd = f'<li><strong><font color=BlueViolet>[question-answers]</font></strong><br/> {qu_ans} </li>'
+
+    return ' '.join(['<tr>', label_cmd, pm_cmd, hyp_cmd, ans_cmd, '</tr>'])
 
 
 def get_cmd(sample):

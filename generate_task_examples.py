@@ -128,5 +128,5 @@ layout: case-study
             write_file(fileini + cmd, outfile)
 
 if __name__ == '__main__':
-    filename = 'files/toy_examples/task.jsonl'
+    filename = 'files/toy_examples/toy-task.jsonl'
     load_data(filename)

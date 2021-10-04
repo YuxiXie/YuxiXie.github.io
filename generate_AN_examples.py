@@ -37,6 +37,7 @@ def get_caption(cap, i, ids):
     cap_cmd = f'<td>{_id}</td><td>{s}s</td><td>{e}s</td><td>{dur}s</td><td bgcolor={color}>{sent}</td>'
     return cap_cmd
 
+
 def get_cmd(sample):
     vid = sample['vid']
     vid_seg_int = vid.split('_')

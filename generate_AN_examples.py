@@ -32,7 +32,8 @@ def get_caption(cap, i):
     _id = i + 1
     sent = cap['sentence']
     s, e = math.floor(cap['timestamp'][0]), math.ceil(cap['timestamp'][1])
-    cap_cmd = f'<td>{_id}</td><td>{s}s</td><td>{e}s</td><td>{sent}</td>'
+    dur = e - s
+    cap_cmd = f'<td>{_id}</td><td>{s}s</td><td>{e}s</td><td>{dur}</td><td>{sent}</td>'
     return cap_cmd
 
 def get_cmd(sample):
@@ -48,8 +49,8 @@ def get_cmd(sample):
     sents = sample['captions']['captions']
     captions = '<tr>' + '</tr><tr>'.join([get_caption(sents[_id], i) for i, _id in enumerate(ids)]) + '</tr>'
     cap_cmd = f'<strong><font color=DodgerBlue>[Desc]</font></strong> <br/>' \
-        + '<table><tr><td width="30"><strong>order</strong></td><td width="30"><strong>start</strong></td>' \
-        + f'<td width="30"><strong>end</strong></td><td>sentence</td></tr>{captions}</table>'
+        + '<table><tr><td width="30"><strong>ID</strong></td><td width="30"><strong>StartPoint</strong></td>' \
+        + f'<td width="30"><strong>EndPoint</strong><td width="30"><strong>Duration</strong></td></td><td><strong>Sentence</strong></td></tr>{captions}</table>'
 
 
     return ''.join(['<p>', head_cmd, iframe_cmd, cap_cmd, '</p>'])

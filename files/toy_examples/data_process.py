@@ -145,6 +145,7 @@ def get_abductive(events):
             else:
                 q = f'what {random_verb} happened to {arg} {random_time} ?'
                 _id = 'others ' + arg
+        
         return {'question': q, 'answer': srl_to_text(ev3), 'id': _id}
 
     def abductive_sample(e):
@@ -156,7 +157,7 @@ def get_abductive(events):
         for k in range(4, int(e[-1])):
             evk = events[f'Ev{k}']
             if srl_portion(evk['SRL'], events[e]['SRL']):
-                qas += [get_qa_pair(evk['SRL'], events['Ev3']['SRL'])]
+                qas += [get_qa_pair(events[e]['SRL'], evk['SRL'])]
         hyp = {}
         for qa in qas:
             if qa['id'] in hyp:

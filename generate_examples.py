@@ -62,8 +62,8 @@ def get_cmd(sample):
 
     head_cmd = f'<strong><font color=DodgerBlue>[Movie]</font> {movie}  <font color=DodgerBlue>[Clip]</font> {clip} </strong> {genres}<br/>' \
         + f'<strong><font color=DodgerBlue>[Desc]</font></strong> {desc}<br/>' \
-        + f'<strong><font color=YellowGreen>[10s-Clip]</font></strong> <br/>' \
-        + f'<strong><font color=BlueViolet>[VL CSR Task]</font></strong> {taskdesc} <br/>'
+        + f'<strong><font color=BlueViolet>[VL CSR Task]</font></strong> {taskdesc} <br/>' \
+        + f'<strong><font color=YellowGreen>[10s-Clip]</font></strong> <br/>'
 
     iframe_cmd = f'<iframe src="https://www.youtube.com/embed/{vid_seg_int[1]}?start={vid_seg_int[3]}&end={vid_seg_int[4]}&version=3" ' \
         + f'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width="600" height="400"></iframe> <br/>'
@@ -83,13 +83,14 @@ def get_cmd(sample):
 
     return ''.join(['<p>', head_cmd, iframe_cmd, ev_table, '</p>'])
 
+
 def load_data(filename):
     cmd_list = []
     with jsonlines.open(filename) as reader:
         for idx, sample in enumerate(reader):
             cmd = get_cmd(sample)
             _id = idx + 1
-            outfile = f'_example/example-{_id:02d}.html'
+            outfile = f'_example/example-vidsitu-{_id:02d}.html'
             fileini = f'''---
 title: "VidSitu Example {_id:02d}"
 collection: example

@@ -118,7 +118,7 @@ def get_abductive(events):
     verb_list = ['might have', 'may have', 'has possibly']
     time_list = ['before', 'in the interval', 'ealier', 'previously']
 
-    def get_qa_pair(evh, ev3):
+    def get_qa_pair(evh, ev3, rel):
         evh_args = [v['text'] for _,v in evh.items()]
         args = [(k, v['text']) for k,v in ev3.items() if k in ['Arg0', 'Arg1', 'Arg2'] and v['text'] in evh_args]
         
@@ -136,6 +136,8 @@ def get_abductive(events):
                 tags = tags[1:]
             if tags[0] not in ['PDT', 'PRP', 'PRP$', 'TO', 'WDT', 'WP', 'WP$', 'WRB']:
                 arg = ' '.join(['the', arg])
+            
+            arg = arg.lower() if arg != 'I' else arg
 
             if key == 'Arg0':
                 random_verb = random_verb.split()
@@ -146,25 +148,31 @@ def get_abductive(events):
                 q = f'what {random_verb} happened to {arg} {random_time} ?'
                 _id = 'others ' + arg
         
-        return {'question': q, 'answer': srl_to_text(ev3), 'id': _id}
+        return {'question': q, 'answer': srl_to_text(ev3), 'id': _id, 'rel': rel}
 
     def abductive_sample(e):
         frms = events['Ev1']['Frames'] + events['Ev2']['Frames']
         o1 = [frms[i*2 + 1] for i in range(4)]
         o2 = srl_to_text(events[e]['SRL'])
         
-        qas = [get_qa_pair(events[e]['SRL'], events['Ev3']['SRL'])]
+        rel_dict = {'Causes': 'cause', 'Enables': 'condition', 'Reaction To': 'trigger', 'NoRel': 'temporal'}
+        rel = rel_dict[events[e]['EvRel']]
+        qas = [get_qa_pair(events[e]['SRL'], events['Ev3']['SRL'], rel)]
+        
         for k in range(4, int(e[-1])):
             evk = events[f'Ev{k}']
             if srl_portion(evk['SRL'], events[e]['SRL']):
-                qas += [get_qa_pair(events[e]['SRL'], evk['SRL'])]
+                qas += [get_qa_pair(events[e]['SRL'], evk['SRL'], 'temporal')]
+        
         hyp = {}
         for qa in qas:
             if qa['id'] in hyp:
                 hyp[qa['id']].append(qa)
             else:
                 hyp[qa['id']] = [qa]
-        hyp = [{'question': v[0]['question'], 'answers': [vv['answer'] for vv in v]} for _,v in hyp.items()]
+        hyp = [
+            {'question': v[0]['question'], 'answers': [{'ans': vv['answer'], 'rel': vv['rel']} for vv in v]
+        } for _,v in hyp.items()]
 
         return [{
             'label': 'abductive',
@@ -189,7 +197,7 @@ def get_prediction(events):
     verb_list = ['is likely to', 'would', 'will', 'might', 'may', 'is gonna', 'is going to', 'is about to']
     time_list = ['next', 'afterwards', 'right after the hypothetical event', 'immediately after the hypothetical event', 'then', 'later']
 
-    def get_qa_pair(evp, ev3):
+    def get_qa_pair(evp, ev3, rel):
         ev3_args = [v['text'] for _,v in ev3.items()]
         args = [(k, v['text']) for k,v in evp.items() if k in ['Arg0', 'Arg1', 'Arg2'] and v['text'] in ev3_args]
         
@@ -207,6 +215,8 @@ def get_prediction(events):
                 tags = tags[1:]
             if tags[0] not in ['PDT', 'PRP', 'PRP$', 'TO', 'WDT', 'WP', 'WP$', 'WRB']:
                 arg = ' '.join(['the', arg])
+            
+            arg = arg.lower() if arg != 'I' else arg
 
             if key == 'Arg0':
                 if random_verb.startswith('is'):
@@ -218,21 +228,23 @@ def get_prediction(events):
             else:
                 q = f'what {random_verb} happen to {arg} {random_time} ?'
                 _id = 'others ' + arg
-        return {'question': q, 'answer': srl_to_text(evp), 'id': _id}
+        return {'question': q, 'answer': srl_to_text(evp), 'id': _id, 'rel': rel}
 
     def prediction_sample(evps):
         frm1, frm2 = events['Ev1']['Frames'], events['Ev2']['Frames']
         bg = [frm1[1], frm1[3], frm2[1], frm2[3]]
         hyp = srl_to_text(events['Ev3']['SRL'])
 
-        qa_list = [get_qa_pair(events[evp]['SRL'], events['Ev3']['SRL']) for evp in evps]
+        qa_list = [get_qa_pair(events[evp[0]]['SRL'], events['Ev3']['SRL'], evp[1]) for evp in evps]
         prd = {}
         for qa in qa_list:
             if qa['id'] in prd:
                 prd[qa['id']].append(qa)
             else:
                 prd[qa['id']] = [qa]
-        prd = [{'question': v[0]['question'], 'answers': [vv['answer'] for vv in v]} for _, v in prd.items()]
+        prd = [
+            {'question': v[0]['question'], 'answers': [{'ans': vv['answer'], 'rel': vv['rel']} for vv in v]
+        } for _, v in prd.items()]
 
         return[{
             'label': 'prediction',
@@ -243,8 +255,9 @@ def get_prediction(events):
     pairs, ev3, evps, evbs = [], events['Ev3'], [], []
     for e in ['Ev4', 'Ev5']:
         evp = events[e]
+        rel_dict = {'Causes': 'effect', 'Enables': 'temporal', 'Reaction To': 'reaction', 'NoRel': 'temporal'}
         if evp['EvRel'] != 'NoRel' and srl_portion(evp['SRL'], ev3['SRL']):
-            evps += [e]
+            evps += [(e, rel_dict[evp['EvRel']])]
     if len(evps) > 0:
         pairs = prediction_sample(evps)
     

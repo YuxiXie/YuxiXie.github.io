@@ -1,7 +1,7 @@
 ---
 layout: case-study
-permalink: /hyp-vlr/
-title: "VidSitu: Visual Semantic Role Labeling"
+permalink: /vl-csr/
+title: "Visual-Linguistic Reasoning: VidSitu and ActyNet"
 author_profile: false
 ---
 

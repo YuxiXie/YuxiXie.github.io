@@ -265,7 +265,7 @@ def get_prediction(events):
 
 
 def process_data(data):
-    keys_to_remain = ['vid_seg_int', 'movie_name', 'genres', 'clip_name', 'text']
+    keys_to_remain = ['vid_seg_int', 'movie_name', 'genres', 'clip_name', 'text', 'desc']
     sample = {k:data[k] for k in keys_to_remain}
 
     events = data['events']

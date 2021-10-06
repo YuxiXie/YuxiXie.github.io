@@ -113,15 +113,16 @@ def get_task_cmd(task, vid, tid):
 def get_cmd(sample):
     vid_seg_int = sample['vid_seg_int'].split('_')
 
-    movie, clip, desc = sample['movie_name'], sample['clip_name'], sample['text']
+    movie, clip, desc, bgdesc = sample['movie_name'], sample['clip_name'], sample['text'], sample['desc']
     genres = [] if sample['genres'] == 'NA' else json.loads(sample['genres'].replace("'", '"'))
     genres = ''.join([f'<code>{gen}</code>' for gen in genres])
     head_cmd = f'<strong><font color=DodgerBlue>[Movie]</font> {movie}  <font color=DodgerBlue>[Clip]</font> {clip} </strong> {genres}<br/>' \
         + f'<strong><font color=DodgerBlue>[Desc]</font></strong> {desc}<br/>' \
-        + f'<strong><font color=YellowGreen>[10s-Clip]</font></strong> <br/>'
+        + f'<strong><font color=DodgerBlue>[Background]</font></strong> {bgdesc}<br/>'
+        # + f'<strong><font color=YellowGreen>[10s-Clip]</font></strong> <br/>'
 
-    iframe_cmd = f'<iframe src="https://www.youtube.com/embed/{vid_seg_int[1]}?start={vid_seg_int[3]}&end={vid_seg_int[4]}&version=3" ' \
-        + f'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width="450" height="300"></iframe> <br/>'
+    iframe_cmd = '' #f'<iframe src="https://www.youtube.com/embed/{vid_seg_int[1]}?start={vid_seg_int[3]}&end={vid_seg_int[4]}&version=3" ' \
+        # + f'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width="450" height="300"></iframe> <br/>'
     
     task_cnt = sample['task']['count']
     task_brief = f'<strong><font color=BlueViolet>[Tasks]</font></strong> {task_cnt} reasoning tasks in total <br/><br/>'
@@ -148,5 +149,5 @@ layout: case-study
             write_file(fileini + cmd, outfile)
 
 if __name__ == '__main__':
-    filename = 'files/toy_examples/toy-task.jsonl'
+    filename = 'files/toy_examples/test-task.jsonl'
     load_data(filename)

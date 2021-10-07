@@ -78,10 +78,10 @@ def srl_portion(ep, eh, e1, e2):
     x, all_cnt = sum(int(t in th) for t in srl['all']), len(srl['all'])   # language bias
     y, spc_cnt = sum(int(t in t12 + ' ' + th) for t in srl['special']), len(srl['special']) # answerable
 
-    # if y / max(1, spc_cnt) == 0 and spc_cnt >= 2:
+    # if srl_to_text(ep) == "the kid walk dejected in the house":
     #     import ipdb; ipdb.set_trace()
     
-    return x / max(1, all_cnt) < 1 and y / max(1, spc_cnt) > 1/2 or spc_cnt < 2
+    return x / max(1, all_cnt) < 1 and (y / max(1, spc_cnt) > 1/2 or spc_cnt < 2)
 
 
 def get_abductive(events):

@@ -147,10 +147,10 @@ def get_cmd(sample):
         + f'<strong><font color=DodgerBlue>[Background]</font></strong> {bgdesc}<br/>'
 
     start, end = vid_seg_int[-2], int(vid_seg_int[-2]) + 4
-    iframe_cmd = f'<strong><font color=YellowGreen>[Premise]</font></strong> Please refer to frames if not available <br/>' \
+    iframe_cmd = f'<strong><font color=YellowGreen>[Premise]</font></strong> Please refresh the page for replaying. <br/>' \
         + f'<iframe src="https://www.youtube.com/embed/{vid}?start={start}&end={end}&version=3" ' \
-        + f'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width="450" height="300"></iframe> <br/>' \
-        + get_frames_premise(sample['task']['tasks'][0]['premise'], sample['vid_seg_int'])
+        + f'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width="450" height="300"></iframe> <br/>' 
+        # + get_frames_premise(sample['task']['tasks'][0]['premise'], sample['vid_seg_int'])
     
     task_cnt = sample['task']['count']
     task_brief = f'<strong><font color=BlueViolet>[Tasks]</font></strong> {task_cnt} reasoning task(s) in total <br/><br/>'

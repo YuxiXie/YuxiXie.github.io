@@ -143,11 +143,11 @@ def get_cmd(sample):
     genres = [] if sample['genres'] == 'NA' else json.loads(sample['genres'].replace("'", '"'))
     genres = ''.join([f'<code>{gen}</code>' for gen in genres])
     head_cmd = f'<strong><font color=DodgerBlue>[Movie]</font> {movie}  <font color=DodgerBlue>[Clip]</font> {clip} </strong> {genres}<br/>' \
-        + f'<strong><font color=DodgerBlue>[Desc]</font></strong> {desc}<br/>' \
-        + f'<strong><font color=DodgerBlue>[Background]</font></strong> {bgdesc}<br/>'
+        + f'<strong><font color=DodgerBlue>[Desc]</font></strong> {desc}<br/>'
 
     start, end = vid_seg_int[-2], int(vid_seg_int[-2]) + 4
-    iframe_cmd = f'<strong><font color=YellowGreen>[Premise]</font></strong> You can also refer to the thumbnail. (for replaying: please refresh the page). <br/>' \
+    iframe_cmd = f'<strong><font color=DodgerBlue>[Background]</font></strong> {bgdesc}<br/>' \
+        + f'<strong><font color=YellowGreen>[Premise]</font></strong> You can also refer to the thumbnail (for replaying: please refresh the page). <br/>' \
         + f'<iframe src="https://www.youtube.com/embed/{vid}?start={start}&end={end}&version=3" ' \
         + f'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width="600" height="400"></iframe> <br/>' 
         # + get_frames_premise(sample['task']['tasks'][0]['premise'], sample['vid_seg_int'])
@@ -156,7 +156,7 @@ def get_cmd(sample):
     task_brief = f'<strong><font color=BlueViolet>[Tasks]</font></strong> {task_cnt} reasoning task(s) in total <br/><br/>'
     tasks_cmd = task_brief + '<br/><hr/><br/>'.join([get_task_cmd(task, sample['vid_seg_int'], tid) for tid, task in enumerate(sample['task']['tasks'])])
 
-    return ''.join(['<p>', head_cmd, iframe_cmd, tasks_cmd, '</p>'])
+    return ''.join(['<p>', iframe_cmd, head_cmd, tasks_cmd, '</p>'])
 
 
 def load_data(filename):

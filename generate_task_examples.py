@@ -149,7 +149,7 @@ def get_cmd(sample):
     iframe_cmd = f'<strong><font color=DodgerBlue>[Background]</font></strong> {bgdesc}<br/>' \
         + f'<strong><font color=YellowGreen>[Premise]</font></strong> You can also refer to the thumbnail (for replaying: please refresh the page). <br/>' \
         + f'<iframe src="https://www.youtube.com/embed/{vid}?start={start}&end={end}&version=3" ' \
-        + f'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width="600" height="400"></iframe> <br/>' 
+        + f'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width="900" height="600"></iframe> <br/>' 
         # + get_frames_premise(sample['task']['tasks'][0]['premise'], sample['vid_seg_int'])
     
     task_cnt = sample['task']['count']

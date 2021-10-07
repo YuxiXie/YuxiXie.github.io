@@ -90,17 +90,17 @@ def get_task_cmd(task, vid, tid):
     label_cmd = f'<strong><font size="4"> task {tid} </font></strong>' \
         + f'<li><strong>[task type]</strong> <font color={label_color}>{label}</font> </li>'
     
-    frames = ['https://yuxixie.github.io/files/heval_examples/video_frames_dir/' + vid + '.' + frm + '.jpg' for frm in task['premise']]
-    frames_cmd = ''.join([f'<td><img src="{frm}" width="360" height="240"></td>' for frm in frames[:4]])
-    if len(frames) <= 4:
-        frames_cmd = '<tr>' + frames_cmd + '<td></td>' * (4 - len(frames)) + '</tr>'
-    else:
-        frames_cmd = '<tr>' + frames_cmd + '</tr><tr>' \
-            + ''.join([f'<td><img src="{frm}" width="360" height="240"></td>' for frm in frames[4:]]) \
-            + '<td></td>' * (8 - len(frames)) + '</tr>'
+    # frames = ['https://yuxixie.github.io/files/heval_examples/video_frames_dir/' + vid + '.' + frm + '.jpg' for frm in task['premise']]
+    # frames_cmd = ''.join([f'<td><img src="{frm}" width="360" height="240"></td>' for frm in frames[:4]])
+    # if len(frames) <= 4:
+    #     frames_cmd = '<tr>' + frames_cmd + '<td></td>' * (4 - len(frames)) + '</tr>'
+    # else:
+    #     frames_cmd = '<tr>' + frames_cmd + '</tr><tr>' \
+    #         + ''.join([f'<td><img src="{frm}" width="360" height="240"></td>' for frm in frames[4:]]) \
+    #         + '<td></td>' * (8 - len(frames)) + '</tr>'
 
-    pm_cmd = '<li><strong><font color=YellowGreen>[premise]</font></strong> <code>(observation 1)</code> <br/>' \
-        + f'<table>{frames_cmd}</table> </li>'
+    # pm_cmd = '<li><strong><font color=YellowGreen>[premise]</font></strong> <code>(observation 1)</code> <br/>' \
+    #     + f'<table>{frames_cmd}</table> </li>'
     
     hyp = task['hypothese']
     hyp_cmd = f'<li><strong><font color=DodgerBlue>[hypothese]</font></strong> <code>(observation 2)</code> {hyp} </li>'
@@ -114,11 +114,25 @@ def get_task_cmd(task, vid, tid):
     qu_ans = f'<table><tr><td width="30" bgcolor=LightPink><strong><font size="4">Q</font></strong></td><td bgcolor=LightPink><font size="4">{qu}</font></td></tr>{ans}</table>'
     qa_cmd = f'<li><strong><font color=BlueViolet>[question-answers]</font></strong><br/> {qu_ans} </li>'
 
-    return ' '.join(['<tr>', label_cmd, pm_cmd, hyp_cmd, qa_cmd, '</tr>'])
+    return ' '.join(['<tr>', label_cmd, hyp_cmd, qa_cmd, '</tr>'])
+
+
+def get_frames_premise(frames, vid):
+    frames = ['https://yuxixie.github.io/files/heval_examples/video_frames_dir/' + vid + '.' + frm + '.jpg' for frm in frames]
+    frames_cmd = ''.join([f'<td><img src="{frm}" width="360" height="240"></td>' for frm in frames[:4]])
+    if len(frames) <= 4:
+        frames_cmd = '<tr>' + frames_cmd + '<td></td>' * (4 - len(frames)) + '</tr>'
+    else:
+        frames_cmd = '<tr>' + frames_cmd + '</tr><tr>' \
+            + ''.join([f'<td><img src="{frm}" width="360" height="240"></td>' for frm in frames[4:]]) \
+            + '<td></td>' * (8 - len(frames)) + '</tr>'
+    pm_cmd = f'<table>{frames_cmd}</table>'
+    return pm_cmd
 
 
 def get_cmd(sample):
     vid_seg_int = sample['vid_seg_int'].split('_')
+    vid = '_'.join(vid_seg_int[1:-3])
 
     movie, clip, desc, bgdesc = sample['movie_name'], sample['clip_name'], sample['text'], sample['desc']
     genres = [] if sample['genres'] == 'NA' else json.loads(sample['genres'].replace("'", '"'))
@@ -128,12 +142,13 @@ def get_cmd(sample):
         + f'<strong><font color=DodgerBlue>[Background]</font></strong> {bgdesc}<br/>'
 
     start, end = vid_seg_int[-2], int(vid_seg_int[-2]) + 4
-    iframe_cmd = f'<strong><font color=YellowGreen>[4s-Clip(Premise)]</font></strong> <br/>' \
-        + f'<iframe src="https://www.youtube.com/embed/{vid_seg_int[1]}?start={start}&end={end}&version=3" ' \
-        + f'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width="450" height="300"></iframe> <br/>'
+    iframe_cmd = f'<strong><font color=YellowGreen>[Premise]</font></strong> Please refer to frames if not available <br/>' \
+        + f'<iframe src="https://www.youtube.com/embed/{vid}?start={start}&end={end}&version=3" ' \
+        + f'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width="450" height="300"></iframe> <br/>' \
+        + get_frames_premise(sample['task']['tasks'][0]['premise'], vid)
     
     task_cnt = sample['task']['count']
-    task_brief = f'<strong><font color=BlueViolet>[Tasks]</font></strong> {task_cnt} reasoning tasks in total <br/><br/>'
+    task_brief = f'<strong><font color=BlueViolet>[Tasks]</font></strong> {task_cnt} reasoning task(s) in total <br/><br/>'
     tasks_cmd = task_brief + '<br/><hr/><br/>'.join([get_task_cmd(task, sample['vid_seg_int'], tid) for tid, task in enumerate(sample['task']['tasks'])])
 
     return ''.join(['<p>', head_cmd, iframe_cmd, tasks_cmd, '</p>'])

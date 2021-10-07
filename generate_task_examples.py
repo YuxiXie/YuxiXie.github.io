@@ -146,7 +146,7 @@ def get_cmd(sample):
         + f'<strong><font color=DodgerBlue>[Desc]</font></strong> {desc}<br/>' \
         + f'<strong><font color=DodgerBlue>[Background]</font></strong> {bgdesc}<br/>'
 
-    start, end = vid_seg_int[-2], int(vid_seg_int[-2]) + 4
+    start, end = vid_seg_int[-2], int(vid_seg_int[-2]) + 5
     iframe_cmd = f'<strong><font color=YellowGreen>[Premise]</font></strong> Please refresh the page for replaying. <br/>' \
         + f'<iframe src="https://www.youtube.com/embed/{vid}?start={start}&end={end}&version=3" ' \
         + f'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width="600" height="400"></iframe> <br/>' 

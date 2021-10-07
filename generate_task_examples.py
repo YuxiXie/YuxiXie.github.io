@@ -90,10 +90,17 @@ def get_task_cmd(task, vid, tid):
     label_cmd = f'<strong><font size="4"> task {tid} </font></strong>' \
         + f'<li><strong>[task type]</strong> <font color={label_color}>{label}</font> </li>'
     
-    frames = ['https://yuxixie.github.io/files/toy_examples/video_frames_dir/' + vid + '.' + frm + '.jpg' for frm in task['premise']]
-    frames = ''.join([f'<td><img src="{frm}" width="360" height="240"></td>' for frm in frames])
+    frames = ['https://yuxixie.github.io/files/heval_examples/video_frames_dir/' + vid + '.' + frm + '.jpg' for frm in task['premise']]
+    frames_cmd = ''.join([f'<td><img src="{frm}" width="360" height="240"></td>' for frm in frames[:4]])
+    if len(frames) <= 4:
+        frames_cmd = '<tr>' + frames_cmd + '<td></td>' * (4 - len(frames)) + '</tr>'
+    else:
+        frames_cmd = '<tr>' + frames_cmd + '</tr><tr>' \
+            + ''.join([f'<td><img src="{frm}" width="360" height="240"></td>' for frm in frames[4:]]) \
+            + '<td></td>' * (8 - len(frames)) + '</tr>'
+
     pm_cmd = '<li><strong><font color=YellowGreen>[premise]</font></strong> <code>(observation 1)</code> <br/>' \
-        + f'<table>{frames}</table> </li>'
+        + f'<table>{frames_cmd}</table> </li>'
     
     hyp = task['hypothese']
     hyp_cmd = f'<li><strong><font color=DodgerBlue>[hypothese]</font></strong> <code>(observation 2)</code> {hyp} </li>'
@@ -140,7 +147,7 @@ def load_data(filename):
             vid = sample['vid_seg_int']
             outfile = f'tasks/task-{vid}.html'
             fileini = f'''---
-title: "Visual-Linguistic Commonsense Reasoning Task"
+title: "Visual-Linguistic Commonsense Reasoning Task {_id:02d}"
 author_profile: false
 layout: case-study
 ---
@@ -149,5 +156,5 @@ layout: case-study
             write_file(fileini + cmd, outfile)
 
 if __name__ == '__main__':
-    filename = 'files/toy_examples/test-task.jsonl'
+    filename = 'files/heval_examples/heval.jsonl'
     load_data(filename)

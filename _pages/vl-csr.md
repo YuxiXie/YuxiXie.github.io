@@ -9,6 +9,6 @@ author_profile: false
 
 ---
 
-{% for post in site.tasks reversed %}
+{% for post in site.example reversed %}
   {% include case-study-single.html %}
 {% endfor %}

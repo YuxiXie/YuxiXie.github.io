@@ -145,11 +145,10 @@ def load_data(filename):
             cmd = get_cmd(sample)
             _id = idx + 1
             vid = sample['vid_seg_int']
-            outfile = f'tasks/task-{vid}.html'
+            outfile = f'_example/task-{vid}.html'
             fileini = f'''---
-title: "Visual-Linguistic Commonsense Reasoning Task {_id:02d}"
-author_profile: false
-layout: case-study
+title: "Visual-Linguistic Commonsense Reasoning Sample {_id:02d}"
+collection: example
 ---
 
 '''

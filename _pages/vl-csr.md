@@ -1,7 +1,7 @@
 ---
 layout: case-study
 permalink: /vl-csr/
-title: "Visual-Linguistic Reasoning: VidSitu and ActyNet"
+title: "Visual-Linguistic Reasoning: VidSitu"
 author_profile: false
 ---
 

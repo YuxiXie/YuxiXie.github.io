@@ -126,10 +126,11 @@ def get_cmd(sample):
     head_cmd = f'<strong><font color=DodgerBlue>[Movie]</font> {movie}  <font color=DodgerBlue>[Clip]</font> {clip} </strong> {genres}<br/>' \
         + f'<strong><font color=DodgerBlue>[Desc]</font></strong> {desc}<br/>' \
         + f'<strong><font color=DodgerBlue>[Background]</font></strong> {bgdesc}<br/>'
-        # + f'<strong><font color=YellowGreen>[10s-Clip]</font></strong> <br/>'
 
-    iframe_cmd = '' #f'<iframe src="https://www.youtube.com/embed/{vid_seg_int[1]}?start={vid_seg_int[3]}&end={vid_seg_int[4]}&version=3" ' \
-        # + f'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width="450" height="300"></iframe> <br/>'
+    start, end = vid_seg_int[-2], int(vid_seg_int[-2]) + 4
+    iframe_cmd = f'<strong><font color=YellowGreen>[4s-Clip(Premise)]</font></strong> <br/>' \
+        + f'<iframe src="https://www.youtube.com/embed/{vid_seg_int[1]}?start={start}&end={end}&version=3" ' \
+        + f'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width="450" height="300"></iframe> <br/>'
     
     task_cnt = sample['task']['count']
     task_brief = f'<strong><font color=BlueViolet>[Tasks]</font></strong> {task_cnt} reasoning tasks in total <br/><br/>'
@@ -145,7 +146,7 @@ def load_data(filename):
             cmd = get_cmd(sample)
             _id = idx + 1
             vid = sample['vid_seg_int']
-            outfile = f'_example/task-{vid}.html'
+            outfile = f'_example/task-{_id:02d}.html'
             fileini = f'''---
 title: "Visual-Linguistic Commonsense Reasoning Sample {_id:02d}"
 collection: example

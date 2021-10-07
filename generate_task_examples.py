@@ -106,10 +106,15 @@ def get_task_cmd(task, vid, tid):
     hyp_cmd = f'<li><strong><font color=DodgerBlue>[hypothese]</font></strong> <code>(observation 2)</code> {hyp} </li>'
 
     qu = task['question']
+    all_answers = {}
+    for ans in task['answers']:
+        if ans['ans'] not in all_answers:
+            all_answers[ans['ans']] = ans
+    all_answers = list(all_answers.values())
     ans = ''.join([
         '<tr><td bgcolor=LemonChiffon><strong><font size="4">A{x}</font></strong></td>'.format(x=i+1) \
         + '<td bgcolor=LemonChiffon><code>{r}</code><font size="4"> {a}</font></td></tr>'.format(r=a['rel'], a=a['ans']) \
-        for i, a in enumerate(task['answers'])
+        for i, a in enumerate(all_answers)
     ])
     qu_ans = f'<table><tr><td width="30" bgcolor=LightPink><strong><font size="4">Q</font></strong></td><td bgcolor=LightPink><font size="4">{qu}</font></td></tr>{ans}</table>'
     qa_cmd = f'<li><strong><font color=BlueViolet>[question-answers]</font></strong><br/> {qu_ans} </li>'
@@ -145,7 +150,7 @@ def get_cmd(sample):
     iframe_cmd = f'<strong><font color=YellowGreen>[Premise]</font></strong> Please refer to frames if not available <br/>' \
         + f'<iframe src="https://www.youtube.com/embed/{vid}?start={start}&end={end}&version=3" ' \
         + f'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width="450" height="300"></iframe> <br/>' \
-        + get_frames_premise(sample['task']['tasks'][0]['premise'], vid)
+        + get_frames_premise(sample['task']['tasks'][0]['premise'], sample['vid_seg_int'])
     
     task_cnt = sample['task']['count']
     task_brief = f'<strong><font color=BlueViolet>[Tasks]</font></strong> {task_cnt} reasoning task(s) in total <br/><br/>'

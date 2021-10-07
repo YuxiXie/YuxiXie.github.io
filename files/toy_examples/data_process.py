@@ -1,41 +1,3 @@
-'''
-CC coordinating conjunction
-CD cardinal digit
-DT determiner
-EX existential there (like: “there is” … think of it like “there exists”)
-FW foreign word
-* IN preposition/subordinating conjunction
-JJ adjective ‘big’
-JJR adjective, comparative ‘bigger’
-JJS adjective, superlative ‘biggest’
-LS list marker 1)
-# MD modal could, will
-$ NN noun, singular ‘desk’
-$ NNS noun plural ‘desks’
-$ NNP proper noun, singular ‘Harrison’
-$ NNPS proper noun, plural ‘Americans’
-PDT predeterminer ‘all the kids’
-POS possessive ending parent’s
-$ PRP personal pronoun I, he, she
-$ PRP$ possessive pronoun my, his, hers
-RB adverb very, silently,
-RBR adverb, comparative better
-RBS adverb, superlative best
-RP particle give up
-TO, to go ‘to’ the store.
-UH interjection, errrrrrrrm
-# VB verb, base form take
-# VBD verb, past tense took
-# VBG verb, gerund/present participle taking
-# VBN verb, past participle taken
-# VBP verb, sing. present, non-3d take
-# VBZ verb, 3rd person sing. present takes
-WDT wh-determiner which
-WP wh-pronoun who, what
-WP$ possessive wh-pronoun whose
-* WRB wh-abverb where, when
-'''
-
 import sys
 import jsonlines
 from tqdm import tqdm
@@ -90,28 +52,36 @@ def srl_to_text(srl):
     return ' '.join(spans)
 
 
-def srl_portion(e1, e2):
+def srl_portion(ep, eh, e1, e2):
 
     def cat_srl(e):
-        srl = {'A':[], 'V':[], 'M':[]}
+        pos = ['NN', 'NNS', 'NNP', 'NNPS', 'JJ', 'VBD', 'VBN', 'VBG']
+        srl = {'all': [], 'special': []}
         for k, v in e.items():
-            if k in ['Verb']:
-                srl['V'].append(v['text'])
-            elif k in ['Arg0', 'Arg1', 'Arg2']:
-                srl['A'].append(v['text'])
-            elif k in ['ArgM', 'Arg3', 'Arg4', 'Scene of the Event']:
-                srl['M'].append(v['text'])
+            text = v['text']
+            if k not in ['Verb']:
+                tags = pos_tag(text.split())
+                while text and (tags[0][1] not in pos or tags[0][0].endswith('wards')):
+                    text = ' '.join(text.split()[1:])
+                    tags = tags[1:]
+            if text:
+                if k not in ['ArgM', 'Arg3', 'Arg4']:
+                    srl['all'] += [text.lower()]
+                if k not in ['Verb', 'Scene of the Event', 'ArgM', 'Arg3', 'Arg4']:
+                    srl['special'] += [x for tag, x in zip(tags, text.lower().split()) if tag[1] in pos]
         return srl
 
-    srl1, srl2 = cat_srl(e1), cat_srl(e2)
-    x, y = 0, 0
-    for k, v in srl1.items():
-        for t in v:
-            if t in srl2[k]:
-                x += 1
-            y += 1
+    srl = cat_srl(ep)
+    th = ' '.join([v['text'].lower() for _,v in eh.items()])
+    t12 = ' '.join([v['text'].lower() for _,v in e1.items()]) + ' ' + ' '.join([v['text'].lower() for _,v in e2.items()]) 
+
+    x, all_cnt = sum(int(t in th) for t in srl['all']), len(srl['all'])   # language bias
+    y, spc_cnt = sum(int(t in t12 + ' ' + th) for t in srl['special']), len(srl['special']) # answerable
+
+    # if y / max(1, spc_cnt) == 0 and spc_cnt >= 2:
+    #     import ipdb; ipdb.set_trace()
     
-    return x/y < 1/2 or (x/y < 1 and x < 3)
+    return x / max(1, all_cnt) < 1 and y / max(1, spc_cnt) > 1/2 or spc_cnt < 2
 
 
 def get_abductive(events):
@@ -127,32 +97,33 @@ def get_abductive(events):
 
         q = f'what {random_verb} happened {random_time} ?'
         _id = 'basic'
-        if len(args) > 0:
-            key, arg = args[0]
+        for i in range(len(args)):
+            key, arg = args[i]
 
             tags = [t[1] for t in pos_tag(arg.split())]
             if tags[0] in ['IN', 'TO'] or arg.split()[0].endswith('wards'):
                 arg = ' '.join(arg.split()[1:])
                 tags = tags[1:]
-            if tags[0] not in ['PDT', 'PRP', 'PRP$', 'TO', 'WDT', 'WP', 'WP$', 'WRB']:
-                arg = ' '.join(['the', arg])
-            
+            if arg and tags[0] not in ['PDT', 'PRP', 'PRP$', 'TO', 'WDT', 'WP', 'WP$', 'WRB']:
+                arg = ' '.join(['the', arg])            
             arg = arg.lower() if arg != 'I' else arg
 
-            if key == 'Arg0':
-                random_verb = random_verb.split()
-                span = ' '.join([random_verb[0], arg, random_verb[1]])
-                q = f'what {span} done or been doing {random_time} ?'
-                _id = key + ' ' + arg
-            else:
-                q = f'what {random_verb} happened to {arg} {random_time} ?'
-                _id = 'others ' + arg
+            if arg:
+                if key == 'Arg0':
+                    random_verb = random_verb.split()
+                    span = ' '.join([random_verb[0], arg, random_verb[1]])
+                    q = f'what {span} done or been doing {random_time} ?'
+                    _id = key + ' ' + arg
+                else:
+                    q = f'what {random_verb} happened to {arg} {random_time} ?'
+                    _id = 'others ' + arg
+                break
         
         return {'question': q, 'answer': srl_to_text(ev3), 'id': _id, 'rel': rel}
 
     def abductive_sample(e):
         frms = events['Ev1']['Frames'] + events['Ev2']['Frames']
-        o1 = [frms[i*2 + 1] for i in range(4)]
+        o1 = frms   # [frms[i*2 + 1] for i in range(4)]
         o2 = srl_to_text(events[e]['SRL'])
         
         rel_dict = {'Causes': 'cause', 'Enables': 'condition', 'Reaction To': 'trigger', 'NoRel': 'temporal'}
@@ -161,7 +132,7 @@ def get_abductive(events):
         
         for k in range(4, int(e[-1])):
             evk = events[f'Ev{k}']
-            if srl_portion(evk['SRL'], events[e]['SRL']):
+            if srl_portion(evk['SRL'], events[e]['SRL'], events['Ev1']['SRL'], events['Ev2']['SRL']):
                 qas += [get_qa_pair(events[e]['SRL'], evk['SRL'], 'temporal')]
         
         hyp = {}
@@ -183,7 +154,7 @@ def get_abductive(events):
     pairs, ev3, evhs = [], events['Ev3'], []
     for e in ['Ev4', 'Ev5']:
         evh = events[e]
-        if srl_portion(ev3['SRL'], evh['SRL']):
+        if srl_portion(ev3['SRL'], evh['SRL'], events['Ev1']['SRL'], events['Ev2']['SRL']):
             evhs.append({'name': e, 'rel': int(evh['EvRel'] == 'NoRel')})
     if len(evhs) > 1:
         evhs.sort(key=lambda x: (x['rel'], -int(x['name'][-1])), reverse=False)
@@ -206,33 +177,35 @@ def get_prediction(events):
         
         q = f'what {random_verb} happen {random_time} ?'
         _id = 'basic'
-        if len(args) > 0:
-            key, arg = args[0]
+        for i in range(len(args)):
+            key, arg = args[i]
 
             tags = [t[1] for t in pos_tag(arg.split())]
             if tags[0] in ['IN', 'TO'] or arg.split()[0].endswith('wards'):
                 arg = ' '.join(arg.split()[1:])
                 tags = tags[1:]
-            if tags[0] not in ['PDT', 'PRP', 'PRP$', 'TO', 'WDT', 'WP', 'WP$', 'WRB']:
-                arg = ' '.join(['the', arg])
-            
+            if arg and tags[0] not in ['PDT', 'PRP', 'PRP$', 'TO', 'WDT', 'WP', 'WP$', 'WRB']:
+                arg = ' '.join(['the', arg])            
             arg = arg.lower() if arg != 'I' else arg
 
-            if key == 'Arg0':
-                if random_verb.startswith('is'):
-                    random_verb = random_verb.lstrip('is').strip()
-                    q = f'what is {arg} {random_verb} do {random_time} ?'
+            if arg:
+                if key == 'Arg0':
+                    if random_verb.startswith('is'):
+                        random_verb = random_verb.lstrip('is').strip()
+                        q = f'what is {arg} {random_verb} do {random_time} ?'
+                    else:
+                        q = f'what {random_verb} {arg} do {random_time} ?'
+                    _id = key + ' ' + arg
                 else:
-                    q = f'what {random_verb} {arg} do {random_time} ?'
-                _id = key + ' ' + arg
-            else:
-                q = f'what {random_verb} happen to {arg} {random_time} ?'
-                _id = 'others ' + arg
+                    q = f'what {random_verb} happen to {arg} {random_time} ?'
+                    _id = 'others ' + arg
+                break
+        
         return {'question': q, 'answer': srl_to_text(evp), 'id': _id, 'rel': rel}
 
     def prediction_sample(evps):
-        frm1, frm2 = events['Ev1']['Frames'], events['Ev2']['Frames']
-        bg = [frm1[1], frm1[3], frm2[1], frm2[3]]
+        frms = events['Ev1']['Frames'] + events['Ev2']['Frames']
+        bg = frms   # [frms[i*2 + 1] for i in range(4)]
         hyp = srl_to_text(events['Ev3']['SRL'])
 
         qa_list = [get_qa_pair(events[evp[0]]['SRL'], events['Ev3']['SRL'], evp[1]) for evp in evps]
@@ -256,7 +229,7 @@ def get_prediction(events):
     for e in ['Ev4', 'Ev5']:
         evp = events[e]
         rel_dict = {'Causes': 'effect', 'Enables': 'temporal', 'Reaction To': 'reaction', 'NoRel': 'temporal'}
-        if evp['EvRel'] != 'NoRel' and srl_portion(evp['SRL'], ev3['SRL']):
+        if srl_portion(evp['SRL'], ev3['SRL'], events['Ev1']['SRL'], events['Ev2']['SRL']):
             evps += [(e, rel_dict[evp['EvRel']])]
     if len(evps) > 0:
         pairs = prediction_sample(evps)
@@ -279,7 +252,22 @@ def process_data(data):
     return sample
 
 
+def process_data_task(data):
+    keys_to_remain = ['vid_seg_int', 'movie_name', 'genres', 'clip_name', 'text', 'events', 'desc']
+    sample = {k:data[k] for k in keys_to_remain}
+
+    events = data['events']
+    abductives = get_abductive(events)
+    predictions = get_prediction(events)
+    sample['task'] = {
+        'count': len(abductives) + len(predictions),
+        'tasks': abductives + predictions
+    }
+
+    return sample
+
+
 if __name__ == '__main__':
     raw_data = load_data(sys.argv[1])
-    data = [process_data(d) for d in tqdm(raw_data)]
+    data = [process_data_task(d) for d in tqdm(raw_data)]
     dump_data([d for d in data if d['task']['count'] > 0], sys.argv[2])

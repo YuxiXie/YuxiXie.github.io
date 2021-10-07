@@ -176,5 +176,5 @@ collection: example
             write_file(fileini + cmd, outfile)
 
 if __name__ == '__main__':
-    filename = 'files/heval_examples/heval.jsonl'
+    filename = 'files/heval_examples/heval-new.jsonl'
     load_data(filename)

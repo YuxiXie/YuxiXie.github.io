@@ -103,7 +103,7 @@ def get_task_cmd(task, vid, tid):
     #     + f'<table>{frames_cmd}</table> </li>'
     
     hyp = task['hypothese']
-    hyp_cmd = f'<li><strong><font color=DodgerBlue>[hypothese]</font></strong> <code>(observation 2)</code> {hyp} </li>'
+    hyp_cmd = f'<li><strong><font color=DodgerBlue>[hypothesis]</font></strong> <code>(observation 2)</code> {hyp} </li>'
 
     qu = task['question']
     all_answers = {}

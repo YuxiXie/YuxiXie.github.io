@@ -11,8 +11,8 @@ author_profile: false
 
 * **INPUT**
   * `premise` a clip of 4 seconds long from the video
-  * `hypothese` a sentence describing a subsequent event moments later from or right after the `premise`
-  * `question` a question asking about the event happening in between the `premise` and the `hypothese` (_abductive_) or after the `hypothese` (_predictive_)
+  * `hypothesis` a sentence describing a subsequent event moments later from or right after the `premise`
+  * `question` a question asking about the event happening in between the `premise` and the `hypothesis` (_abductive_) or after the `hypothesis` (_predictive_)
 
 * **OUTPUT**
   * `answer` answer(s) to the question
@@ -26,7 +26,7 @@ author_profile: false
 
 * **Feasibility**
 
-  **1-1.** Whether there is _ghost entity_ or _typo_ in `answer` that cannot be detected or interpreted from `premise` or `hypothese`?    
+  **1-1.** Whether there is _ghost entity_ or _typo_ in `answer` that cannot be detected or interpreted from `premise` or `hypothesis`?    
       A. *yes*;   B. *yes, but can be predicted by inference*;  C. *no*
 
   **1-2.** If you choose A for 1-1, then whether the _ghost entity_ or _typo_ can be predicted or interpreted based on `thumbnail`, `clip-bg`, or `movie-bg`?    

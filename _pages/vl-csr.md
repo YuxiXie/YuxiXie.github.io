@@ -11,8 +11,8 @@ author_profile: false
 
 * **INPUT**
   * `premise` a clip of 4 seconds long from the video
-  * `hypothese` a sentence describing a subsequent event
-  * `question` a question asking about the event happening in between (_abductive_) or afterwards (_predictive_)
+  * `hypothese` a sentence describing a subsequent event moments later from or right after the `premise`
+  * `question` a question asking about the event happening in between the `premise` and the `hypothese` (_abductive_) or after the `hypothese` (_predictive_)
 
 * **OUTPUT**
   * `answer` answer(s) to the question

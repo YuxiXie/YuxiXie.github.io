@@ -9,7 +9,7 @@ from pycocoevalcap.bleu.bleu import Bleu
 from pycocoevalcap.meteor.meteor import Meteor
 from pycocoevalcap.rouge.rouge import Rouge
 scorers = {
-    "Bleu": Bleu(4),
+    "Bleu": Bleu(2),
     "Meteor": Meteor(),
     "Rouge": Rouge()
 }
@@ -101,7 +101,7 @@ def get_abductive_task(vevs, levs, hev, rel_dict):
         'question': question
     }]
     if len(vevs) > 1 and vevs[-1]['EvRel'] != 'NoRel' and 'TXT' in vevs[-1]:
-        if _bleu_score(hev['TXT'] + ' ' + levs[-1]['TXT'], vevs[-1]['TXT'])[-1] < 0.5:
+        if _bleu_score(hev['TXT'] + ' ' + levs[-1]['TXT'], vevs[-1]['TXT'])[-1] < 0.7:
             reference = [x for ev in vevs[:-1] + [hev] + levs for x in list(_get_args(ev).values())]
             target = {k:v for k,v in _get_args(vevs[-1]).items() if v in reference}
             tasks += [{
@@ -113,7 +113,7 @@ def get_abductive_task(vevs, levs, hev, rel_dict):
             }]
     pre_tasks = {}
     for evt in levs:
-        if evt['EvRel'] != 'NoRel' and _bleu_score(hev['TXT'], evt['TXT'])[-1] < 0.5:
+        if evt['EvRel'] != 'NoRel' and _bleu_score(hev['TXT'], evt['TXT'])[-1] < 0.7:
             reference = [x for ev in vevs + [hev] for x in list(_get_args(ev).values())]
             target = {k:v for k,v in _get_args(evt).items() if v in reference}
             key = list(target.values())[0] if len(target) > 0 else 'none'
@@ -149,7 +149,7 @@ def overlap(vevs, levs, hev):
     for i, ev in enumerate(levs):
         if 'TXT' in ev:
             scores = _bleu_score(ev['TXT'], hev['TXT'])
-            if scores[-1] < 0.5:
+            if scores[-1] < 0.7:
                 lrst += i + 1
                 if scores[0] > 0.08:
                     flag = 1

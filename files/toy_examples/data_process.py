@@ -9,7 +9,7 @@ from pycocoevalcap.bleu.bleu import Bleu
 from pycocoevalcap.meteor.meteor import Meteor
 from pycocoevalcap.rouge.rouge import Rouge
 scorers = {
-    "Bleu": Bleu(2),
+    "Bleu": Bleu(4),
     "Meteor": Meteor(),
     "Rouge": Rouge()
 }
@@ -101,7 +101,7 @@ def get_abductive_task(vevs, levs, hev, rel_dict):
         'question': question
     }]
     if len(vevs) > 1 and vevs[-1]['EvRel'] != 'NoRel' and 'TXT' in vevs[-1]:
-        if _bleu_score(hev['TXT'] + ' ' + levs[-1]['TXT'], vevs[-1]['TXT'])[-1] < 0.7:
+        if _bleu_score(hev['TXT'] + ' ' + levs[-1]['TXT'], vevs[-1]['TXT'])[1] < 0.6:
             reference = [x for ev in vevs[:-1] + [hev] + levs for x in list(_get_args(ev).values())]
             target = {k:v for k,v in _get_args(vevs[-1]).items() if v in reference}
             tasks += [{
@@ -113,7 +113,7 @@ def get_abductive_task(vevs, levs, hev, rel_dict):
             }]
     pre_tasks = {}
     for evt in levs:
-        if evt['EvRel'] != 'NoRel' and _bleu_score(hev['TXT'], evt['TXT'])[-1] < 0.7:
+        if evt['EvRel'] != 'NoRel' and _bleu_score(hev['TXT'], evt['TXT'])[1] < 0.6:
             reference = [x for ev in vevs + [hev] for x in list(_get_args(ev).values())]
             target = {k:v for k,v in _get_args(evt).items() if v in reference}
             key = list(target.values())[0] if len(target) > 0 else 'none'
@@ -149,7 +149,7 @@ def overlap(vevs, levs, hev):
     for i, ev in enumerate(levs):
         if 'TXT' in ev:
             scores = _bleu_score(ev['TXT'], hev['TXT'])
-            if scores[-1] < 0.7:
+            if scores[1] < 0.6:
                 lrst += i + 1
                 if scores[0] > 0.08:
                     flag = 1
@@ -157,7 +157,7 @@ def overlap(vevs, levs, hev):
         ev_txt = ' '.join([v['text'] for _,v in ev['SRL'].items()]).lower()
         hev_txt = ' '.join([v['text'] for _,v in hev['SRL'].items()]).lower()
         scores = _bleu_score(ev_txt, hev_txt)
-        if scores[-1] < 0.8:
+        if scores[1] < 0.8:
             vrst += i + 1
             if scores[0] > 0.08:
                 flag = 1
@@ -267,8 +267,8 @@ def get_task(events):
         if ovlp['flag']:
             tasks += get_abductive_task([ev[1]], [ev[3]], ev[2], rel_dict)
     
-    if len(tasks) == 0:
-        import ipdb; ipdb.set_trace()
+    # if len(tasks) == 0:
+    #     import ipdb; ipdb.set_trace()
     
     return tasks
 

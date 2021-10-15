@@ -40,18 +40,21 @@ def get_abductive_task(vevs, levs, hev, rel_dict):
     def _process(text):
         tokens = text.split()
         tags = [t[1] for t in pos_tag(tokens)]
-        while tags[0] in ['IN', 'TO'] or tokens[0].endswith('wards') or tokens[0].endswith('ward'):
+        while len(tags) > 0 and (tags[0] in ['IN', 'TO'] or tokens[0].endswith('wards') or tokens[0].endswith('ward')):
             tokens, tags = tokens[1:], tags[1:]
+        if len(tags) == 0:
+            return ''
         if tags[0] not in ['PDT', 'PRP', 'PRP$', 'TO', 'WDT', 'WP', 'WP$', 'WRB', 'NNPS', 'NNS']:
-            if tokens[0] not in ['something', 'nothing', 'anything']:
+            if tokens[0] not in ['something', 'nothing', 'anything', 'everything', 'someone', 'noone', 'anyone', 'everyone']:
                 tokens, tags = ['the'] + tokens, ['DT'] + tags
         return ' '.join(tokens).lower()
 
     def _get_args(ev):
-        return {
+        rst = {
             k: _process(v['text'].strip()) for k,v in ev['SRL'].items() \
             if k in ['Arg0', 'Arg1', 'Arg2']
         }
+        return {k:v for k,v in rst.items() if v}
 
     def _get_question(target):
         values = list(target.values())
@@ -85,7 +88,6 @@ def get_abductive_task(vevs, levs, hev, rel_dict):
         return expl
 
     video_time = [vevs[0]['eid'] * 2 - 2, vevs[-1]['eid'] * 2]
-    text_observation = ' '.join([ev['TXT'] for ev in levs])
 
     reference = [x for ev in vevs + [levs[-1]] for x in list(_get_args(ev).values())]
     target = {k:v for k,v in _get_args(hev).items() if v in reference}
@@ -99,7 +101,7 @@ def get_abductive_task(vevs, levs, hev, rel_dict):
         'question': question
     }]
     if len(vevs) > 1 and vevs[-1]['EvRel'] != 'NoRel' and 'TXT' in vevs[-1]:
-        if _bleu_score(hev['TXT'] + ' ' + levs[-1]['TXT'], vevs[-1]['TXT'])[-1] < 0.2:
+        if _bleu_score(hev['TXT'] + ' ' + levs[-1]['TXT'], vevs[-1]['TXT'])[-1] < 0.5:
             reference = [x for ev in vevs[:-1] + [hev] + levs for x in list(_get_args(ev).values())]
             target = {k:v for k,v in _get_args(vevs[-1]).items() if v in reference}
             tasks += [{
@@ -111,7 +113,7 @@ def get_abductive_task(vevs, levs, hev, rel_dict):
             }]
     pre_tasks = {}
     for evt in levs:
-        if evt['EvRel'] != 'NoRel' and _bleu_score(hev['TXT'], evt['TXT'])[-1] < 0.1:
+        if evt['EvRel'] != 'NoRel' and _bleu_score(hev['TXT'], evt['TXT'])[-1] < 0.5:
             reference = [x for ev in vevs + [hev] for x in list(_get_args(ev).values())]
             target = {k:v for k,v in _get_args(evt).items() if v in reference}
             key = list(target.values())[0] if len(target) > 0 else 'none'
@@ -147,17 +149,17 @@ def overlap(vevs, levs, hev):
     for i, ev in enumerate(levs):
         if 'TXT' in ev:
             scores = _bleu_score(ev['TXT'], hev['TXT'])
-            if scores[-1] < 0.1:
+            if scores[-1] < 0.5:
                 lrst += i + 1
-                if scores[0] > 0.1:
+                if scores[0] > 0.08:
                     flag = 1
     for i, ev in enumerate(vevs):
         ev_txt = ' '.join([v['text'] for _,v in ev['SRL'].items()]).lower()
         hev_txt = ' '.join([v['text'] for _,v in hev['SRL'].items()]).lower()
         scores = _bleu_score(ev_txt, hev_txt)
-        if scores[-1] < 0.7:
+        if scores[-1] < 0.8:
             vrst += i + 1
-            if scores[0] > 0.1:
+            if scores[0] > 0.08:
                 flag = 1
 
     return {'flag': vrst * lrst * flag > 0, 'v': vrst, 'l': lrst}
@@ -202,7 +204,7 @@ def translate_to_text(e, _id):
             if k in ['Arg0', 'Arg1', 'Arg2']:
                 # add DT to nouns
                 if tags[0] not in ['DT', 'IN', 'PDT', 'PRP', 'PRP$', 'TO', 'WDT', 'WP', 'WP$', 'WRB', 'NNPS', 'NNS']:
-                    if tokens[0] not in ['something', 'nothing', 'anything']:
+                    if tokens[0] not in ['something', 'nothing', 'anything', 'everything', 'someone', 'noone', 'anyone', 'everyone']:
                         if not tokens[0].endswith('wards') and not tokens[0].endswith('ward'):
                             tokens, tags = ['the'] + tokens, ['DT'] + tags
                             if 'Arg0' in spans and ' '.join(tokens).lower() == spans['Arg0']:
@@ -247,7 +249,7 @@ def get_task(events):
     ev = {int(k[-1]): translate_to_text(e, int(k[-1])) for k, e in events.items()}
     tasks = []
     
-    if rel_dict[1][5] or rel_dict[2][5] or rel_dict[1][4] or rel_dict[2][4]:
+    if rel_dict[3][5] or rel_dict[3][4]:
         ovlp = overlap([ev[1], ev[2]], [ev[4], ev[5]], ev[3])
         vev, lev = [], []
         if ovlp['flag']:
@@ -260,6 +262,13 @@ def get_task(events):
             if ovlp['l'] >= 2:
                 lev.append(ev[5])
             tasks += get_abductive_task(vev, lev, ev[3], rel_dict)
+    elif rel_dict[2][3]:
+        ovlp = overlap([ev[1]], [ev[3]], ev[2])
+        if ovlp['flag']:
+            tasks += get_abductive_task([ev[1]], [ev[3]], ev[2], rel_dict)
+    
+    if len(tasks) == 0:
+        import ipdb; ipdb.set_trace()
     
     return tasks
 

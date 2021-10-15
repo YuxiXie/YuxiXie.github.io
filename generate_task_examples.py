@@ -85,8 +85,8 @@ def get_task_cmd_prd(task, vid, tid):
 def get_task_cmd(task, vid, tid):
     tid = tid + 1
 
-    label = task['label'].upper()
-    label_color = 'DarkGreen' if task['label'] == 'abductive' else 'DarkRed'
+    label = task['type'].upper()
+    label_color = 'DarkGreen' if task['type'] == 'abductive' else 'DarkRed'
     label_cmd = f'<strong><font size="4"> task {tid} </font></strong>' \
         + f'<li><strong>[task type]</strong> <font color={label_color}>{label}</font> </li>'
     
@@ -102,24 +102,32 @@ def get_task_cmd(task, vid, tid):
     # pm_cmd = '<li><strong><font color=YellowGreen>[premise]</font></strong> <code>(observation 1)</code> <br/>' \
     #     + f'<table>{frames_cmd}</table> </li>'
     
-    hyp = task['hypothese']
-    hyp_cmd = f'<li><strong><font color=DodgerBlue>[hypothesis]</font></strong> <code>(observation 2)</code> {hyp} </li>'
+    add_pre = ''
+    if 'premise_l' in task:
+        prm = task['premise_l']
+        add_pre = f'<li><strong><font color=DodgerBlue>[premise]</font></strong> <code>(observed premise)</code> {prm} </li>'
+    
+    hyp = task['result_l']
+    hyp_cmd = f'<li><strong><font color=DodgerBlue>[hypothesis]</font></strong> <code>(observed result)</code> {hyp} </li>'
 
     qu = task['question']
-    all_answers = {}
-    for ans in task['answers']:
-        if ans['ans'] not in all_answers:
-            all_answers[ans['ans']] = ans
-    all_answers = list(all_answers.values())
-    ans = ''.join([
-        '<tr><td bgcolor=LemonChiffon><strong><font size="4">A{x}</font></strong></td>'.format(x=i+1) \
-        + '<td bgcolor=LemonChiffon><code>{r}</code><font size="4"> {a}</font></td></tr>'.format(r=a['rel'], a=a['ans']) \
-        for i, a in enumerate(all_answers)
-    ])
+    # all_answers = {}
+    # for ans in task['answers']:
+    #     if ans['ans'] not in all_answers:
+    #         all_answers[ans['ans']] = ans
+    # all_answers = list(all_answers.values())
+    # ans = ''.join([
+    #     '<tr><td bgcolor=LemonChiffon><strong><font size="4">A{x}</font></strong></td>'.format(x=i+1) \
+    #     + '<td bgcolor=LemonChiffon><code>{r}</code><font size="4"> {a}</font></td></tr>'.format(r=a['rel'], a=a['ans']) \
+    #     for i, a in enumerate(all_answers)
+    # ])
+    a = task['hypothesis']
+    ans = '<tr><td bgcolor=LemonChiffon><strong><font size="4">A</font></strong></td>' \
+        + '<td bgcolor=LemonChiffon><font size="4">{a}</font></td></tr>'
     qu_ans = f'<table><tr><td width="30" bgcolor=LightPink><strong><font size="4">Q</font></strong></td><td bgcolor=LightPink><font size="4">{qu}</font></td></tr>{ans}</table>'
     qa_cmd = f'<li><strong><font color=BlueViolet>[question-answers]</font></strong><br/> {qu_ans} </li>'
 
-    return ' '.join(['<tr>', label_cmd, hyp_cmd, qa_cmd, '</tr>'])
+    return ' '.join(['<tr>', label_cmd, add_pre, hyp_cmd, qa_cmd, '</tr>'])
 
 
 def get_frames_premise(frames, vid):
@@ -176,5 +184,5 @@ collection: example
             write_file(fileini + cmd, outfile)
 
 if __name__ == '__main__':
-    filename = 'files/heval_examples/heval-new.jsonl'
+    filename = 'files/heval_examples/heval-only.jsonl'
     load_data(filename)

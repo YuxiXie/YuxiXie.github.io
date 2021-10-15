@@ -2,8 +2,17 @@ import sys
 import jsonlines
 from tqdm import tqdm
 import random
+import string
 
 from nltk import pos_tag 
+from pycocoevalcap.bleu.bleu import Bleu
+from pycocoevalcap.meteor.meteor import Meteor
+from pycocoevalcap.rouge.rouge import Rouge
+scorers = {
+    "Bleu": Bleu(4),
+    "Meteor": Meteor(),
+    "Rouge": Rouge()
+}
 
 
 def load_data(filename):
@@ -18,250 +27,243 @@ def dump_data(data, filename):
         writer.write_all(data)
 
 
-def srl_to_text(srl):
-    # keys = ['Arg0', 'Verb', 'Arg1', 'Arg2', 'Arg3', 'Arg4', 'ArgM', 'Scene of the Event']
-    spans = []
-    for k, v in srl.items():
-        text = v['text'].strip()
-        if text not in ['...', '']:
-            tokens = text.split()
-            tags = [t[1] for t in pos_tag(tokens)]
-            
-            if k in ['Arg0', 'Arg1']:
-                if tags[0] not in ['DT', 'IN', 'PDT', 'PRP', 'PRP$', 'TO', 'WDT', 'WP', 'WP$', 'WRB']:
-                    text = ' '.join(['the', text])
-            elif k in ['Arg2']:
-                if tags[0] not in ['IN', 'TO'] and not tokens[0].endswith('wards'):
-                    text = ' '.join(['towards', text])
-            elif k == 'Arg3':
-                text = ' '.join(['from', text]) if tokens[0] != 'from' else text
-            elif k == 'Arg4':
-                text = ' '.join(['to', text]) if tokens[0] != 'to' else text
-            elif k == 'Scene of the Event':
-                if tags[0] not in ['IN', 'TO', 'WRB']:
-                    if tags[0] not in ['DT', 'PDT', 'WDT']:
-                        text = ' '.join(['the', text])
-                    text = ' '.join(['in', text])
-            elif k == 'ArgM':
-                if 'goal' in v['desc'] and tags[0] not in ['TO', 'IN']:
-                    text = ' '.join(['to', text])
-            
-            text = text.lower() if text != 'I' else text
-            spans.append(text)
-    
-    return ' '.join(spans)
-
-
-def srl_portion(ep, eh, e1, e2):
-
-    def cat_srl(e):
-        pos = ['NN', 'NNS', 'NNP', 'NNPS', 'JJ', 'VBD', 'VBN', 'VBG']
-        srl = {'all': [], 'special': []}
-        for k, v in e.items():
-            text = v['text']
-            if k not in ['Verb']:
-                tags = pos_tag(text.split())
-                while text and (tags[0][1] not in pos or tags[0][0].endswith('wards')):
-                    text = ' '.join(text.split()[1:])
-                    tags = tags[1:]
-            if text:
-                if k not in ['ArgM', 'Arg3', 'Arg4']:
-                    srl['all'] += [text.lower()]
-                if k not in ['Verb', 'Scene of the Event', 'ArgM', 'Arg3', 'Arg4']:
-                    srl['special'] += [x for tag, x in zip(tags, text.lower().split()) if tag[1] in pos]
-        return srl
-
-    srl = cat_srl(ep)
-    th = ' '.join([v['text'].lower() for _,v in eh.items()])
-    t12 = ' '.join([v['text'].lower() for _,v in e1.items()]) + ' ' + ' '.join([v['text'].lower() for _,v in e2.items()]) 
-
-    x, all_cnt = sum(int(t in th) for t in srl['all']), len(srl['all'])   # language bias
-    y, spc_cnt = sum(int(t in t12 + ' ' + th) for t in srl['special']), len(srl['special']) # answerable
-
-    # if srl_to_text(ep) == "the kid walk dejected in the house":
-    #     import ipdb; ipdb.set_trace()
-    
-    return x / max(1, all_cnt) < 1 and (y / max(1, spc_cnt) > 1/2 or spc_cnt < 2)
-
-
-def get_abductive(events):
+def get_abductive_task(vevs, levs, hev, rel_dict):
     verb_list = ['might have', 'may have', 'has possibly']
     time_list = ['before', 'in the interval', 'ealier', 'previously']
 
-    def get_qa_pair(evh, ev3, rel):
-        evh_args = [v['text'] for _,v in evh.items()]
-        args = [(k, v['text']) for k,v in ev3.items() if k in ['Arg0', 'Arg1', 'Arg2'] and v['text'] in evh_args]
-        
-        random_verb = random.choice(verb_list)
-        random_time = random.choice(time_list)
-
-        q = f'what {random_verb} happened {random_time} ?'
-        _id = 'basic'
-        for i in range(len(args)):
-            key, arg = args[i]
-
-            tags = [t[1] for t in pos_tag(arg.split())]
-            if tags[0] in ['IN', 'TO'] or arg.split()[0].endswith('wards'):
-                arg = ' '.join(arg.split()[1:])
-                tags = tags[1:]
-            if arg and tags[0] not in ['PDT', 'PRP', 'PRP$', 'TO', 'WDT', 'WP', 'WP$', 'WRB']:
-                arg = ' '.join(['the', arg])            
-            arg = arg.lower() if arg != 'I' else arg
-
-            if arg:
-                if key == 'Arg0':
-                    random_verb = random_verb.split()
-                    span = ' '.join([random_verb[0], arg, random_verb[1]])
-                    q = f'what {span} done or been doing {random_time} ?'
-                    _id = key + ' ' + arg
-                else:
-                    q = f'what {random_verb} happened to {arg} {random_time} ?'
-                    _id = 'others ' + arg
-                break
-        
-        return {'question': q, 'answer': srl_to_text(ev3), 'id': _id, 'rel': rel}
-
-    def abductive_sample(e):
-        frms = events['Ev1']['Frames'] + events['Ev2']['Frames']
-        o1 = frms   # [frms[i*2 + 1] for i in range(4)]
-        o2 = srl_to_text(events[e]['SRL'])
-        
-        rel_dict = {'Causes': 'cause', 'Enables': 'condition', 'Reaction To': 'trigger', 'NoRel': 'temporal'}
-        rel = rel_dict[events[e]['EvRel']]
-        qas = [get_qa_pair(events[e]['SRL'], events['Ev3']['SRL'], rel)]
-        
-        for k in range(4, int(e[-1])):
-            evk = events[f'Ev{k}']
-            if srl_portion(evk['SRL'], events[e]['SRL'], events['Ev1']['SRL'], events['Ev2']['SRL']):
-                qas += [get_qa_pair(events[e]['SRL'], evk['SRL'], 'temporal')]
-        
-        hyp = {}
-        for qa in qas:
-            if qa['id'] in hyp:
-                hyp[qa['id']].append(qa)
-            else:
-                hyp[qa['id']] = [qa]
-        hyp = [
-            {'question': v[0]['question'], 'answers': [{'ans': vv['answer'], 'rel': vv['rel']} for vv in v]
-        } for _,v in hyp.items()]
-
-        return [{
-            'label': 'abductive',
-            'premise': o1, 'hypothese': o2,
-            'question': h['question'], 'answers': h['answers']
-        } for h in hyp]
-
-    pairs, ev3, evhs = [], events['Ev3'], []
-    for e in ['Ev4', 'Ev5']:
-        evh = events[e]
-        if srl_portion(ev3['SRL'], evh['SRL'], events['Ev1']['SRL'], events['Ev2']['SRL']):
-            evhs.append({'name': e, 'rel': int(evh['EvRel'] == 'NoRel')})
-    if len(evhs) > 1:
-        evhs.sort(key=lambda x: (x['rel'], -int(x['name'][-1])), reverse=False)
-    if len(evhs) > 0:
-        pairs = abductive_sample(evhs[0]['name'])
-
-    return pairs
-
-
-def get_prediction(events):
-    verb_list = ['is likely to', 'would', 'will', 'might', 'may', 'is gonna', 'is going to', 'is about to']
-    time_list = ['next', 'afterwards', 'right after the hypothetical event', 'immediately after the hypothetical event', 'then', 'later']
-
-    def get_qa_pair(evp, ev3, rel):
-        ev3_args = [v['text'] for _,v in ev3.items()]
-        args = [(k, v['text']) for k,v in evp.items() if k in ['Arg0', 'Arg1', 'Arg2'] and v['text'] in ev3_args]
-        
-        random_verb = random.choice(verb_list)
-        random_time = random.choice(time_list)
-        
-        q = f'what {random_verb} happen {random_time} ?'
-        _id = 'basic'
-        for i in range(len(args)):
-            key, arg = args[i]
-
-            tags = [t[1] for t in pos_tag(arg.split())]
-            if tags[0] in ['IN', 'TO'] or arg.split()[0].endswith('wards'):
-                arg = ' '.join(arg.split()[1:])
-                tags = tags[1:]
-            if arg and tags[0] not in ['PDT', 'PRP', 'PRP$', 'TO', 'WDT', 'WP', 'WP$', 'WRB']:
-                arg = ' '.join(['the', arg])            
-            arg = arg.lower() if arg != 'I' else arg
-
-            if arg:
-                if key == 'Arg0':
-                    if random_verb.startswith('is'):
-                        random_verb = random_verb.lstrip('is').strip()
-                        q = f'what is {arg} {random_verb} do {random_time} ?'
-                    else:
-                        q = f'what {random_verb} {arg} do {random_time} ?'
-                    _id = key + ' ' + arg
-                else:
-                    q = f'what {random_verb} happen to {arg} {random_time} ?'
-                    _id = 'others ' + arg
-                break
-        
-        return {'question': q, 'answer': srl_to_text(evp), 'id': _id, 'rel': rel}
-
-    def prediction_sample(evps):
-        frms = events['Ev1']['Frames'] + events['Ev2']['Frames']
-        bg = frms   # [frms[i*2 + 1] for i in range(4)]
-        hyp = srl_to_text(events['Ev3']['SRL'])
-
-        qa_list = [get_qa_pair(events[evp[0]]['SRL'], events['Ev3']['SRL'], evp[1]) for evp in evps]
-        prd = {}
-        for qa in qa_list:
-            if qa['id'] in prd:
-                prd[qa['id']].append(qa)
-            else:
-                prd[qa['id']] = [qa]
-        prd = [
-            {'question': v[0]['question'], 'answers': [{'ans': vv['answer'], 'rel': vv['rel']} for vv in v]
-        } for _, v in prd.items()]
-
-        return[{
-            'label': 'prediction',
-            'premise': bg, 'hypothese': hyp,
-            'question': p['question'], 'answers': p['answers']
-        } for p in prd]
-
-    pairs, ev3, evps, evbs = [], events['Ev3'], [], []
-    for e in ['Ev4', 'Ev5']:
-        evp = events[e]
-        rel_dict = {'Causes': 'effect', 'Enables': 'temporal', 'Reaction To': 'reaction', 'NoRel': 'temporal'}
-        if srl_portion(evp['SRL'], ev3['SRL'], events['Ev1']['SRL'], events['Ev2']['SRL']):
-            evps += [(e, rel_dict[evp['EvRel']])]
-    if len(evps) > 0:
-        pairs = prediction_sample(evps)
+    def _bleu_score(gt, hyp):
+        score, _ = scorers['Bleu'].compute_score({1:[gt]}, {1:[hyp]}, verbose=0)
+        return score
     
-    return pairs
+    def _process(text):
+        tokens = text.split()
+        tags = [t[1] for t in pos_tag(tokens)]
+        while tags[0] in ['IN', 'TO'] or tokens[0].endswith('wards') or tokens[0].endswith('ward'):
+            tokens, tags = tokens[1:], tags[1:]
+        if tags[0] not in ['PDT', 'PRP', 'PRP$', 'TO', 'WDT', 'WP', 'WP$', 'WRB', 'NNPS', 'NNS']:
+            if tokens[0] not in ['something', 'nothing', 'anything']:
+                tokens, tags = ['the'] + tokens, ['DT'] + tags
+        return ' '.join(tokens).lower()
+
+    def _get_args(ev):
+        return {
+            k: _process(v['text'].strip()) for k,v in ev['SRL'].items() \
+            if k in ['Arg0', 'Arg1', 'Arg2']
+        }
+
+    def _get_question(target):
+        values = list(target.values())
+        target = {k:target[k] for i, k in enumerate(target) if target[k] not in values[:i]}
+
+        random_verb = random.choice(verb_list)
+        random_time = random.choice(time_list)
+        
+        q = f'What {random_verb} happened {random_time}?'
+        if len(target) > 1:
+            if 'Arg0' in target:
+                arg0, arg1 = target['Arg0'], list(target.values())[1]
+                q = f'What have {arg0} done or been doing to {arg1} {random_time}?'
+            else:
+                arg0, arg1 = target['Arg1'], target['Arg2']
+                q = f'What {random_verb} happened to {arg0} and {arg1} {random_time}?'
+        elif len(target) > 0:
+            arg0 = list(target.values())[0]
+            if 'Arg0' in target:
+                q = f'What have {arg0} done or been doing {random_time}?'
+            else:
+                q = f'What {random_verb} happened to {arg0} {random_time}?'
+        
+        return q
+
+    def _explain(premises, results, hyp):
+        premises = [p for p in premises if 'TXT' in p]
+        expl = ' '.join([
+            'That ' + p['TXT'].rstrip(string.punctuation) + ' ' + rel_dict[p['eid']][hyp['eid']] \
+            + ' that ' + hyp['TXT'].rstrip(string.punctuation) + '.' \
+            for p in premises + results \
+            if rel_dict[p['eid']][hyp['eid']] and 'Ev3' not in rel_dict[p['eid']][hyp['eid']]
+        ])
+        return expl
+
+    video_time = [vevs[0]['eid'] * 2 - 2, vevs[-1]['eid'] * 2]
+    text_observation = ' '.join([ev['TXT'] for ev in levs])
+
+    reference = [x for ev in vevs + levs for x in list(_get_args(ev).values())]
+    target = {k:v for k,v in _get_args(hev).items() if v in reference}
+    question = _get_question(target)
+    
+    tasks = [{
+        'type': 'abductive',
+        'premise_v': video_time,
+        'result_l': text_observation,
+        'hypothesis': hev['TXT'],
+        'question': question
+    }]
+    if len(vevs) > 1 and vevs[-1]['EvRel'] != 'NoRel' and 'TXT' in vevs[-1]:
+        if _bleu_score(hev['TXT'] + ' ' + text_observation, vevs[-1]['TXT'])[-1] < 0.2:
+            reference = [x for ev in vevs[:-1] + [hev] + levs for x in list(_get_args(ev).values())]
+            target = {k:v for k,v in _get_args(vevs[-1]).items() if v in reference}
+            tasks += [{
+                'type': 'abductive_v',
+                'premise_v': [vevs[0]['eid'] * 2 - 2, vevs[0]['eid'] * 2],
+                'result_l': hev['TXT'] + ' ' + text_observation,
+                'hypothesis': vevs[-1]['TXT'],
+                'question': _get_question(target)
+            }]
+    if len(levs) > 1 and levs[0]['EvRel'] != 'NoRel':
+        if _bleu_score(hev['TXT'] + ' ' + levs[-1]['TXT'], levs[0]['TXT'])[-1] < 0.1:
+            reference = [x for ev in vevs + [hev] + levs[1:] for x in list(_get_args(ev).values())]
+            target = {k:v for k,v in _get_args(levs[0]).items() if v in reference}
+            tasks += [{
+                'type': 'abductive_l',
+                'premise_v': video_time,
+                'premise_l': hev['TXT'],
+                'result_l': levs[-1]['TXT'],
+                'hypothesis': levs[0]['TXT'],
+                'question': _get_question(target)
+            }]
+    
+    return tasks
 
 
-def process_data(data):
-    keys_to_remain = ['vid_seg_int', 'movie_name', 'genres', 'clip_name', 'text', 'desc']
-    sample = {k:data[k] for k in keys_to_remain}
+def overlap(vevs, levs, hev):
 
-    events = data['events']
-    abductives = get_abductive(events)
-    predictions = get_prediction(events)
-    sample['task'] = {
-        'count': len(abductives) + len(predictions),
-        'tasks': abductives + predictions
-    }
+    def _bleu_score(gt, hyp):
+        score, _ = scorers['Bleu'].compute_score({1:[gt]}, {1:[hyp]}, verbose=0)
+        return score
 
-    return sample
+    if 'TXT' not in hev:
+        return {'flag': False}
+    
+    vrst, lrst, flag = 0, 0, 0
+    for i, ev in enumerate(levs):
+        if 'TXT' in ev:
+            scores = _bleu_score(ev['TXT'], hev['TXT'])
+            if scores[-1] < 0.1:
+                lrst += i + 1
+                if scores[0] > 0.1:
+                    flag = 1
+    for i, ev in enumerate(vevs):
+        ev_txt = ' '.join([v['text'] for _,v in ev['SRL'].items()]).lower()
+        hev_txt = ' '.join([v['text'] for _,v in hev['SRL'].items()]).lower()
+        scores = _bleu_score(ev_txt, hev_txt)
+        if scores[-1] < 0.7:
+            vrst += i + 1
+            if scores[0] > 0.1:
+                flag = 1
+
+    return {'flag': vrst * lrst * flag > 0, 'v': vrst, 'l': lrst}
+
+
+def get_relations(Ev):
+    before = {'Causes': 'causes', 'Enables': 'enables', 'Reaction To': 'motivates', 'NoRel': ''}
+    after = {'Causes': 'is caused by', 'Enables': 'is enabled by', 'Reaction To': 'is reaction to', 'NoRel': ''}
+    
+    rel_dict = {i: {j: '' for j in range(1, 6) if j != i} for i in range(1, 6)}
+    for i in range(1, 6):
+        if i < 3:
+            rel_dict[i][3] = before[Ev[f'Ev{i}']['EvRel']]
+            rel_dict[3][i] = after[Ev[f'Ev{i}']['EvRel']]
+        elif i > 3:
+            rel_dict[i][3] = after[Ev[f'Ev{i}']['EvRel']]
+            rel_dict[3][i] = before[Ev[f'Ev{i}']['EvRel']]
+    
+    for i in range(1, 3):
+        for j in range(4, 6):
+            if rel_dict[i][3] and rel_dict[j][3]:
+                rel_dict[i][j] = ' '.join([rel_dict[i][3], 'Ev3', rel_dict[3][j]])
+                rel_dict[j][i] = ' '.join([rel_dict[j][3], 'Ev3', rel_dict[3][i]])
+    
+    return rel_dict
+
+
+def translate_to_text(e, _id):
+    e['eid'] = _id
+    ev = e['SRL']
+    to_remain = [k for k in ev if k in ['Arg0', 'Arg1', 'Arg2', 'Verb']]
+    # keys = ['Arg0', 'Verb', 'Arg1', 'Arg2', 'Arg3', 'Arg4', 'ArgM', 'Scene of the Event']
+    spans = {}
+    for k, v in ev.items():
+        v['desc'] = '' if v['desc'] is None else v['desc'].lower()
+        text = v['text'].strip()
+        if any(c not in string.punctuation for c in text) and len(text) > 0:
+            ## get the POS tags
+            tokens = text.split()
+            tags = [t[1] for t in pos_tag(tokens)]
+            ## refine the text according to its type
+            if k in ['Arg0', 'Arg1', 'Arg2']:
+                # add DT to nouns
+                if tags[0] not in ['DT', 'IN', 'PDT', 'PRP', 'PRP$', 'TO', 'WDT', 'WP', 'WP$', 'WRB', 'NNPS', 'NNS']:
+                    if tokens[0] not in ['something', 'nothing', 'anything']:
+                        if not tokens[0].endswith('wards') and not tokens[0].endswith('ward'):
+                            tokens, tags = ['the'] + tokens, ['DT'] + tags
+                            if 'Arg0' in spans and ' '.join(tokens).lower() == spans['Arg0']:
+                                tokens, tags = ['themselves'], ['NNS']
+            if k in ['Arg2'] or any(x in v['desc'] for x in ['instrument', 'benefactive', 'attribute']):
+                # add towards/to/for to Arg2 phrases
+                if tags[0] not in ['IN', 'TO'] and not tokens[0].endswith('wards') and not tokens[0].endswith('ward'):
+                    if tags[0] in ['VB', 'VBP']:
+                        tokens, tags = ['to'] + tokens, ['TO'] + tags
+                    else:
+                        tokens, tags = ['towards'] + tokens, ['IN'] + tags
+            elif k == 'Arg3' and 'start' in v['desc'] and tokens[0] != 'from':
+                # start point
+                tokens, tags = ['from'] + tokens, ['IN'] + tags
+            elif (k == 'Arg4' or 'destination' in v['desc']) and not tokens[0].endswith('to'):
+                # end point
+                tokens, tags = ['to'] + tokens, ['TO'] + tags
+            elif k == 'Scene of the Event' or 'location' in v['desc']:
+                # location / scene / place
+                if tags[0] not in ['IN', 'TO', 'WRB']:
+                    if tags[0] not in ['DT', 'PDT', 'WDT'] and not tokens[0].endswith('where'):
+                        tokens, tags = ['the'] + tokens, ['DT'] + tags
+                    tokens, tags = ['in'] + tokens, ['IN'] + tags
+            elif k == 'ArgM':
+                # goal / purpose
+                if 'goal' in v['desc'] or 'purpose' in v['desc']:
+                    if tags[0] not in ['TO', 'IN']:
+                        tokens, tags = ['to'] + tokens, ['TO'] + tags
+            
+            text = ' '.join(tokens).lower()
+            spans[k] = text
+    
+    if all(x in spans for x in to_remain):
+        e['TXT'] = ' '.join(list(spans.values()))  + '.'
+        e['TXT'] = e['TXT'][0].upper() + e['TXT'][1:]
+
+    return e
+
+
+def get_task(events):
+    rel_dict = get_relations(events)
+    ev = {int(k[-1]): translate_to_text(e, int(k[-1])) for k, e in events.items()}
+    tasks = []
+    
+    if rel_dict[1][5] or rel_dict[2][5] or rel_dict[1][4] or rel_dict[2][4]:
+        ovlp = overlap([ev[1], ev[2]], [ev[4], ev[5]], ev[3])
+        vev, lev = [], []
+        if ovlp['flag']:
+            if ovlp['v'] in [1, 3]:
+                vev.append(ev[1])
+            if ovlp['v'] >= 2:
+                vev.append(ev[2])
+            if ovlp['l'] in [1, 3]:
+                lev.append(ev[4])
+            if ovlp['l'] >= 2:
+                lev.append(ev[5])
+            tasks += get_abductive_task(vev, lev, ev[3], rel_dict)
+    
+    return tasks
 
 
 def process_data_task(data):
     keys_to_remain = ['vid_seg_int', 'movie_name', 'genres', 'clip_name', 'text', 'events', 'desc']
     sample = {k:data[k] for k in keys_to_remain}
 
-    events = data['events']
-    abductives = get_abductive(events)
-    predictions = get_prediction(events)
+    tasks = get_task(data['events'])
     sample['task'] = {
-        'count': len(abductives) + len(predictions),
-        'tasks': abductives + predictions
+        'count': len(tasks),
+        'tasks': tasks
     }
 
     return sample

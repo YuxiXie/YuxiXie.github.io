@@ -123,7 +123,7 @@ def get_task_cmd(task, vid, tid):
     # ])
     a = task['hypothesis']
     ans = '<tr><td bgcolor=LemonChiffon><strong><font size="4">A</font></strong></td>' \
-        + '<td bgcolor=LemonChiffon><font size="4">{a}</font></td></tr>'
+        + f'<td bgcolor=LemonChiffon><font size="4">{a}</font></td></tr>'
     qu_ans = f'<table><tr><td width="30" bgcolor=LightPink><strong><font size="4">Q</font></strong></td><td bgcolor=LightPink><font size="4">{qu}</font></td></tr>{ans}</table>'
     qa_cmd = f'<li><strong><font color=BlueViolet>[question-answers]</font></strong><br/> {qu_ans} </li>'
 

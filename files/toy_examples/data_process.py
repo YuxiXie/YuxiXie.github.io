@@ -30,6 +30,8 @@ def dump_data(data, filename):
 def get_abductive_task(vevs, levs, hev, rel_dict):
     verb_list = ['might have', 'may have', 'has possibly']
     time_list = ['before', 'in the interval', 'ealier', 'previously']
+    random_verb = random.choice(verb_list)
+    random_time = random.choice(time_list)
 
     def _bleu_score(gt, hyp):
         score, _ = scorers['Bleu'].compute_score({1:[gt]}, {1:[hyp]}, verbose=0)
@@ -54,9 +56,6 @@ def get_abductive_task(vevs, levs, hev, rel_dict):
     def _get_question(target):
         values = list(target.values())
         target = {k:target[k] for i, k in enumerate(target) if target[k] not in values[:i]}
-
-        random_verb = random.choice(verb_list)
-        random_time = random.choice(time_list)
         
         q = f'What {random_verb} happened {random_time}?'
         if len(target) > 1:
@@ -88,40 +87,49 @@ def get_abductive_task(vevs, levs, hev, rel_dict):
     video_time = [vevs[0]['eid'] * 2 - 2, vevs[-1]['eid'] * 2]
     text_observation = ' '.join([ev['TXT'] for ev in levs])
 
-    reference = [x for ev in vevs + levs for x in list(_get_args(ev).values())]
+    reference = [x for ev in vevs + [levs[-1]] for x in list(_get_args(ev).values())]
     target = {k:v for k,v in _get_args(hev).items() if v in reference}
     question = _get_question(target)
     
     tasks = [{
         'type': 'abductive',
         'premise_v': video_time,
-        'result_l': text_observation,
-        'hypothesis': hev['TXT'],
+        'result_l': levs[-1]['TXT'],
+        'hypothesis': [hev['TXT']],
         'question': question
     }]
     if len(vevs) > 1 and vevs[-1]['EvRel'] != 'NoRel' and 'TXT' in vevs[-1]:
-        if _bleu_score(hev['TXT'] + ' ' + text_observation, vevs[-1]['TXT'])[-1] < 0.2:
+        if _bleu_score(hev['TXT'] + ' ' + levs[-1]['TXT'], vevs[-1]['TXT'])[-1] < 0.2:
             reference = [x for ev in vevs[:-1] + [hev] + levs for x in list(_get_args(ev).values())]
             target = {k:v for k,v in _get_args(vevs[-1]).items() if v in reference}
             tasks += [{
                 'type': 'abductive_v',
                 'premise_v': [vevs[0]['eid'] * 2 - 2, vevs[0]['eid'] * 2],
-                'result_l': hev['TXT'] + ' ' + text_observation,
-                'hypothesis': vevs[-1]['TXT'],
+                'result_l': hev['TXT'] + ' ' + levs[-1]['TXT'],
+                'hypothesis': [vevs[-1]['TXT']],
                 'question': _get_question(target)
             }]
-    if len(levs) > 1 and levs[0]['EvRel'] != 'NoRel':
-        if _bleu_score(hev['TXT'] + ' ' + levs[-1]['TXT'], levs[0]['TXT'])[-1] < 0.1:
-            reference = [x for ev in vevs + [hev] + levs[1:] for x in list(_get_args(ev).values())]
-            target = {k:v for k,v in _get_args(levs[0]).items() if v in reference}
-            tasks += [{
-                'type': 'abductive_l',
-                'premise_v': video_time,
-                'premise_l': hev['TXT'],
-                'result_l': levs[-1]['TXT'],
-                'hypothesis': levs[0]['TXT'],
-                'question': _get_question(target)
-            }]
+    pre_tasks = {}
+    for evt in levs:
+        if evt['EvRel'] != 'NoRel' and _bleu_score(hev['TXT'], evt['TXT'])[-1] < 0.1:
+            reference = [x for ev in vevs + [hev] for x in list(_get_args(ev).values())]
+            target = {k:v for k,v in _get_args(evt).items() if v in reference}
+            key = list(target.values())[0] if len(target) > 0 else 'none'
+            if key in pre_tasks:
+                pre_tasks[key].append((evt['TXT'], target))
+            else:
+                pre_tasks[key] = [(evt['TXT'], target)]
+
+    for k, v in pre_tasks.items():
+        v.sort(key=lambda x: len(x[1]), reverse=False)
+        target = v[0][1]
+        tasks += [{
+            'type': 'predictive',
+            'premise_v': video_time,
+            'premise_l': hev['TXT'],
+            'hypothesis': [x[0] for x in v],
+            'question': _get_question(target)
+        }]
     
     return tasks
 

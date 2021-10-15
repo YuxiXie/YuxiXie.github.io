@@ -107,23 +107,23 @@ def get_task_cmd(task, vid, tid):
         prm = task['premise_l']
         add_pre = f'<li><strong><font color=DodgerBlue>[premise]</font></strong> <code>(observed premise)</code> {prm} </li>'
     
-    hyp = task['result_l']
-    hyp_cmd = f'<li><strong><font color=DodgerBlue>[hypothesis]</font></strong> <code>(observed result)</code> {hyp} </li>'
+    hyp_cmd = ''
+    if 'result_l' in task:
+        hyp = task['result_l']
+        hyp_cmd = f'<li><strong><font color=DodgerBlue>[hypothesis]</font></strong> <code>(observed result)</code> {hyp} </li>'
 
     qu = task['question']
-    # all_answers = {}
-    # for ans in task['answers']:
-    #     if ans['ans'] not in all_answers:
-    #         all_answers[ans['ans']] = ans
-    # all_answers = list(all_answers.values())
-    # ans = ''.join([
-    #     '<tr><td bgcolor=LemonChiffon><strong><font size="4">A{x}</font></strong></td>'.format(x=i+1) \
-    #     + '<td bgcolor=LemonChiffon><code>{r}</code><font size="4"> {a}</font></td></tr>'.format(r=a['rel'], a=a['ans']) \
-    #     for i, a in enumerate(all_answers)
-    # ])
-    a = task['hypothesis']
-    ans = '<tr><td bgcolor=LemonChiffon><strong><font size="4">A</font></strong></td>' \
-        + f'<td bgcolor=LemonChiffon><font size="4">{a}</font></td></tr>'
+    all_answers = []
+    for ans in task['hypothesis']:
+        if ans not in all_answers:
+            all_answers += [ans]
+    ans = ''.join([
+        f'<tr><td bgcolor=LemonChiffon><strong><font size="4">A{i}</font></strong></td>' \
+        + f'<td bgcolor=LemonChiffon><font size="4">{a}</font></td></tr>' for i, a in enumerate(all_answers, 1)
+    ])
+    # a = task['hypothesis']
+    # ans = '<tr><td bgcolor=LemonChiffon><strong><font size="4">A</font></strong></td>' \
+    #     + f'<td bgcolor=LemonChiffon><font size="4">{a}</font></td></tr>'
     qu_ans = f'<table><tr><td width="30" bgcolor=LightPink><strong><font size="4">Q</font></strong></td><td bgcolor=LightPink><font size="4">{qu}</font></td></tr>{ans}</table>'
     qa_cmd = f'<li><strong><font color=BlueViolet>[question-answers]</font></strong><br/> {qu_ans} </li>'
 

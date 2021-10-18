@@ -28,10 +28,14 @@ def dump_data(data, filename):
 
 
 def get_abductive_task(vevs, levs, hev, rel_dict):
-    verb_list = ['might have', 'may have', 'has possibly']
-    time_list = ['before', 'in the interval', 'ealier', 'previously']
-    random_verb = random.choice(verb_list)
-    random_time = random.choice(time_list)
+    verb_list_p = ['might have', 'may have', 'has possibly']
+    time_list_p = ['before', 'in the interval', 'ealier', 'previously']
+    verb_list_f = ['is likely to', 'would', 'will', 'might', 'may', 'is gonna', 'is going to', 'is about to']
+    time_list_f = ['next', 'afterwards', 'right after the hypothetical event', 'immediately after the hypothetical event', 'then', 'later']
+    random_verb_p = random.choice(verb_list_p)
+    random_time_p = random.choice(time_list_p)
+    random_verb_f = random.choice(verb_list_f)
+    random_time_f = random.choice(time_list_f)
 
     def _bleu_score(gt, hyp):
         score, _ = scorers['Bleu'].compute_score({1:[gt]}, {1:[hyp]}, verbose=0)
@@ -44,7 +48,7 @@ def get_abductive_task(vevs, levs, hev, rel_dict):
             tokens, tags = tokens[1:], tags[1:]
         if len(tags) == 0:
             return ''
-        if tags[0] not in ['PDT', 'PRP', 'PRP$', 'TO', 'WDT', 'WP', 'WP$', 'WRB', 'NNPS', 'NNS']:
+        if tags[0] not in ['DT', 'PDT', 'PRP', 'PRP$', 'WDT', 'WP', 'WP$', 'WRB', 'NNPS', 'NNS']:
             if tokens[0] not in ['something', 'nothing', 'anything', 'everything', 'someone', 'noone', 'anyone', 'everyone']:
                 tokens, tags = ['the'] + tokens, ['DT'] + tags
         return ' '.join(tokens).lower()
@@ -56,36 +60,23 @@ def get_abductive_task(vevs, levs, hev, rel_dict):
         }
         return {k:v for k,v in rst.items() if v}
 
-    def _get_question(target):
+    def _get_question(target, predict=False):
+        if predict:
+            random_verb, random_time = random_verb_f, random_time_f
+        else:
+            random_verb, random_time = random_verb_p, random_time_p
         values = list(target.values())
         target = {k:target[k] for i, k in enumerate(target) if target[k] not in values[:i]}
         
         q = f'What {random_verb} happened {random_time}?'
         if len(target) > 1:
-            if 'Arg0' in target:
-                arg0, arg1 = target['Arg0'], list(target.values())[1]
-                q = f'What have {arg0} done or been doing to {arg1} {random_time}?'
-            else:
-                arg0, arg1 = target['Arg1'], target['Arg2']
-                q = f'What {random_verb} happened to {arg0} and {arg1} {random_time}?'
+            arg0, arg1 = list(target.values())[:2]
+            q = f'What {random_verb} happened to {arg0} and {arg1} {random_time}?'
         elif len(target) > 0:
             arg0 = list(target.values())[0]
-            if 'Arg0' in target:
-                q = f'What have {arg0} done or been doing {random_time}?'
-            else:
-                q = f'What {random_verb} happened to {arg0} {random_time}?'
+            q = f'What {random_verb} happened to {arg0} {random_time}?'
         
         return q
-
-    def _explain(premises, results, hyp):
-        premises = [p for p in premises if 'TXT' in p]
-        expl = ' '.join([
-            'That ' + p['TXT'].rstrip(string.punctuation) + ' ' + rel_dict[p['eid']][hyp['eid']] \
-            + ' that ' + hyp['TXT'].rstrip(string.punctuation) + '.' \
-            for p in premises + results \
-            if rel_dict[p['eid']][hyp['eid']] and 'Ev3' not in rel_dict[p['eid']][hyp['eid']]
-        ])
-        return expl
 
     video_time = [vevs[0]['eid'] * 2 - 2, vevs[-1]['eid'] * 2]
 
@@ -116,13 +107,29 @@ def get_abductive_task(vevs, levs, hev, rel_dict):
         if evt['EvRel'] != 'NoRel' and _bleu_score(hev['TXT'], evt['TXT'])[1] < 0.6:
             reference = [x for ev in vevs + [hev] for x in list(_get_args(ev).values())]
             target = {k:v for k,v in _get_args(evt).items() if v in reference}
-            key = list(target.values())[0] if len(target) > 0 else 'none'
+            key = '; '.join(list(target.values())) if len(target) > 0 else 'none'
             if key in pre_tasks:
                 pre_tasks[key].append((evt['TXT'], target))
             else:
                 pre_tasks[key] = [(evt['TXT'], target)]
+    if len(pre_tasks) > 0 and 'none' in pre_tasks:
+        del pre_tasks['none']
+    
+    key_list = list(pre_tasks.keys())
+    for key in pre_tasks:
+        candidates = [key != k and pre_tasks[k] is not None and all(ky in key for ky in k.split('; ')) for k in pre_tasks]
+        if any(candidates):
+            try:
+                pre_tasks[key_list[candidates.index(True)]] += pre_tasks[key]
+            except:
+                import ipdb; ipdb.set_trace()
+            pre_tasks[key] = None
+    
+    if len(pre_tasks) > 1:
+        import ipdb; ipdb.set_trace()
 
     for k, v in pre_tasks.items():
+        if not isinstance(v, list): continue
         v.sort(key=lambda x: len(x[1]), reverse=False)
         target = v[0][1]
         tasks += [{
@@ -130,7 +137,7 @@ def get_abductive_task(vevs, levs, hev, rel_dict):
             'premise_v': video_time,
             'premise_l': hev['TXT'],
             'hypothesis': [x[0] for x in v],
-            'question': _get_question(target)
+            'question': _get_question(target, predict=True)
         }]
     
     return tasks

@@ -36,10 +36,10 @@ def get_task_cmd(task, sample, tid):
     label_cmd = f'<strong><font size="4"> task {tid} </font></strong>' \
         + f'<li><strong>[task type]</strong> <font color={label_color}>{label}</font> </li>'
 
-    pm_cmd = f'<li><strong><font color=YellowGreen>[premise]</font></strong> <code>{vid_in}</code> <br/>'
+    pm_cmd = f'<li><strong><font color=YellowGreen>[Premise]</font></strong> <code>{vid_in}</code> <br/>'
 
     rst = ' '.join([sample[f'ev{x}']['desc'] for x in txt_in])
-    rst_cmd = f'<li><strong><font color=DodgerBlue>[result]</font></strong> <code>(observed result)</code> {rst} </li>'
+    rst_cmd = f'<li><strong><font color=DodgerBlue>[Observation]</font></strong> {rst} </li>'
     
     all_answers = []
     for x in txt_out:
@@ -52,7 +52,7 @@ def get_task_cmd(task, sample, tid):
     ])
     
     qu_ans = f'<table>{ans}</table>'
-    qa_cmd = f'<li><strong><font color=BlueViolet>[Abductive]</font></strong><br/> {qu_ans} </li>'
+    qa_cmd = f'<li><strong><font color=BlueViolet>[Hypothesis]</font></strong><br/> {qu_ans} </li>'
 
     return ' '.join(['<tr>', label_cmd, pm_cmd, rst_cmd, qa_cmd, '</tr>'])
 

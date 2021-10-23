@@ -28,17 +28,21 @@ def write_file(data, filename):
 
 def get_task_cmd(task, sample, tid):
     tid = tid + 1
-    label_cmd = f'<strong><font size="4"> task {tid} </font></strong>'
-
     task = task.split('-')
-    vid_in, txt_in, int_ev = ' + '.join(task[0]), task[1], task[2]
+    vid_in, txt_in, txt_out = ' + '.join(task[0]), task[1], task[2]
+
+    label = 'abductive' if int(txt_out[0]) < int(txt_in[0]) else 'predictive'
+    label_color = 'DarkGreen' if label == 'abductive' else 'DarkRed'
+    label_cmd = f'<strong><font size="4"> task {tid} </font></strong>' \
+        + f'<li><strong>[task type]</strong> <font color={label_color}>{label}</font> </li>'
+
     pm_cmd = f'<li><strong><font color=YellowGreen>[premise]</font></strong> <code>{vid_in}</code> <br/>'
 
     rst = ' '.join([sample[f'ev{x}']['desc'] for x in txt_in])
     rst_cmd = f'<li><strong><font color=DodgerBlue>[result]</font></strong> <code>(observed result)</code> {rst} </li>'
     
     all_answers = []
-    for x in int_ev:
+    for x in txt_out:
         ans = sample[f'ev{x}']['desc']
         if ans not in all_answers:
             all_answers += [ans]

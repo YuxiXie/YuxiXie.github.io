@@ -98,5 +98,5 @@ collection: example
 
 
 if __name__ == '__main__':
-    filename = 'files/toy.json'
+    filename = 'files/roberta-large_filled_toy.json'
     load_data(filename)

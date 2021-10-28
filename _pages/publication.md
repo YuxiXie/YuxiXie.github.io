@@ -15,7 +15,7 @@ See also my [Google Scholar Profile](https://scholar.google.com/citations?user=L
 ### 2021
 **CANVASEMB: Learning Layout Representation with Large-scale Pre-training for Graphic Design** (ACM MM 2021)    
 **Yuxi Xie**, Danqing Huang, Jinpeng Wang, Chin-Yew Lin   
-[[slides](https://docs.google.com/presentation/d/1JxozAgOTkF3cqHXK7r34ihlTy-nvxwIfXtCSZs9mz7U/edit?usp=sharing)]
+[[paper](https://dl.acm.org/doi/10.1145/3474085.3475541)] [[slides](https://docs.google.com/presentation/d/1JxozAgOTkF3cqHXK7r34ihlTy-nvxwIfXtCSZs9mz7U/edit?usp=sharing)]
 
 ### 2020
 **Exploring Question-Specific Rewards for Generating Deep Questions** (COLING 2020, Oral)   

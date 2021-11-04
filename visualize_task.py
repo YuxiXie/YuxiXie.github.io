@@ -78,7 +78,7 @@ def get_cmd(annots):
         _type = 'Premise' if is_vis_premise else 'Observation'
         iframe_cmd = f'<li><strong><font color=YellowGreen>[{_type}]</font></strong> You can also refer to the thumbnail (for replaying: please refresh the page). <br/>' \
             + f'<iframe src="https://www.youtube.com/embed/{vid}?start={start}&end={end}&version=3" ' \
-            + 'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width="300" height="200"></iframe></li> <br/>'
+            + 'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width="300" height="200"></iframe></li>'
         
         nar = sample['observation'] if is_vis_premise else sample['premise']
         _type = 'Observation' if is_vis_premise else 'Premise'
@@ -92,7 +92,7 @@ def get_cmd(annots):
             + f'<td bgcolor=LemonChiffon><font size="4">{a}</font></td></tr>' for i, a in enumerate(sample['hypothesis'], 1)
         ])    
         qu_ans = '<table><tr><td bgcolor=LightBlue><strong><font size="4">Q</font></strong></td>' \
-            + '<td bgcolor=LemonChiffon><font size="4">{}</font></td></tr>'.format(sample['question']) \
+            + '<td bgcolor=LightBlue><font size="4">{}</font></td></tr>'.format(sample['question']) \
             + f'{ans}</table>'
         qa_cmd = f'<li><strong><font color=BlueViolet>[Hypothesis]</font></strong><br/> {qu_ans} </li>'
 

@@ -57,44 +57,71 @@ def get_task_cmd(task, sample, tid):
     return ' '.join(['<tr>', label_cmd, pm_cmd, rst_cmd, qa_cmd, '</tr>'])
 
 
-def get_cmd(sample, annot_id):
-    vid_seg_int = sample['vid_seg_int'].split('_')
+def get_cmd(annots):
+    vid_seg_int = annots[0]['vid'].split('_')
     vid = '_'.join(vid_seg_int[1:-3])
 
-    movie, clip, desc = sample['movie_name'], sample['clip_name'], sample['clip_desc']
-    genres = sample['genres'] if isinstance(sample['genres'], list) else []
+    movie, clip, desc = annots[0]['movie'], annots[0]['clip'], annots[0]['desc']
+    genres = annots[0]['genres'] if isinstance(annots[0]['genres'], list) else []
     genres = ''.join([f'<code>{gen}</code>' for gen in genres])
     head_cmd = f'<strong><font color=DodgerBlue>[Movie]</font> {movie}  <font color=DodgerBlue>[Clip]</font> {clip} </strong> {genres}<br/>' \
-        + f'<strong><font color=DodgerBlue>[Desc]</font></strong> {desc}<br/>'
+        + f'<strong><font color=DodgerBlue>[Desc]</font></strong> {desc}<br/>' \
+        + '<strong>{} task(s) in total </strong>'.format(len(annots))
 
-    start, end = vid_seg_int[-2], int(vid_seg_int[-2]) + 4
-    iframe_cmd = '<strong><font color=YellowGreen>[Premise]</font></strong> You can also refer to the thumbnail (for replaying: please refresh the page). <br/>' \
-        + f'<iframe src="https://www.youtube.com/embed/{vid}?start={start}&end={end}&version=3" ' \
-        + 'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width="900" height="600"></iframe> <br/>'
+    task_cmd = []
+    for sample in annots:
+        is_vis_premise = isinstance(sample['premise'], list)
     
-    sample = sample['annots'][annot_id]
-    tasks, task_cnt = sample['tasks'], len(sample['tasks'])
-    task_brief = f'<strong><font color=BlueViolet>[Tasks]</font></strong> {task_cnt} reasoning task(s) in total <br/><br/>'
-    tasks_cmd = task_brief + '<br/><hr/><br/>'.join([get_task_cmd(task, sample, tid) for tid, task in enumerate(tasks)])
+        timestamps = sample['premise'] if is_vis_premise else sample['observation']
+        start = int(vid_seg_int[-2]) + (timestamps[0] - 1) * 2
+        end = int(vid_seg_int[-2]) + timestamps[1] * 2
+        _type = 'Premise' if is_vis_premise else 'Observation'
+        iframe_cmd = '<strong><font color=YellowGreen>[{_type}]</font></strong> You can also refer to the thumbnail (for replaying: please refresh the page). <br/>' \
+            + f'<iframe src="https://www.youtube.com/embed/{vid}?start={start}&end={end}&version=3" ' \
+            + 'scrolling="yes" frameborder="yes" framespacing="0" allowfullscreen="true" width="300" height="200"></iframe> <br/>'
+        
+        nar = sample['observation'] if is_vis_premise else sample['premise']
+        _type = 'Observation' if is_vis_premise else 'Premise'
+        nar_cmd = f'<li><strong><font color=DodgerBlue>[{_type}]</font></strong> {nar} </li>'
+        
+        prm_cmd = iframe_cmd if is_vis_premise else nar_cmd
+        obs_cmd = nar_cmd if is_vis_premise else iframe_cmd
+        
+        ans = ''.join([
+            f'<tr><td bgcolor=LemonChiffon><strong><font size="4">A{i}</font></strong></td>' \
+            + f'<td bgcolor=LemonChiffon><font size="4">{a}</font></td></tr>' for i, a in enumerate(sample['hypothesis'], 1)
+        ])    
+        qu_ans = '<table><tr><td bgcolor=LemonChiffon><strong><font size="4">Q</font></strong></td>' \
+            + '<td bgcolor=LemonChiffon><font size="4">{}</font></td></tr>'.format(sample['question']) \
+            + f'{ans}</table>'
+        qa_cmd = f'<li><strong><font color=BlueViolet>[Hypothesis]</font></strong><br/> {qu_ans} </li>'
 
-    return ''.join(['<p>', iframe_cmd, head_cmd, tasks_cmd, '</p>'])
+        task_cmd.append(' '.join(['<tr>', prm_cmd, obs_cmd, qa_cmd, '</tr>']))
+    task_cmd = ' <br/> '.join(task_cmd)
+
+    return ''.join(['<p>', head_cmd, task_cmd, '</p>'])
 
 
 def load_data(filename):
-    _id = 0
+    idx = 0
     data = json.load(codecs.open(filename, 'r', encoding='utf-8'))
-    for _, sample in data['data'].items():
-        for annot_id in range(sample['annots_cnt']):
-            cmd = get_cmd(sample, annot_id)
-            _id = _id + 1
-            outfile = f'_example/task-{_id:03d}.html'
-            fileini = f'''---
-title: "Visual-Linguistic Commonsense Reasoning Sample {_id:02d}"
+    samples = {}
+    for sample in data['data']:
+        _id = sample['vid'] + '_' + str(sample['annot_id'])
+        if _id not in samples:
+            samples[_id] = []
+        samples[_id].append(sample)
+    for _, sample in samples.items():
+        cmd = get_cmd(sample)
+        idx = idx + 1
+        outfile = f'_example/task-{idx:03d}.html'
+        fileini = f'''---
+title: "Visual-Linguistic Commonsense Reasoning Sample {idx:03d}"
 collection: example
 ---
 
 '''
-            write_file(fileini + cmd, outfile)
+        write_file(fileini + cmd, outfile)
 
 
 if __name__ == '__main__':

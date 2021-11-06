@@ -107,6 +107,7 @@ def load_data(filename):
     data = json.load(codecs.open(filename, 'r', encoding='utf-8'))
     samples = {}
     for sample in data['data']:
+        if not sample['to_train']: continue
         _id = sample['vid'] + '_' + str(sample['annot_id'])
         if _id not in samples:
             samples[_id] = []

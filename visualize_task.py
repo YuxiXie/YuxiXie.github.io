@@ -135,7 +135,7 @@ def load_data(filename, cometname=None):
                         '[{}] {}'.format('P', rst['q']), '[{}] {}'.format('HC', rst['p']), '[{}] {}'.format('HO', rst['h'])])
                     rst = rsts[1]
                     ccmd += ' <br/> ' + ' <br/> '.join([
-                        '[{}] {}'.format('P', rst['q']), '[{}] {}'.format('HC', rst['p']), '[{}] {}'.format('HO', rst['h'])])
+                        '[{}] {}'.format('O', rst['q']), '[{}] {}'.format('HC', rst['p']), '[{}] {}'.format('HO', rst['h'])])
                     cmd += ccmd
         cmd += ' </p>'
         idx = idx + 1

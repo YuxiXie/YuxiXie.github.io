@@ -1,5 +1,6 @@
 import json
 import codecs
+import jsonlines
 
 COLOR_REL = {
     'Reaction To': '<td bgcolor=LightBlue><strong>Reaction</strong></td>',
@@ -99,13 +100,22 @@ def get_cmd(annots):
         task_cmd.append(' '.join(['<tr>', prm_cmd, obs_cmd, qa_cmd, '</tr>']))
     task_cmd = ' <br/> '.join(task_cmd)
 
-    return ''.join(['<p>', head_cmd, task_cmd, '</p>'])
+    return ''.join([head_cmd, task_cmd])
 
 
-def load_data(filename):
+def load_comet(filename):
+    data = {}
+    with jsonlines.open(filename, mode='r') as reader:
+        for line in reader:
+            data[line['id']] = line
+    return data
+
+
+def load_data(filename, cometname=None):
     idx = 0
     data = json.load(codecs.open(filename, 'r', encoding='utf-8'))
     samples = {}
+    comet = load_comet(cometname) if cometname else None
     for sample in data['data']:
         if not sample['to_train']: continue
         _id = sample['vid'] + '_' + str(sample['annot_id'])
@@ -113,7 +123,19 @@ def load_data(filename):
             samples[_id] = []
         samples[_id].append(sample)
     for _, sample in samples.items():
-        cmd = get_cmd(sample)
+        cmd = '<p> ' + get_cmd(sample)
+        if comet is not None:
+            for sp in sample:
+                if sp['id'] in comet and comet[sp['id']]['vid'] == sample[0]['vid']:
+                    rsts = comet[sp['id']]['rst']
+                    rst = rsts[0]
+                    ccmd = ' <br/>  <br/> ' + ' <br/> '.join([
+                        '[{}] {}'.format('P', rst['q']), '[{}] {}'.format('HC', rst['p']), '[{}] {}'.format('HO', rst['h'])])
+                    rst = rsts[1]
+                    ccmd += ' <br/> ' + ' <br/> '.join([
+                        '[{}] {}'.format('P', rst['q']), '[{}] {}'.format('HC', rst['p']), '[{}] {}'.format('HO', rst['h'])])
+                    cmd += ccmd
+        cmd += ' </p>'
         idx = idx + 1
         outfile = f'_example/task-{idx:03d}.html'
         fileini = f'''---
@@ -127,4 +149,5 @@ collection: example
 
 if __name__ == '__main__':
     filename = 'files/roberta-large_filled_toy.json'
-    load_data(filename)
+    cometname = 'files/comet.json'
+    load_data(filename, cometname=cometname)

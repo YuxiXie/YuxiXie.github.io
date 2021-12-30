@@ -117,16 +117,18 @@ def load_data(filename, cometname=None):
     samples = {}
     comet = load_comet(cometname) if cometname else None
     for sample in data['data']:
-        if not sample['to_train']: continue
+        # if not sample['to_train']: continue
         _id = sample['vid'] + '_' + str(sample['annot_id'])
         if _id not in samples:
             samples[_id] = []
         samples[_id].append(sample)
     for _, sample in samples.items():
+        # print(sample[0]['id'])
         cmd = '<p> ' + get_cmd(sample)
         if comet is not None:
             for sp in sample:
-                if sp['id'] in comet and comet[sp['id']]['vid'] == sample[0]['vid']:
+                # import ipdb; ipdb.set_trace()
+                if sp['id'] in comet and comet[sp['id']]['vid'] == sp['vid']:
                     rsts = comet[sp['id']]['rst']
                     rst = rsts[0]
                     ccmd = ' <br/>  <br/> ' + ' <br/> '.join([

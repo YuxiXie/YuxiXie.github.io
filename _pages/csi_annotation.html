@@ -1,10 +1,3 @@
----
-layout: case-study
-permalink: /csi_examples/
-title: "Annotation Example"
-author_profile: false
----
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,15 +8,12 @@ author_profile: false
     <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
     <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/grid_new.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/content.css') }}">
-    <script src="/static/js/video_play.js"></script>
-    <script src="/static/js/layouts.js"></script>
+    <link rel="stylesheet" href="https://vlcsr.comp.nus.edu.sg/static/css/grid_new.css">
+    <link rel="stylesheet" href="https://vlcsr.comp.nus.edu.sg/static/css/content.css">
+    <script src="https://vlcsr.comp.nus.edu.sg/static/js/video_play.js"></script>
+    <script src="https://vlcsr.comp.nus.edu.sg/static/js/layouts.js"></script>
     <script type="text/javascript">
-        document.addEventListener('contextmenu', event => event.preventDefault());
-        function no_context() {
-            return false;
-        }
+        <!-- document.addEventListener('contextmenu', event => event.preventDefault()); -->
     </script>
     <script type="text/javascript">
         function align_timestamp() {
@@ -112,7 +102,7 @@ author_profile: false
             btn.className = "btn btn-default";
         }
     </script>
-    <script>
+    <script type="text/javascript">
         function resume_from(input_id) {
             var MM = parseInt(document.getElementById(input_id + '_MM').value);
             var SS = parseInt(document.getElementById(input_id + '_SS').value);
@@ -304,17 +294,14 @@ author_profile: false
         <!-- <h1>{{length}}</h1> -->
         <div class="row">
             <h3>
-                <span class="badge badge-pill">Current User:
-                    {% if current_user.is_authenticated %}
-                        {{ current_user.get_id() }}
-                    {% endif %}
+                <span class="badge badge-pill">Current User: EXAMPLE 1
                 </span>
             </h3>
-            <form method="POST" action="{{ url_for('logout') }}">
+            <!-- <form method="POST" action="{{ url_for('logout') }}">
                 <button class="btn btn-default btn-block" type="submit"><h5>Logout</h5></button>
-            </form>
+            </form> -->
         </div>
-        <h5 align="right">CLIP ID: {{ sample['ID'] }}<br>Number of Completed Annotations (Samples): {{count}}</h5>
+        <h5 align="right">CLIP ID: 0<br>Number of Completed Annotations (Samples): 0</h5>
 
         <h4><span class="badge badge-pill badge-info">Instruction:</span></h4>
         <h5>
@@ -324,15 +311,15 @@ author_profile: false
             and what the people are talking about in the scene.  
         </h5>
 
-        <h4><span class="badge badge-pill badge-info">Episode: {{ sample['title'] }}</span> </h4>
-        <h5>Clip Start Time: <span id="start_time">{{ sample['start_time'] }}</span></h5>
-        <h5>Clip End Time: <span id="end_time">{{ sample['end_time'] }}</span></h5>
-        <h5>Clip Duration: <span id="clip_duration">{{ sample['duration'] }} seconds</span></h5>
+        <h4><span class="badge badge-pill badge-info">Episode: S01E20 - Sounds of Silence</span> </h4>
+        <h5>Clip Start Time: <span id="start_time"><code>00:14</code></span></h5>
+        <h5>Clip End Time: <span id="end_time"><code>00:32</code></span></h5>
+        <h5>Clip Duration: <span id="clip_duration"><code>18</code> seconds</span></h5>
 
         <h4><span class="badge badge-pill badge-info">Video:</span></h4>
         <h5>
             <video id="main_video" width="1100" controls controlsList="nodownload" onloadstart="resume_video()" oncanplay="align_timestamp()" ontimeupdate="align_timestamp()">
-                <source src="{{ sample['video_path'] }}" type="video/mp4">
+                <source src="https://vlcsr.comp.nus.edu.sg/static/video/S01E20_new.mp4" type="video/mp4">
                 Sorry, your browser doesn't support embedded videos.
             </video>
             <br/>
@@ -340,8 +327,8 @@ author_profile: false
             <input type="button" id="play_pause" value="Play" class="btn btn-success" onclick="play_pause()">
             <input type="button" id="forward" value="►►" class="btn btn-warning" style="background-color:#FFA500;color:white;" onclick="playfor()">
             &nbsp;&nbsp;&nbsp;&nbsp;
-            <input type="button" id="RfL" class="btn btn-warning" value="Resume from Clip Start Time [{{ sample['start_time'] }}]🕓" onclick="resume_video()">
-            <input type="button" id="RfE" class="btn btn-warning" value="Jump to Clip End Time [{{ sample['end_time'] }}]🕓" onclick="jump_to_end()">
+            <input type="button" id="RfL" class="btn btn-warning" value="Resume from Clip Start Time [00:14]🕓" onclick="resume_video()">
+            <input type="button" id="RfE" class="btn btn-warning" value="Jump to Clip End Time [00:32]🕓" onclick="jump_to_end()">
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <input type="button" id="PiP" value="👉 Enter Picture-in-Picture Mode 👈" class="btn btn-primary" onclick="picture_in_picture()">
         </h5>
@@ -381,32 +368,37 @@ author_profile: false
                 <span class="badge badge-pill badge-info" style="background-color:white;color:#17a2b8;">start</span>
             </div>
             <div style="width:1120px;padding:0.05rem 3.45rem;line-height:1.7rem;">
-                • {{sample['scripts'][0]}}<br/>
+                • (Women are laughing. A car, Nevada license #OVK 195, drives by. There are two women inside the car.)<br/>
             </div>
             
-            {% if sample['scripts']|length > 2 %}
             <div id="button_for_more" style="width:300px;padding:0.05rem 3.45rem;line-height:1.7rem;">
                 <input type="button" value="...(more)" class="button-style" onclick="more_transcripts()">
             </div>
             <div id="more_contents" style="display:none">
-                {% for text in sample['scripts'][1:-1] %}
-                    • {{ text }}<br/>
-                {% endfor %}
+                • [[Charlotte]]: That club was hot!<br/>
+                • [[Lisa]]: We're just warming up, my girl.<br/>
+                • (LISA turns the car and CHARLOTTE doesn't recognize where they are.)<br/>
+                • [[Charlotte]]: Wait, wait, wait. I don't think this is the right way.<br/>
+                • [[Lisa]]: (turns to look at CHARLOTTE) It's a shortcut.<br/>
+                • (She laughs.)<br/>
+                • [[Charlotte]]: A shortcut to where?<br/>
+                • (The car hits over something.)<br/>
+                • [[Charlotte]]: Stop. Stop the car.<br/>
+                • [[Lisa]]: It was just a pothole.<br/>
+                • (CHARLOTTE looks back. LISA looks in the mirror.)<br/>
+                • [[Charlotte]]: I think you hit someone.<br/>
             </div>
-            {% endif %}
 
             <div style="width:55px;float:left;">
                 <span class="badge badge-pill badge-info" style="background-color:white;color:#17a2b8;">end</span>
             </div>
             <div style="width:1120px;padding:0.05rem 3.45rem;line-height:1.7rem;">
-                • {{sample['scripts'][-1]}}<br/>
+                • (The tires screech as she stops the car.)<br/>
             </div>
 
-            {% if sample['scripts']|length > 2 %}
             <div id="button_for_hide" style="display:none">
                 <input type="button" value="↑ collapse ↑" class="button-style" onclick="hide_transcripts()">
             </div>
-            {% endif %}
         </h5>
 
         <h4><span class="badge badge-pill badge-info">Annotations:</span></h4>
@@ -414,7 +406,7 @@ author_profile: false
             For each character who appears in the scene (i.e., name in the transcript), please answer the following questions:
         </h5>
         
-        <form class="form-signin" method="POST" action="{{ url_for('submit_label', sample=sample['user'] + '\t' + sample['ID']|string + '\t' + sample['cur_sid']|string) }}">
+        <form class="form-signin" method="POST">
             <style>
                 .xjumbotron {
                     padding:1rem 2rem;
@@ -452,11 +444,10 @@ author_profile: false
                 }
             </style>
             <div class="xjumbotron">
-                <h5><span class="badge badge-pill badge-secondary">Character: {{sample['characters'][sample['cur_sid']]['name']}}</span></h5>
-                    
+                <h5><span class="badge badge-pill badge-secondary">Character: Charlotte</span></h5>
                 <div class="row" id="question1" style = "display:">
                     <h5>
-                        Q1: Choose the age category of {{sample['characters'][sample['cur_sid']]['name']}}.
+                        Q1: Choose the age category of <code>Charlotte</code>.
                         <div class="xtooltip">
                             💬
                             <span class="tooltiptext" style="width:530px">Age is one of the important aspects to identify the personality or intent of a character.</span>
@@ -464,20 +455,21 @@ author_profile: false
                         &nbsp &nbsp
                     </h5>
                     <fieldset id="group_Q1">
-                        {% for index, choice in enumerate([(1, 'Infant or Child (<12)'), (2, 'Child, Teenager or Youth (10~25)'), (3, 'Youth or Middle-Age (25~55)'), (4, 'Middle/Old-Age (>50)'), (0, 'N.A.')]) %}
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" id="Q1_{{index}}" value="{{choice[0]}}" name="Q1" onclick="check_complete()">
-                            <label class="custom-control-label" for="Q1_{{index}}">
-                                <h6>{{choice[1]}}</h6>
-                            </label>
-                        </div>
-                        {% endfor %}
+                        <script type="text/javascript">
+                            var indexes = [1, 2, 3, 4, 0];
+                            var choices = ['Infant or Child (<12)', 'Child, Teenager or Youth (10~25)', 'Youth or Middle-Age (25~55)', 'Middle/Old-Age (>50)', 'N.A.'];
+                            for (var i = 0; i < choices.length; i++) {
+                                document.write('<div class="custom-control custom-radio custom-control-inline"> <input type="radio" class="custom-control-input" id="Q1_'
+                                    + i + '" value="' + indexes[i] + '" name="Q1" onclick="check_complete()"> <label class="custom-control-label" for="Q1_'
+                                    + i + '"> <h6>' + choices[i] + '</h6> </label> </div>');
+                            }
+                        </script>
                     </fieldset>
                 </div>
 
                 <div class="row" id="question2" style = "display:">
                     <h5>
-                        Q2: Identify the occupation or role of {{sample['characters'][sample['cur_sid']]['name']}} in the clip.
+                        Q2: Identify the occupation or role of <code>Charlotte</code> in the clip.
                         <div class="xtooltip">
                             💬
                             <span class="tooltiptext" style="width:550px">Occupation/Role can indicate the intent or cause for the action of a character in an event.</span>
@@ -493,7 +485,7 @@ author_profile: false
 
                 <div class="row" id="question3" style = "display:">
                     <h5>
-                        Q3: Select the emotion(s) of {{sample['characters'][sample['cur_sid']]['name']}} within the duration of the video clip.
+                        Q3: Select the emotion(s) of <code>Charlotte</code> within the duration of the video clip.
                         <div class="xtooltip">
                             💬
                             <span class="tooltiptext" style="width:330px">We follow the categories of eight primary emotions.</span>
@@ -501,25 +493,29 @@ author_profile: false
                         &nbsp &nbsp
                     </h5>
                     <fieldset id="group_Q3">
-                        {% for index, choice in enumerate(sample['Q3_choices'][:-1]) %}
+                        <script type="text/javascript">
+                            var indexes = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+                            var emotions = ['Anger', 'Disgust', 'Doubt', 'Fear', 'Interest', 'Joy', 'Sadness', 'Shame', 'Surprise'];
+                            var tips = ['fury, outrage, wrath, irritability, hostility, resentment, violence', 
+                                        'contempt, disdain, scorn, aversion, distaste, revulsion', 'uncertainty, confusion. distrust', 
+                                        'anxiety, apprehension, nervousness, dread, fright, panic', 
+                                        'anticipation, acceptance, friendliness, trust, kindness, affection, love, devotion', 
+                                        'enjoyment, happiness, relief, bliss, delight, pride, thrill, ecstasy', 
+                                        'grief, sorrow, gloom, melancholy, despair, loneliness, depression', 
+                                        'guilt, embarrassment, chagrin, remorse, regret, contrition', 'astound, shock, wonder, astonishment, amazement'];
+                            
+                            for (var i = 0; i < indexes.length; i++) {
+                                document.write('<div class="custom-control custom-checkbox custom-control-inline"> <input type="checkbox" class="custom-control-input" id="Q3_'
+                                    + i + '" value="' + indexes[i] + '" name="Q3" onclick="check_complete()"> <label class="custom-control-label" for="Q3_' + i + '"><h6>' 
+                                    + emotions[i] + ' <div class="xtooltip"> <strong> ⓘ </strong> <span class="tooltiptext" style="width:250px;color:#17a2b8;background-color:white;border-color:#17a2b8;text-align:bottom;top:105%;left:0%;margin-left:-30px;">' 
+                                    + tips[i] + '</span> </div> </h6> </label> </div>');
+                            }
+                        </script>
                         <div class="custom-control custom-checkbox custom-control-inline">
-                            <input type="checkbox" class="custom-control-input" id="Q3_{{index}}" value="{{choice[0]}}" name="Q3" onclick="check_complete()">
-                            <label class="custom-control-label" for="Q3_{{index}}">
+                            <input type="checkbox" class="custom-control-input" id="Q3_10" value="0" name="Q3" onclick="check_complete()">
+                            <label class="custom-control-label" for="Q3_10">
                                 <h6>
-                                    {{choice[1]}}
-                                    <div class="xtooltip">
-                                        <strong>ⓘ</strong>
-                                        <span class="tooltiptext" style="width:250px;color:#17a2b8;background-color:white;border-color:#17a2b8;text-align:bottom;top:105%;left:0%;margin-left:-30px;">{{choice[2]}}</span>
-                                    </div>
-                                </h6>
-                            </label>
-                        </div>
-                        {% endfor %}
-                        <div class="custom-control custom-checkbox custom-control-inline">
-                            <input type="checkbox" class="custom-control-input" id="Q3_{{index}}" value="{{sample['Q3_choices'][-1][0]}}" name="Q3" onclick="check_complete()">
-                            <label class="custom-control-label" for="Q3_{{index}}">
-                                <h6>
-                                    {{sample['Q3_choices'][-1][1]}}
+                                    Others
                                 </h6>
                             </label>
                         </div>
@@ -528,7 +524,7 @@ author_profile: false
                     
                 <div class="row" id="question4" style = "display:">
                     <h5>Q4: Please select exact 3 different frames in the order of timestamps (in MM:SS format), 
-                        which can cover the character development of {{sample['characters'][sample['cur_sid']]['name']}} 
+                        which can cover the character development of <code>Charlotte</code> 
                         within the clip duration.
                         <div class="xtooltip">
                             💬
@@ -582,7 +578,7 @@ author_profile: false
                         <div class="xtooltip">
                             💬
                             <span class="tooltiptext" style="width:450px">
-                                Tips: (i) The character {{sample['characters'][sample['cur_sid']]['name']}} should be contained in your answer;<br/>
+                                Tips: (i) The character <code>Charlotte</code> should be contained in your answer;<br/>
                                      (ii) Please include the emotion(s) you've labeled in Q3 if related;<br/>
                                     (iii) Please answer based on the event(s) described in both the visual clip and the textual transcripts.
                             </span>
@@ -591,7 +587,7 @@ author_profile: false
                     <br/>
                     <h5>
                         <div style="display:;padding:0rem 2rem;width:1100px;">
-                            ❔ {{sample['characters'][sample['cur_sid']]['test']}} 
+                            ❔ What is probably caused/enabled by the event that LISA turns the car and CHARLOTTE doesn't recognize where they are?
                         </div>
                     </h5>
                     <div class="custom-control custom-radio custom-control-inline">

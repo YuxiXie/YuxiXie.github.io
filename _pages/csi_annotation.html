@@ -1,0 +1,615 @@
+---
+layout: case-study
+permalink: /csi_examples/
+title: "Annotation Example"
+author_profile: false
+---
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/grid_new.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/content.css') }}">
+    <script src="/static/js/video_play.js"></script>
+    <script src="/static/js/layouts.js"></script>
+    <script type="text/javascript">
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        function no_context() {
+            return false;
+        }
+    </script>
+    <script type="text/javascript">
+        function align_timestamp() {
+            on_video_update();
+            
+            var vid = document.getElementById("main_video");
+            vid.addEventListener("timeupdate", function(event) {
+                var start_time = document.getElementById('start_time').innerText.split(":");
+                var btn = document.getElementById("RfL");
+                start_time = parseInt(start_time[0]) * 60 + parseInt(start_time[1]);
+                if (start_time - vid.currentTime == 0) {
+                    btn.disabled = true;
+                    btn.className = "btn btn-default";
+                } else {
+                    btn.disabled = false;
+                    btn.className = "btn btn-warning";
+                }
+
+                var end_time = document.getElementById('end_time').innerText.split(":");
+                var end_btn = document.getElementById('RfE');
+                end_time = parseInt(end_time[0]) * 60 + parseInt(end_time[1]);
+                if (vid.currentTime - end_time < 0.2 && vid.currentTime - end_time >= 0) {
+                    vid.pause();
+                    end_btn.disabled = true;
+                    end_btn.className = "btn btn-default";
+                } else {
+                    end_btn.disabled = false;
+                    end_btn.className = "btn btn-warning";
+                }
+
+                var Q41_time = parseInt(document.getElementById('Q41_MM').value) * 60 + parseInt(document.getElementById('Q41_SS').value);
+                var Q41_btn = document.getElementById('Q41_copy');
+                if (Q41_time - vid.currentTime !== 0) {
+                    Q41_btn.disabled = false;
+                    Q41_btn.className = "btn-primary";
+                    Q41_btn.style = "background-color:mediumpurple;cursor:pointer;";
+                } else {
+                    Q41_btn.disabled = true;
+                    Q41_btn.className = "btn-default";
+                    Q41_btn.style = "background-color:#e9ecef;cursor:;";
+                }
+                var Q42_time = parseInt(document.getElementById('Q42_MM').value) * 60 + parseInt(document.getElementById('Q42_SS').value);
+                var Q42_btn = document.getElementById('Q42_copy');
+                if (Q42_time - vid.currentTime !== 0) {
+                    Q42_btn.disabled = false;
+                    Q42_btn.className = "btn-primary";
+                    Q42_btn.style = "background-color:mediumpurple;cursor:pointer;";
+                } else {
+                    Q42_btn.disabled = true;
+                    Q42_btn.className = "btn-default";
+                    Q42_btn.style = "background-color:#e9ecef;cursor:;";
+                }
+                var Q43_time = parseInt(document.getElementById('Q43_MM').value) * 60 + parseInt(document.getElementById('Q43_SS').value);
+                var Q43_btn = document.getElementById('Q43_copy');
+                if (Q43_time - vid.currentTime !== 0) {
+                    Q43_btn.disabled = false;
+                    Q43_btn.className = "btn-primary";
+                    Q43_btn.style = "background-color:mediumpurple;cursor:pointer;";
+                } else {
+                    Q43_btn.disabled = true;
+                    Q43_btn.className = "btn-default";
+                    Q43_btn.style = "background-color:#e9ecef;cursor:;";
+                }
+
+                check_available();
+            });
+        }
+        function resume_video() {
+            var start_time = document.getElementById('start_time').innerText.split(":");
+            start_time = parseInt(start_time[0]) * 60 + parseInt(start_time[1]);
+            
+            document.getElementById("main_video").currentTime = start_time;
+
+            var btn = document.getElementById("RfL");
+            btn.disabled = true;
+            btn.className = "btn btn-default";
+        }
+        function jump_to_end() {
+            var end_time = document.getElementById('end_time').innerText.split(":");
+            end_time = parseInt(end_time[0]) * 60 + parseInt(end_time[1]);
+            
+            document.getElementById("main_video").currentTime = end_time;
+
+            var btn = document.getElementById("RfE");
+            btn.disabled = true;
+            btn.className = "btn btn-default";
+        }
+    </script>
+    <script>
+        function resume_from(input_id) {
+            var MM = parseInt(document.getElementById(input_id + '_MM').value);
+            var SS = parseInt(document.getElementById(input_id + '_SS').value);
+            var timestamp = MM * 60 + SS;
+            var vid = document.getElementById("main_video");
+
+            if (vid.currentTime !== timestamp) {
+                vid.currentTime = timestamp;
+            }
+        }
+        function copy_to(input_id) {
+            document.getElementById(input_id + '_copy').disabled = true;
+            document.getElementById(input_id + '_copy').className = "btn-default";
+            document.getElementById(input_id + '_copy').style = "background-color:#e9ecef;";
+
+            var timestamp = document.getElementById("main_video").currentTime;
+            var MM = Math.floor(timestamp / 60).toString().padStart(2, "0");
+            var SS = Math.floor(timestamp - 60 * MM).toString().padStart(2, "0");
+
+            document.getElementById(input_id + '_MM').value = MM;
+            document.getElementById(input_id + '_SS').value = SS;
+            check_complete_Q4();
+        }
+        function check_timestamp(input_id) {
+            var MM = document.getElementById(input_id + '_MM').value;
+            var SS = document.getElementById(input_id + '_SS').value;
+
+            let pattern = /^\d+$/;
+            if (MM.match(pattern) && SS.match(pattern) && SS < 60) {
+                MM = parseInt(MM);
+                SS = parseInt(SS);
+                var timestamp = MM * 60 + SS;
+
+                if (timestamp <= document.getElementById("main_video").duration) {
+                    document.getElementById(input_id + '_resume').disabled = false;
+                    document.getElementById(input_id + '_resume').className = "btn-primary";
+                    document.getElementById(input_id + '_resume').style = "background-color:#228B22;cursor:pointer;";
+                } else {
+                    document.getElementById(input_id + '_resume').disabled = true;
+                    document.getElementById(input_id + '_resume').className = "btn-default";
+                    document.getElementById(input_id + '_resume').style = "background-color:#e9ecef;cursor:;";
+                }
+                return timestamp;
+            } else {
+                document.getElementById(input_id + '_resume').disabled = true;
+                document.getElementById(input_id + '_resume').className = "btn-default";
+                document.getElementById(input_id + '_resume').style = "background-color:#e9ecef;cursor:;";
+                return -1;
+            }
+        }
+        function check_available_Q4(input_id) {
+            var MM = document.getElementById(input_id + "_MM").value;
+            var SS = document.getElementById(input_id + "_SS").value;
+        
+            let pattern = /^\d+$/;
+        
+            if (MM.match(pattern)) {
+                for (i = 0; i < MM.length; i++) {
+                    if ('0' !== MM.charAt(i)) {
+                        MM = MM.substring(i, MM.length);
+                        break;
+                    }
+                }
+                MM = MM.padStart(2, "0");
+                document.getElementById(input_id + "_MM").value = MM;
+            }
+            if (SS.match(pattern)) {
+                for (i = 0; i < SS.length; i++) {
+                    if ('0' !== SS.charAt(i)) {
+                        SS = SS.substring(i, SS.length);
+                        break;
+                    }
+                }
+                SS = SS.padStart(2, "0");
+                document.getElementById(input_id + "_SS").value = SS;
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        // check whether the form is complete to submit, if yes, enable the submit button
+        function check_complete() {
+            var valid_Q4 = check_complete_Q4();
+            var valid_Q1 = check_complete_Q1();
+            var valid_Q2 = check_complete_Q2();
+            var valid_Q3 = check_complete_Q3();
+            var valid_Q5 = check_complete_Q5();
+            change_next_button(valid_Q1 && valid_Q2  && valid_Q3 && valid_Q4 && valid_Q5);
+        }
+        function check_complete_Q1() {
+            var is_valid = false;
+            for (var i=0; i<5; i++ ) {
+                var is_check = document.getElementById("Q1_" + i.toString()).checked
+                if(is_check == true){
+                    is_valid = true
+                }
+            }
+            console.log(is_valid);
+            return is_valid;
+        }
+        function check_complete_Q2() {
+            var is_valid = (document.getElementById("Q2").value.length > 0)
+            console.log(is_valid);
+            return is_valid;
+        }
+        function check_complete_Q3() {
+            var is_valid = false;
+            for (var i=0; i<34; i++ ) {
+                var is_check = document.getElementById("Q3_" + i.toString()).checked
+                if(is_check == true){
+                    is_valid = true;
+                    break;
+                }
+            }
+            console.log(is_valid);
+            return is_valid;
+        }
+        function check_complete_Q4() {
+            var Q41_value = check_timestamp("Q41");
+            var Q42_value = check_timestamp("Q42");
+            var Q43_value = check_timestamp("Q43");
+
+            check_available_Q4("Q41");
+            check_available_Q4("Q42");
+            check_available_Q4("Q43");
+
+            var is_valid = Q41_value >= 0 && Q41_value < Q42_value && Q42_value < Q43_value && Q43_value <= document.getElementById("main_video").duration;
+            console.log(is_valid);
+            return is_valid;
+        }
+        function check_complete_Q5() {
+            var is_valid = (document.getElementById("Q5").value.length > 0);
+            console.log(is_valid);
+            return is_valid;
+        }
+        function change_next_button(is_valid){
+            if(is_valid == true){
+                document.getElementById("next").disabled = false
+                document.getElementById("next").className = "btn btn-primary btn-lg btn-block"
+            }
+            else{
+                document.getElementById("next").disabled = true
+                document.getElementById("next").className = "btn btn-default btn-lg btn-block"
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        history.pushState(null, null, document.URL);
+        window.addEventListener('popstate', function () {
+            history.pushState(null, null, document.URL);
+        });
+    </script>
+    <script type="text/javascript">
+        var current_question = 1
+        
+        // when click the next button
+        function next_button() {
+            switch_to_submit();
+        }
+        function jump_to_question(q_index){
+            current_question = q_index
+            show_question()
+            change_next_button(false)
+        }
+        function show_question() {
+            for (var i=1; i<=5; i++ ){
+                question = document.getElementById("question" + i.toString())
+                if (i <= current_question){
+                    question.style = "display:"
+                }
+                else{
+                    question.style = "display:none;"
+                }
+            }
+        }
+        function switch_to_submit(){
+            document.getElementById("submit").style = "display:"
+            document.getElementById("next").style = "display:none;"
+        }
+    </script>
+</head>
+
+<body>
+    <div id="app" class="container">
+        <header>
+        <!-- Header content -->
+        <span class="status">Designed by XYX</span>
+        </header>
+        <main class="site-content">
+        <!-- <h1>{{length}}</h1> -->
+        <div class="row">
+            <h3>
+                <span class="badge badge-pill">Current User:
+                    {% if current_user.is_authenticated %}
+                        {{ current_user.get_id() }}
+                    {% endif %}
+                </span>
+            </h3>
+            <form method="POST" action="{{ url_for('logout') }}">
+                <button class="btn btn-default btn-block" type="submit"><h5>Logout</h5></button>
+            </form>
+        </div>
+        <h5 align="right">CLIP ID: {{ sample['ID'] }}<br>Number of Completed Annotations (Samples): {{count}}</h5>
+
+        <h4><span class="badge badge-pill badge-info">Instruction:</span></h4>
+        <h5>
+            For each video clip (labeled by its start and end times), 
+            please read the corresponding block of transcripts 
+            to understand what is happening 
+            and what the people are talking about in the scene.  
+        </h5>
+
+        <h4><span class="badge badge-pill badge-info">Episode: {{ sample['title'] }}</span> </h4>
+        <h5>Clip Start Time: <span id="start_time">{{ sample['start_time'] }}</span></h5>
+        <h5>Clip End Time: <span id="end_time">{{ sample['end_time'] }}</span></h5>
+        <h5>Clip Duration: <span id="clip_duration">{{ sample['duration'] }} seconds</span></h5>
+
+        <h4><span class="badge badge-pill badge-info">Video:</span></h4>
+        <h5>
+            <video id="main_video" width="1100" controls controlsList="nodownload" onloadstart="resume_video()" oncanplay="align_timestamp()" ontimeupdate="align_timestamp()">
+                <source src="{{ sample['video_path'] }}" type="video/mp4">
+                Sorry, your browser doesn't support embedded videos.
+            </video>
+            <br/>
+            <input type="button" id="backward" value="◄◄" class="btn btn-warning" style="background-color:#FFA500;color:white;" onclick="playback()">
+            <input type="button" id="play_pause" value="Play" class="btn btn-success" onclick="play_pause()">
+            <input type="button" id="forward" value="►►" class="btn btn-warning" style="background-color:#FFA500;color:white;" onclick="playfor()">
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="button" id="RfL" class="btn btn-warning" value="Resume from Clip Start Time [{{ sample['start_time'] }}]🕓" onclick="resume_video()">
+            <input type="button" id="RfE" class="btn btn-warning" value="Jump to Clip End Time [{{ sample['end_time'] }}]🕓" onclick="jump_to_end()">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="button" id="PiP" value="👉 Enter Picture-in-Picture Mode 👈" class="btn btn-primary" onclick="picture_in_picture()">
+        </h5>
+        <h5>
+            <p id="tmp"></p>
+            <div style="width:550px;float:left;">
+                <label for="label">⏱ Current Timestamp (MM:SS) </label>
+                <input type="number" id="timestamp_MM" min="0" disabled style="width:3em;text-align:right;">
+                <strong>:</strong>
+                <input type="number" id="timestamp_SS" min="0" max="59" disabled style="width:3em;text-align:left;">
+            </div>
+            <div style="margin-left:150px;">
+                <label for="label">⏰ Jump to timestamp → </label>
+                <input type="number" id="customized_timestamp_MM" min="0" placeholder="MM" style="width:3em;text-align:right;" oninput="check_available()">
+                <strong>:</strong> 
+                <input type="number" id="customized_timestamp_SS" min="0" max="59" placeholder="SS" style="width:3em;text-align:left;" oninput="check_available()">
+                <input type="button" id="customized_timestamp_submit" value=" GO " disabled=true class="btn-default" onclick="change_timestamp()">
+            </div>
+        </h5>
+
+        <h4><span class="badge badge-pill badge-info">Transcripts:</span></h4>
+        <h5>
+            <style>
+                .button-style {
+                    background-color: #e0ffff;
+                    border: none;
+                    color: blue;
+                    text-align: center;
+                    text-decoration: underline;
+                    display: inside;
+                    font-size: 20px;
+                    margin: 4px 2px;
+                    cursor: pointer;
+                }
+            </style>
+            <div style="width:55px;float:left;">
+                <span class="badge badge-pill badge-info" style="background-color:white;color:#17a2b8;">start</span>
+            </div>
+            <div style="width:1120px;padding:0.05rem 3.45rem;line-height:1.7rem;">
+                • {{sample['scripts'][0]}}<br/>
+            </div>
+            
+            {% if sample['scripts']|length > 2 %}
+            <div id="button_for_more" style="width:300px;padding:0.05rem 3.45rem;line-height:1.7rem;">
+                <input type="button" value="...(more)" class="button-style" onclick="more_transcripts()">
+            </div>
+            <div id="more_contents" style="display:none">
+                {% for text in sample['scripts'][1:-1] %}
+                    • {{ text }}<br/>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div style="width:55px;float:left;">
+                <span class="badge badge-pill badge-info" style="background-color:white;color:#17a2b8;">end</span>
+            </div>
+            <div style="width:1120px;padding:0.05rem 3.45rem;line-height:1.7rem;">
+                • {{sample['scripts'][-1]}}<br/>
+            </div>
+
+            {% if sample['scripts']|length > 2 %}
+            <div id="button_for_hide" style="display:none">
+                <input type="button" value="↑ collapse ↑" class="button-style" onclick="hide_transcripts()">
+            </div>
+            {% endif %}
+        </h5>
+
+        <h4><span class="badge badge-pill badge-info">Annotations:</span></h4>
+        <h5>
+            For each character who appears in the scene (i.e., name in the transcript), please answer the following questions:
+        </h5>
+        
+        <form class="form-signin" method="POST" action="{{ url_for('submit_label', sample=sample['user'] + '\t' + sample['ID']|string + '\t' + sample['cur_sid']|string) }}">
+            <style>
+                .xjumbotron {
+                    padding:1rem 2rem;
+                    margin-bottom:auto;
+                    max-width:auto;
+                    background-color:#e9ecef;
+                    border-radius:.3rem
+                }
+
+                .xtooltip {
+                    position: relative;
+                    display: inline-block;
+                  }
+                  
+                .xtooltip .tooltiptext {
+                    visibility: hidden;
+                    width: 650px;
+                    font-size: small;
+                    background-color:black;
+                    color: #e9ecef;
+                    border-color:#e9ecef;
+                    border-style:solid;
+                    border-width:thin;
+                    text-align: left;
+                    border-radius: 6px;
+                    padding: 5px 5px;
+                  
+                    /* Position the tooltip */
+                    position: absolute;
+                    z-index: 1;
+                }
+                  
+                .xtooltip:hover .tooltiptext {
+                    visibility: visible;
+                }
+            </style>
+            <div class="xjumbotron">
+                <h5><span class="badge badge-pill badge-secondary">Character: {{sample['characters'][sample['cur_sid']]['name']}}</span></h5>
+                    
+                <div class="row" id="question1" style = "display:">
+                    <h5>
+                        Q1: Choose the age category of {{sample['characters'][sample['cur_sid']]['name']}}.
+                        <div class="xtooltip">
+                            💬
+                            <span class="tooltiptext" style="width:530px">Age is one of the important aspects to identify the personality or intent of a character.</span>
+                        </div>
+                        &nbsp &nbsp
+                    </h5>
+                    <fieldset id="group_Q1">
+                        {% for index, choice in enumerate([(1, 'Infant or Child (<12)'), (2, 'Child, Teenager or Youth (10~25)'), (3, 'Youth or Middle-Age (25~55)'), (4, 'Middle/Old-Age (>50)'), (0, 'N.A.')]) %}
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" class="custom-control-input" id="Q1_{{index}}" value="{{choice[0]}}" name="Q1" onclick="check_complete()">
+                            <label class="custom-control-label" for="Q1_{{index}}">
+                                <h6>{{choice[1]}}</h6>
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </fieldset>
+                </div>
+
+                <div class="row" id="question2" style = "display:">
+                    <h5>
+                        Q2: Identify the occupation or role of {{sample['characters'][sample['cur_sid']]['name']}} in the clip.
+                        <div class="xtooltip">
+                            💬
+                            <span class="tooltiptext" style="width:550px">Occupation/Role can indicate the intent or cause for the action of a character in an event.</span>
+                        </div>
+                        &nbsp &nbsp
+                    </h5>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <fieldset>
+                            <input type="text" size="80" id="Q2" name="Q2" oninput="check_complete()">
+                        </fieldset>
+                    </div>
+                </div>
+
+                <div class="row" id="question3" style = "display:">
+                    <h5>
+                        Q3: Select the emotion(s) of {{sample['characters'][sample['cur_sid']]['name']}} within the duration of the video clip.
+                        <div class="xtooltip">
+                            💬
+                            <span class="tooltiptext" style="width:330px">We follow the categories of eight primary emotions.</span>
+                        </div>
+                        &nbsp &nbsp
+                    </h5>
+                    <fieldset id="group_Q3">
+                        {% for index, choice in enumerate(sample['Q3_choices'][:-1]) %}
+                        <div class="custom-control custom-checkbox custom-control-inline">
+                            <input type="checkbox" class="custom-control-input" id="Q3_{{index}}" value="{{choice[0]}}" name="Q3" onclick="check_complete()">
+                            <label class="custom-control-label" for="Q3_{{index}}">
+                                <h6>
+                                    {{choice[1]}}
+                                    <div class="xtooltip">
+                                        <strong>ⓘ</strong>
+                                        <span class="tooltiptext" style="width:250px;color:#17a2b8;background-color:white;border-color:#17a2b8;text-align:bottom;top:105%;left:0%;margin-left:-30px;">{{choice[2]}}</span>
+                                    </div>
+                                </h6>
+                            </label>
+                        </div>
+                        {% endfor %}
+                        <div class="custom-control custom-checkbox custom-control-inline">
+                            <input type="checkbox" class="custom-control-input" id="Q3_{{index}}" value="{{sample['Q3_choices'][-1][0]}}" name="Q3" onclick="check_complete()">
+                            <label class="custom-control-label" for="Q3_{{index}}">
+                                <h6>
+                                    {{sample['Q3_choices'][-1][1]}}
+                                </h6>
+                            </label>
+                        </div>
+                    </fieldset>
+                </div>
+                    
+                <div class="row" id="question4" style = "display:">
+                    <h5>Q4: Please select exact 3 different frames in the order of timestamps (in MM:SS format), 
+                        which can cover the character development of {{sample['characters'][sample['cur_sid']]['name']}} 
+                        within the clip duration.
+                        <div class="xtooltip">
+                            💬
+                            <span class="tooltiptext" style="width:550px">
+                                Tips: (i) Exact alignment between frames and emotions is not compulsory;<br/>
+                                     (ii) The 3 frames should be relatively evenly-distributed in the clip duration;<br/>
+                                    (iii) The frames which contain complementary information to the transcripts are preferred.
+                            </span>
+                        </div>
+                        &nbsp &nbsp
+                    </h5>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <fieldset>
+                            <p>
+                                <strong>frame 1:</strong>
+                                <input id="Q41_MM" name="Q41_MM" type="number" min="0" placeholder="MM" size="1" style="text-align:right;width:3.5em" oninput="check_complete()">
+                                <strong>:</strong> 
+                                <input id="Q41_SS" name="Q41_SS" type="number" min="0" max="59"  placeholder="SS" size="1" style="text-align:left;width:3em" oninput="check_complete()">
+                                <strong>   </strong> 
+                                <input type="button" id="Q41_copy" value=" copy from current timestamp " class="btn-primary" style="background-color:mediumpurple;cursor: pointer;" onclick="copy_to('Q41')">
+                                <strong>   </strong> 
+                                <input type="button" id="Q41_resume" value=" resume from here " disabled=true class="btn-default" onclick="resume_from('Q41')">
+                            </p>
+                            <p>
+                                <strong>frame 2:</strong>
+                                <input id="Q42_MM" name="Q42_MM" type="number" min="0" placeholder="MM" size="1" style="text-align:right;width:3.5em" oninput="check_complete()">
+                                <strong>:</strong> 
+                                <input id="Q42_SS" name="Q42_SS" type="number" min="0" max="59"  placeholder="SS" size="1" style="text-align:left;width:3em" oninput="check_complete()">
+                                <strong>   </strong> 
+                                <input type="button" id="Q42_copy" value=" copy from current timestamp " class="btn-primary" style="background-color:mediumpurple;cursor: pointer;" onclick="copy_to('Q42')">
+                                <strong>   </strong> 
+                                <input type="button" id="Q42_resume" value=" resume from here " disabled=true class="btn-default" onclick="resume_from('Q42')">
+                            </p>
+                            <p>
+                                <strong>frame 3:</strong>
+                                <input id="Q43_MM" name="Q43_MM" type="number" min="0" placeholder="MM" size="1" style="text-align:right;width:3.5em" oninput="check_complete()">
+                                <strong>:</strong> 
+                                <input id="Q43_SS" name="Q43_SS" type="number" min="0" max="59" placeholder="SS" size="1" style="text-align:left;width:3em" oninput="check_complete()">
+                                <strong>   </strong> 
+                                <input type="button" id="Q43_copy" value=" copy from current timestamp " class="btn-primary" style="background-color:mediumpurple;cursor: pointer;" onclick="copy_to('Q43')">
+                                <strong>   </strong> 
+                                <input type="button" id="Q43_resume" value=" resume from here " disabled=true class="btn-default" onclick="resume_from('Q43')">
+                            </p>
+                        </fieldset>
+                    </div>
+                </div>
+
+                <div class="row" id="question5" style = "display:">
+                    <h5>
+                        Q5: Based on your above annotations, please answer the reasoning question. 
+                        <div class="xtooltip">
+                            💬
+                            <span class="tooltiptext" style="width:450px">
+                                Tips: (i) The character {{sample['characters'][sample['cur_sid']]['name']}} should be contained in your answer;<br/>
+                                     (ii) Please include the emotion(s) you've labeled in Q3 if related;<br/>
+                                    (iii) Please answer based on the event(s) described in both the visual clip and the textual transcripts.
+                            </span>
+                        </div>
+                    </h5>
+                    <br/>
+                    <h5>
+                        <div style="display:;padding:0rem 2rem;width:1100px;">
+                            ❔ {{sample['characters'][sample['cur_sid']]['test']}} 
+                        </div>
+                    </h5>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <fieldset>
+                            <input type="text" size="120" id="Q5" name="Q5" oninput="check_complete()">
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <button id='next' disabled=false class="btn btn-primary btn-lg btn-block" onclick="next_button()" type="button"><h3>Next</h3></button> -->
+            <p><h5 id="submit_warning" style="display:none;">⚠ You cannot change the above inputs once you've submited.</h5></p>
+            <button id='submit' style = "display:none;" class="btn btn-primary btn-lg btn-block" type="submit"><h3>Submit</h3></button>
+            <input type="button" id="next" value="Next" disabled=true class="btn btn-default btn-lg btn-block" onclick="next_button()">
+            <br/>
+        </form>
+        
+      </main>
+    </div>
+</body>
+</html>

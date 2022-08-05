@@ -13,7 +13,7 @@
     <script src="https://vlcsr.comp.nus.edu.sg/static/js/video_play.js"></script>
     <script src="https://vlcsr.comp.nus.edu.sg/static/js/layouts.js"></script>
     <script type="text/javascript">
-        <!-- document.addEventListener('contextmenu', event => event.preventDefault()); -->
+        document.addEventListener('contextmenu', event => event.preventDefault());
     </script>
     <script type="text/javascript">
         function align_timestamp() {
@@ -44,39 +44,7 @@
                     end_btn.className = "btn btn-warning";
                 }
 
-                var Q41_time = parseInt(document.getElementById('Q41_MM').value) * 60 + parseInt(document.getElementById('Q41_SS').value);
-                var Q41_btn = document.getElementById('Q41_copy');
-                if (Q41_time - vid.currentTime !== 0) {
-                    Q41_btn.disabled = false;
-                    Q41_btn.className = "btn-primary";
-                    Q41_btn.style = "background-color:mediumpurple;cursor:pointer;";
-                } else {
-                    Q41_btn.disabled = true;
-                    Q41_btn.className = "btn-default";
-                    Q41_btn.style = "background-color:#e9ecef;cursor:;";
-                }
-                var Q42_time = parseInt(document.getElementById('Q42_MM').value) * 60 + parseInt(document.getElementById('Q42_SS').value);
-                var Q42_btn = document.getElementById('Q42_copy');
-                if (Q42_time - vid.currentTime !== 0) {
-                    Q42_btn.disabled = false;
-                    Q42_btn.className = "btn-primary";
-                    Q42_btn.style = "background-color:mediumpurple;cursor:pointer;";
-                } else {
-                    Q42_btn.disabled = true;
-                    Q42_btn.className = "btn-default";
-                    Q42_btn.style = "background-color:#e9ecef;cursor:;";
-                }
-                var Q43_time = parseInt(document.getElementById('Q43_MM').value) * 60 + parseInt(document.getElementById('Q43_SS').value);
-                var Q43_btn = document.getElementById('Q43_copy');
-                if (Q43_time - vid.currentTime !== 0) {
-                    Q43_btn.disabled = false;
-                    Q43_btn.className = "btn-primary";
-                    Q43_btn.style = "background-color:mediumpurple;cursor:pointer;";
-                } else {
-                    Q43_btn.disabled = true;
-                    Q43_btn.className = "btn-default";
-                    Q43_btn.style = "background-color:#e9ecef;cursor:;";
-                }
+                
 
                 check_available();
             });
@@ -270,16 +238,17 @@
             for (var i=1; i<=5; i++ ){
                 question = document.getElementById("question" + i.toString())
                 if (i <= current_question){
-                    question.style = "display:"
+                    question.style = "display:";
                 }
                 else{
-                    question.style = "display:none;"
+                    question.style = "display:none;";
                 }
             }
         }
         function switch_to_submit(){
-            document.getElementById("submit").style = "display:"
-            document.getElementById("next").style = "display:none;"
+            document.getElementById("submit").style = "display:";
+            document.getElementById("submit_warning").style = "display:";
+            document.getElementById("next").style = "display:none;";
         }
     </script>
 </head>
@@ -294,14 +263,14 @@
         <!-- <h1>{{length}}</h1> -->
         <div class="row">
             <h3>
-                <span class="badge badge-pill">Current User: EXAMPLE 1
+                <span class="badge badge-pill">Current User: EXAMPLES
                 </span>
             </h3>
             <!-- <form method="POST" action="{{ url_for('logout') }}">
                 <button class="btn btn-default btn-block" type="submit"><h5>Logout</h5></button>
             </form> -->
         </div>
-        <h5 align="right">CLIP ID: 0<br>Number of Completed Annotations (Samples): 0</h5>
+        <h5 align="right">CLIP ID: 1<br>Number of Completed Annotations (Samples): 1</h5>
 
         <h4><span class="badge badge-pill badge-info">Instruction:</span></h4>
         <h5>
@@ -312,9 +281,9 @@
         </h5>
 
         <h4><span class="badge badge-pill badge-info">Episode: S01E20 - Sounds of Silence</span> </h4>
-        <h5>Clip Start Time: <span id="start_time"><code>00:14</code></span></h5>
-        <h5>Clip End Time: <span id="end_time"><code>00:32</code></span></h5>
-        <h5>Clip Duration: <span id="clip_duration"><code>18</code> seconds</span></h5>
+        <h5>Clip Start Time: <span id="start_time"><code>11:14</code></span></h5>
+        <h5>Clip End Time: <span id="end_time"><code>12:38</code></span></h5>
+        <h5>Clip Duration: <span id="clip_duration"><code>84</code> seconds</span></h5>
 
         <h4><span class="badge badge-pill badge-info">Video:</span></h4>
         <h5>
@@ -327,8 +296,8 @@
             <input type="button" id="play_pause" value="Play" class="btn btn-success" onclick="play_pause()">
             <input type="button" id="forward" value="►►" class="btn btn-warning" style="background-color:#FFA500;color:white;" onclick="playfor()">
             &nbsp;&nbsp;&nbsp;&nbsp;
-            <input type="button" id="RfL" class="btn btn-warning" value="Resume from Clip Start Time [00:14]🕓" onclick="resume_video()">
-            <input type="button" id="RfE" class="btn btn-warning" value="Jump to Clip End Time [00:32]🕓" onclick="jump_to_end()">
+            <input type="button" id="RfL" class="btn btn-warning" value="Resume from Clip Start Time [11:14]🕓" onclick="resume_video()">
+            <input type="button" id="RfE" class="btn btn-warning" value="Jump to Clip End Time [12:38]🕓" onclick="jump_to_end()">
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <input type="button" id="PiP" value="👉 Enter Picture-in-Picture Mode 👈" class="btn btn-primary" onclick="picture_in_picture()">
         </h5>
@@ -368,32 +337,32 @@
                 <span class="badge badge-pill badge-info" style="background-color:white;color:#17a2b8;">start</span>
             </div>
             <div style="width:1120px;padding:0.05rem 3.45rem;line-height:1.7rem;">
-                • (Women are laughing. A car, Nevada license #OVK 195, drives by. There are two women inside the car.)<br/>
+                • [[Sara]]: We understand you don't want a homicide investigation upsetting your students.<br/>
             </div>
             
             <div id="button_for_more" style="width:300px;padding:0.05rem 3.45rem;line-height:1.7rem;">
                 <input type="button" value="...(more)" class="button-style" onclick="more_transcripts()">
             </div>
             <div id="more_contents" style="display:none">
-                • [[Charlotte]]: That club was hot!<br/>
-                • [[Lisa]]: We're just warming up, my girl.<br/>
-                • (LISA turns the car and CHARLOTTE doesn't recognize where they are.)<br/>
-                • [[Charlotte]]: Wait, wait, wait. I don't think this is the right way.<br/>
-                • [[Lisa]]: (turns to look at CHARLOTTE) It's a shortcut.<br/>
-                • (She laughs.)<br/>
-                • [[Charlotte]]: A shortcut to where?<br/>
-                • (The car hits over something.)<br/>
-                • [[Charlotte]]: Stop. Stop the car.<br/>
-                • [[Lisa]]: It was just a pothole.<br/>
-                • (CHARLOTTE looks back. LISA looks in the mirror.)<br/>
-                • [[Charlotte]]: I think you hit someone.<br/>
+                • [[Jane Gilbert]]: I'm severely deaf, and I can communicate fine. I'd appreciate it if you'd look at me when you speak to me. I wear a hearing aid and I can read lips. You could have asked if I needed an interpreter.<br/>
+                • [[Sara]]: I'm sorry. I didn't mean to offend you.<br/>
+                • [[Jane Gilbert]]: There are 152 students at my school. We live together, we study together, we eat together. We're a family. And Brian is dead.<br/>
+                • [[Warrick]]: Dr. Gilbert, we're just following protocol. We need to speak with Brian's friends; his roommates.<br/>
+                • [[Sara]]: We'll also need access to his records.<br/>
+                • [[Jane Gilbert]]: The crime didn't happen here -- it happened out there.<br/>
+                • [[Sara]]: I'm not accusing anybody of anything.<br/>
+                • [[Jane Gilbert]]: Neither am I, but there are more of you, right? Send someone else - someone with more understanding of this school of my students.<br/>
+                • [[Warrick]]: But we're here now, and evidence is time-sensitive.<br/>
+                • [[Jane Gilbert]]: How can you solve a crime without understanding the v*ctim?<br/>
+                • (Frustrated, DR. GILBERT signs to the interpreter. SARA turns to look back at HALLEY.)<br/>
+                • [[Halley]]: Um ... she's kicking us out.<br/>
             </div>
 
             <div style="width:55px;float:left;">
                 <span class="badge badge-pill badge-info" style="background-color:white;color:#17a2b8;">end</span>
             </div>
             <div style="width:1120px;padding:0.05rem 3.45rem;line-height:1.7rem;">
-                • (The tires screech as she stops the car.)<br/>
+                • (WARRICK and SARA both leave the office.) (HALLEY looks at DR. GILBERT and apologizes to her.)<br/>
             </div>
 
             <div id="button_for_hide" style="display:none">
@@ -406,7 +375,7 @@
             For each character who appears in the scene (i.e., name in the transcript), please answer the following questions:
         </h5>
         
-        <form class="form-signin" method="POST">
+        <form class="form-signin" metho="get" action="https://yuxixie.github.io/_pages/csi_annotation_3.html">
             <style>
                 .xjumbotron {
                     padding:1rem 2rem;
@@ -443,11 +412,11 @@
                     visibility: visible;
                 }
             </style>
-            <div class="xjumbotron" action="{{ url_for('submit_label', 'https://yuxixie.github.io/_pages/csi_annotation.html'}}>
-                <h5><span class="badge badge-pill badge-secondary">Character: Charlotte</span></h5>
+            <div class="xjumbotron">
+                <h5><span class="badge badge-pill badge-secondary">Character: Warrick</span></h5>
                 <div class="row" id="question1" style = "display:">
                     <h5>
-                        Q1: Choose the age category of <code>Charlotte</code>.
+                        Q1: Choose the age category of <code>Warrick</code>.
                         <div class="xtooltip">
                             💬
                             <span class="tooltiptext" style="width:530px">Age is one of the important aspects to identify the personality or intent of a character.</span>
@@ -459,17 +428,18 @@
                             var indexes = [1, 2, 3, 4, 0];
                             var choices = ['Infant or Child (<12)', 'Child, Teenager or Youth (10~25)', 'Youth or Middle-Age (25~55)', 'Middle/Old-Age (>50)', 'N.A.'];
                             for (var i = 0; i < choices.length; i++) {
-                                document.write('<div class="custom-control custom-radio custom-control-inline"> <input type="radio" class="custom-control-input" id="Q1_'
+                                document.write('<div class="custom-control custom-radio custom-control-inline"> <input type="radio" disabled class="custom-control-input" id="Q1_'
                                     + i + '" value="' + indexes[i] + '" name="Q1" onclick="check_complete()"> <label class="custom-control-label" for="Q1_'
                                     + i + '"> <h6>' + choices[i] + '</h6> </label> </div>');
                             }
+                            document.getElementById("Q1_2").checked = true;
                         </script>
                     </fieldset>
                 </div>
 
                 <div class="row" id="question2" style = "display:">
                     <h5>
-                        Q2: Identify the occupation or role of <code>Charlotte</code> in the clip.
+                        Q2: Identify the occupation or role of <code>Warrick</code> in the clip.
                         <div class="xtooltip">
                             💬
                             <span class="tooltiptext" style="width:550px">Occupation/Role can indicate the intent or cause for the action of a character in an event.</span>
@@ -478,14 +448,18 @@
                     </h5>
                     <div class="custom-control custom-radio custom-control-inline">
                         <fieldset>
-                            <input type="text" size="80" id="Q2" name="Q2" oninput="check_complete()">
+                            <p>
+                                <strong>e.g. ans: </strong>
+                                <input type="text" disabled size="80" id="Q2" name="Q2" value="(male) investigator" oninput="check_complete()">
+                                <br/> * "male" is optional here, but can distinguish Warrick fom Sara.
+                            </p>
                         </fieldset>
                     </div>
                 </div>
 
                 <div class="row" id="question3" style = "display:">
                     <h5>
-                        Q3: Select the emotion(s) of <code>Charlotte</code> within the duration of the video clip.
+                        Q3: Select the emotion(s) of <code>Warrick</code> within the duration of the video clip.
                         <div class="xtooltip">
                             💬
                             <span class="tooltiptext" style="width:330px">We follow the categories of eight primary emotions.</span>
@@ -505,15 +479,18 @@
                                         'guilt, embarrassment, chagrin, remorse, regret, contrition', 'astound, shock, wonder, astonishment, amazement'];
                             
                             for (var i = 0; i < indexes.length; i++) {
-                                document.write('<div class="custom-control custom-checkbox custom-control-inline"> <input type="checkbox" class="custom-control-input" id="Q3_'
+                                document.write('<div class="custom-control custom-checkbox custom-control-inline"> <input type="checkbox" disabled class="custom-control-input" id="Q3_'
                                     + i + '" value="' + indexes[i] + '" name="Q3" onclick="check_complete()"> <label class="custom-control-label" for="Q3_' + i + '"><h6>' 
                                     + emotions[i] + ' <div class="xtooltip"> <strong> ⓘ </strong> <span class="tooltiptext" style="width:250px;color:#17a2b8;background-color:white;border-color:#17a2b8;text-align:bottom;top:105%;left:0%;margin-left:-30px;">' 
                                     + tips[i] + '</span> </div> </h6> </label> </div>');
                             }
+
+                            document.getElementById('Q3_4').checked = true;
+                            document.getElementById('Q3_7').checked = true;
                         </script>
                         <div class="custom-control custom-checkbox custom-control-inline">
-                            <input type="checkbox" class="custom-control-input" id="Q3_10" value="0" name="Q3" onclick="check_complete()">
-                            <label class="custom-control-label" for="Q3_10">
+                            <input type="checkbox" disabled class="custom-control-input" id="Q3_9" value="0" name="Q3" onclick="check_complete()">
+                            <label class="custom-control-label" for="Q3_9">
                                 <h6>
                                     Others
                                 </h6>
@@ -524,14 +501,16 @@
                     
                 <div class="row" id="question4" style = "display:">
                     <h5>Q4: Please select exact 3 different frames in the order of timestamps (in MM:SS format), 
-                        which can cover the character development of <code>Charlotte</code> 
+                        which can cover the character development of <code>Warrick</code> 
                         within the clip duration.
                         <div class="xtooltip">
                             💬
-                            <span class="tooltiptext" style="width:550px">
+                            <span class="tooltiptext" style="width:650px">
                                 Tips: (i) Exact alignment between frames and emotions is not compulsory;<br/>
-                                     (ii) The 3 frames should be relatively evenly-distributed in the clip duration;<br/>
-                                    (iii) The frames which contain complementary information to the transcripts are preferred.
+                                     (ii) The 3 frames should be arranged in the order of time;<br/>
+                                    (iii) The 3 frames should contain various plot information and be relatively evenly-distributed in the clip;<br/>
+                                     (iv) The frames which contain complementary information to the transcripts are preferred;<br/>
+                                     (v) Please use the <u>resume from here</u> button to check whether the timestamp is at the right position.
                             </span>
                         </div>
                         &nbsp &nbsp
@@ -540,36 +519,44 @@
                         <fieldset>
                             <p>
                                 <strong>frame 1:</strong>
-                                <input id="Q41_MM" name="Q41_MM" type="number" min="0" placeholder="MM" size="1" style="text-align:right;width:3.5em" oninput="check_complete()">
+                                <input id="Q41_MM" disabled name="Q41_MM" type="number" min="0" placeholder="MM" size="1" style="text-align:right;width:3.5em" oninput="check_complete()">
                                 <strong>:</strong> 
-                                <input id="Q41_SS" name="Q41_SS" type="number" min="0" max="59"  placeholder="SS" size="1" style="text-align:left;width:3em" oninput="check_complete()">
+                                <input id="Q41_SS" disabled name="Q41_SS" type="number" min="0" max="59"  placeholder="SS" size="1" style="text-align:left;width:3em" oninput="check_complete()">
                                 <strong>   </strong> 
-                                <input type="button" id="Q41_copy" value=" copy from current timestamp " class="btn-primary" style="background-color:mediumpurple;cursor: pointer;" onclick="copy_to('Q41')">
+                                <input type="button" disabled id="Q41_copy" value=" copy from current timestamp " class="btn-default" style="background-color:#e9ecef;cursor:;" onclick="copy_to('Q41')">
                                 <strong>   </strong> 
-                                <input type="button" id="Q41_resume" value=" resume from here " disabled=true class="btn-default" onclick="resume_from('Q41')">
+                                <input type="button" id="Q41_resume" value=" resume from here " class="btn-primary" style="background-color:#228B22;cursor:pointer;" onclick="resume_from('Q41')">
                             </p>
                             <p>
                                 <strong>frame 2:</strong>
-                                <input id="Q42_MM" name="Q42_MM" type="number" min="0" placeholder="MM" size="1" style="text-align:right;width:3.5em" oninput="check_complete()">
+                                <input id="Q42_MM" disabled name="Q42_MM" type="number" min="0" placeholder="MM" size="1" style="text-align:right;width:3.5em" oninput="check_complete()">
                                 <strong>:</strong> 
-                                <input id="Q42_SS" name="Q42_SS" type="number" min="0" max="59"  placeholder="SS" size="1" style="text-align:left;width:3em" oninput="check_complete()">
+                                <input id="Q42_SS" disabled name="Q42_SS" type="number" min="0" max="59"  placeholder="SS" size="1" style="text-align:left;width:3em" oninput="check_complete()">
                                 <strong>   </strong> 
-                                <input type="button" id="Q42_copy" value=" copy from current timestamp " class="btn-primary" style="background-color:mediumpurple;cursor: pointer;" onclick="copy_to('Q42')">
+                                <input type="button" disabled id="Q42_copy" value=" copy from current timestamp " class="btn-default" style="background-color:#e9ecef;cursor:;" onclick="copy_to('Q42')">
                                 <strong>   </strong> 
-                                <input type="button" id="Q42_resume" value=" resume from here " disabled=true class="btn-default" onclick="resume_from('Q42')">
+                                <input type="button" id="Q42_resume" value=" resume from here " class="btn-primary" style="background-color:#228B22;cursor:pointer;" onclick="resume_from('Q42')">
                             </p>
                             <p>
                                 <strong>frame 3:</strong>
-                                <input id="Q43_MM" name="Q43_MM" type="number" min="0" placeholder="MM" size="1" style="text-align:right;width:3.5em" oninput="check_complete()">
+                                <input id="Q43_MM" disabled name="Q43_MM" type="number" min="0" placeholder="MM" size="1" style="text-align:right;width:3.5em" oninput="check_complete()">
                                 <strong>:</strong> 
-                                <input id="Q43_SS" name="Q43_SS" type="number" min="0" max="59" placeholder="SS" size="1" style="text-align:left;width:3em" oninput="check_complete()">
+                                <input id="Q43_SS" disabled name="Q43_SS" type="number" min="0" max="59" placeholder="SS" size="1" style="text-align:left;width:3em" oninput="check_complete()">
                                 <strong>   </strong> 
-                                <input type="button" id="Q43_copy" value=" copy from current timestamp " class="btn-primary" style="background-color:mediumpurple;cursor: pointer;" onclick="copy_to('Q43')">
+                                <input type="button" disabled id="Q43_copy" value=" copy from current timestamp " class="btn-default" style="background-color:#e9ecef;cursor:;" onclick="copy_to('Q43')">
                                 <strong>   </strong> 
-                                <input type="button" id="Q43_resume" value=" resume from here " disabled=true class="btn-default" onclick="resume_from('Q43')">
+                                <input type="button" id="Q43_resume" value=" resume from here " class="btn-primary" style="background-color:#228B22;cursor:pointer;" onclick="resume_from('Q43')">
                             </p>
                         </fieldset>
                     </div>
+                    <script type="text/javascript">
+                        document.getElementById('Q41_MM').value = '11';
+                        document.getElementById('Q42_MM').value = '12';
+                        document.getElementById('Q43_MM').value = '12';
+                        document.getElementById('Q41_SS').value = 39;
+                        document.getElementById('Q42_SS').value = 11;
+                        document.getElementById('Q43_SS').value = 23;
+                    </script>
                 </div>
 
                 <div class="row" id="question5" style = "display:">
@@ -577,31 +564,36 @@
                         Q5: Based on your above annotations, please answer the reasoning question. 
                         <div class="xtooltip">
                             💬
-                            <span class="tooltiptext" style="width:450px">
-                                Tips: (i) The character <code>Charlotte</code> should be contained in your answer;<br/>
+                            <span class="tooltiptext" style="width:500px">
+                                Tips: (i) The character <code>Warrick</code> should be contained in your answer;<br/>
                                      (ii) Please include the emotion(s) you've labeled in Q3 if related;<br/>
-                                    (iii) Please answer based on the event(s) described in both the visual clip and the textual transcripts.
+                                    (iii) Please avoid directly copying from the transcripts or describing the clip;<br/>
+                                     (iv) Specifically, your answer should be complete sentence(s).
                             </span>
                         </div>
                     </h5>
                     <br/>
                     <h5>
                         <div style="display:;padding:0rem 2rem;width:1100px;">
-                            ❔ What is probably caused/enabled by the event that LISA turns the car and CHARLOTTE doesn't recognize where they are?
+                            ❔ What probably caused/enabled the event that <u>Warrick says: But we're here now, and evidence is time-sensitive</u>?
                         </div>
                     </h5>
                     <div class="custom-control custom-radio custom-control-inline">
                         <fieldset>
-                            <input type="text" size="120" id="Q5" name="Q5" oninput="check_complete()">
+                            <p>
+                                <strong>e.g. ans: </strong>
+                                <input type="text" disabled size="120" id="Q5" name="Q5" value="Jane Gilbert is reluctant to talk to Warrick and Sara, and Warrick wants to use this to persuade her." oninput="check_complete()">
+                                <br/> * The character <code>Warrick</code> is included. And interpreted via characters' intents.
+                            </p>
                         </fieldset>
                     </div>
                 </div>
             </div>
 
             <!-- <button id='next' disabled=false class="btn btn-primary btn-lg btn-block" onclick="next_button()" type="button"><h3>Next</h3></button> -->
-            <!-- <p><h5 id="submit_warning" style="display:none;">⚠ You cannot change the above inputs once you've submited.</h5></p>
-            <button id='submit' style = "display:none;" class="btn btn-primary btn-lg btn-block" type="submit"><h3>Submit</h3></button> -->
-            <input type="submit" id="next" value="Next" disabled=true class="btn btn-default btn-lg btn-block">
+            <p><h5 id="submit_warning" style="display:none;">⚠ You cannot change the above inputs once you've submited.</h5></p>
+            <button id='submit' style = "display:none;" class="btn btn-primary btn-lg btn-block" type="submit"><h3>Submit</h3></button>
+            <input type="button" id="next" value="Next" class="btn btn-primary btn-lg btn-block" onclick="next_button()">
             <br/>
         </form>
         

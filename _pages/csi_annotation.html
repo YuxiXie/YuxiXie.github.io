@@ -443,7 +443,7 @@
                     visibility: visible;
                 }
             </style>
-            <div class="xjumbotron">
+            <div class="xjumbotron" action="{{ url_for('submit_label', 'https://yuxixie.github.io/_pages/csi_annotation.html'}}>
                 <h5><span class="badge badge-pill badge-secondary">Character: Charlotte</span></h5>
                 <div class="row" id="question1" style = "display:">
                     <h5>
@@ -599,9 +599,9 @@
             </div>
 
             <!-- <button id='next' disabled=false class="btn btn-primary btn-lg btn-block" onclick="next_button()" type="button"><h3>Next</h3></button> -->
-            <p><h5 id="submit_warning" style="display:none;">⚠ You cannot change the above inputs once you've submited.</h5></p>
-            <button id='submit' style = "display:none;" class="btn btn-primary btn-lg btn-block" type="submit"><h3>Submit</h3></button>
-            <input type="button" id="next" value="Next" disabled=true class="btn btn-default btn-lg btn-block" onclick="next_button()">
+            <!-- <p><h5 id="submit_warning" style="display:none;">⚠ You cannot change the above inputs once you've submited.</h5></p>
+            <button id='submit' style = "display:none;" class="btn btn-primary btn-lg btn-block" type="submit"><h3>Submit</h3></button> -->
+            <input type="submit" id="next" value="Next" disabled=true class="btn btn-default btn-lg btn-block">
             <br/>
         </form>
         

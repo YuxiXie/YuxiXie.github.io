@@ -278,7 +278,7 @@
                 document.getElementById('Q5_or').value = (sum / tmp * 100).toPrecision(5).toString();
 
                 var rate = parseFloat(document.getElementById('Q5_or').value);
-                if (rate >= 50) {
+                if (rate >= 50 || cnt < 3) {
                     is_valid = false;
                 }
             }

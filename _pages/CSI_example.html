@@ -667,26 +667,43 @@
                             <div class="custom-control custom-checkbox custom-control-inline">
                                 <fieldset id="group_Q6">
                                     <table style="border-collapse:collapse;width:100%;">
-                                    {% for index in range(2) %}
                                         <tr>
-                                            <th id="ct{{index * 2}}" style="display:none;">
-                                                Frame {{index * 2 + 1}}
+                                            <th id="ct0" style="display:none;">
+                                                Frame 1
                                             </th>
-                                            <th id="ct{{index * 2 + 1}}" style="display:none;">
-                                                Frame {{index * 2 + 2}}
+                                            <th id="ct1" style="display:none;">
+                                                Frame 2
                                             </th>
                                         </tr>
                                         <tr>
-                                            <td id="cvs{{index * 2}}" style="display:none;" class="mycontainer">
-                                                <input type="checkbox" id="Q6_{{index * 2}}" name="Q6" value="{{index * 2}}" onclick="check_complete('Q6')" onchange="check_complete('Q6')">
-                                                <label for="Q6_{{index * 2}}"><canvas id="canvas{{index * 2}}" class="canvas"></canvas></label>
+                                            <td id="cvs0" style="display:none;" class="mycontainer">
+                                                <input type="checkbox" id="Q6_0" name="Q6" value="0" onclick="check_complete('Q6')" onchange="check_complete('Q6')">
+                                                <label for="Q6_0"><canvas id="canvas0" class="canvas"></canvas></label>
                                             </td>
-                                            <td id="cvs{{index * 2 + 1}}" style="display:none;" class="mycontainer">
-                                                <input type="checkbox" id="Q6_{{index * 2 + 1}}" name="Q6" value="{{index * 2 + 1}}" onclick="check_complete('Q6')" onchange="check_complete('Q6')">
-                                                <label for="Q6_{{index * 2 + 1}}"><canvas id="canvas{{index * 2 + 1}}" class="canvas"></canvas></label>
+                                            <td id="cvs1" style="display:none;" class="mycontainer">
+                                                <input type="checkbox" id="Q6_1" name="Q6" value="1" onclick="check_complete('Q6')" onchange="check_complete('Q6')">
+                                                <label for="Q6_1"><canvas id="canvas1" class="canvas"></canvas></label>
                                             </td>
                                         </tr>
-                                    {% endfor %}
+                                        
+                                        <tr>
+                                            <th id="ct2" style="display:none;">
+                                                Frame 3
+                                            </th>
+                                            <th id="ct3" style="display:none;">
+                                                Frame 4
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <td id="cvs2" style="display:none;" class="mycontainer">
+                                                <input type="checkbox" id="Q6_2" name="Q6" value="2" onclick="check_complete('Q6')" onchange="check_complete('Q6')">
+                                                <label for="Q6_2"><canvas id="canvas2" class="canvas"></canvas></label>
+                                            </td>
+                                            <td id="cvs3" style="display:none;" class="mycontainer">
+                                                <input type="checkbox" id="Q6_3" name="Q6" value="3" onclick="check_complete('Q6')" onchange="check_complete('Q6')">
+                                                <label for="Q6_3"><canvas id="canvas3" class="canvas"></canvas></label>
+                                            </td>
+                                        </tr>
                                     </table>
                                 </fieldset>
                             </div>

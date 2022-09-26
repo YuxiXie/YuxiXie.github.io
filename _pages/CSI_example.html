@@ -254,6 +254,8 @@
             var is_valid = (document.getElementById("Q5").value.length > 0);
             var sc_tokens = document.getElementById('sc_tokens').value.split("\t");
             var stp_words = document.getElementById('stp_words').value.split("\t");
+
+            document.getElementById('tmp').innerHTML = sc_tokens.length;
             
             if (is_valid) {
                 var tokens = document.getElementById("Q5").value.trim().split(/\W+/);
@@ -391,6 +393,8 @@
                 <input type="button" id="customized_timestamp_submit" value=" GO " disabled=true class="btn-default" onclick="change_timestamp()">
             </div>
         </h5>
+
+        <p id="tmp"></p>
 
         <div style="display:none;">
             <input id="n_emotions" value="13">

@@ -251,12 +251,12 @@
             return is_valid;
         }
         function check_complete_Q5() {
-            document.getElementById('tmp').innerHTML = document.getElementById("Q5").value;
+            //document.getElementById('tmp').innerHTML = document.getElementById("Q5").value;
             var is_valid = (document.getElementById("Q5").value.length > 0);
             var sc_tokens = document.getElementById('sc_tokens').value.split(" ");
             var stp_words = document.getElementById('stp_words').value.split(" ");
 
-            document.getElementById('tmp').innerHTML = sc_tokens.length;
+            //document.getElementById('tmp').innerHTML = sc_tokens.length;
             
             if (is_valid) {
                 var tokens = document.getElementById("Q5").value.trim().split(/\W+/);

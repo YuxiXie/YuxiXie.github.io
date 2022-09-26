@@ -253,8 +253,8 @@
         function check_complete_Q5() {
             document.getElementById('tmp').innerHTML = document.getElementById("Q5").value;
             var is_valid = (document.getElementById("Q5").value.length > 0);
-            var sc_tokens = document.getElementById('sc_tokens').value.split("\t");
-            var stp_words = document.getElementById('stp_words').value.split("\t");
+            var sc_tokens = document.getElementById('sc_tokens').value.split(" ");
+            var stp_words = document.getElementById('stp_words').value.split(" ");
 
             document.getElementById('tmp').innerHTML = sc_tokens.length;
             
@@ -402,8 +402,8 @@
             <input id="min-fr" value="2">
             <input id="num-fr" value="2">
             <input id="max-fr" value="4">
-            <input id="sc_tokens" value="(\twomen\tlaughing\t.\tcar\t,\tnevada\tlicense\t#\tovk\t195\t,\tdrives\t.\ttwo\twomen\tinside\tcar\t.\t)\t[\t[\tcharlotte\t]\t]\t:\tclub\thot\t!\t[\t[\tlisa\t]\t]\t:\t're\twarming\t,\tgirl\t.\t(\tlisa\tturns\tcar\tcharlotte\tn't\trecognize\t.\t)\t[\t[\tcharlotte\t]\t]\t:\twait\t,\twait\t,\twait\t.\tn't\tthink\tright\tway\t.\t[\t[\tlisa\t]\t]\t:\t(\tturns\tlook\tcharlotte\t)\t's\tshortcut\t.\t(\tlaughs\t.\t)\t[\t[\tcharlotte\t]\t]\t:\tshortcut\t?\t(\tcar\thits\tsomething\t.\t)\t[\t[\tcharlotte\t]\t]\t:\tstop\t.\tstop\tcar\t.\t[\t[\tlisa\t]\t]\t:\tpothole\t.\t(\tcharlotte\tlooks\tback\t.\tlisa\tlooks\tmirror\t.\t)\t[\t[\tcharlotte\t]\t]\t:\tthink\thit\tsomeone\t.\t(\ttires\tscreech\tstops\tcar\t.\t)">
-            <input id="stp_words" value="i\tme\tmy\tmyself\twe\tour\tours\tourselves\tyou\tyou're\tyou've\tyou'll\tyou'd\tyour\tyours\tyouhey\tthem\ttheir\ttheirs\tthemselves\twhat\twhich\twho\twhom\tthis\tthat\tthat'll\tthese\tthose\tam\tis\tare\twas\twere\tbe\tbeen\tbeing\thave\thas\thad\thaving\tdo\tdoes\tdid\tdoing\ta\tan\tthe\tand\tbut\tif\tor\tbecause\tas\tuntil\twhile\tof\tat\tby\tfor\twith\tabout\tagainst\tbetween\tinto\tthrough\tduring\tbefore\tafter\tabove\tbelow\tto\tfrom\tup\tdown\tin\tout\ton\toff\tover\tunder\tagain\tfurther\tthen\tonce\there\tthere\twhen\twhere\twhy\thow\tall\tany\tboth\teach\tfew\tmore\tmost\tother\tsome\tsuch\tno\tnor\tnot\tonly\town\tsame\tso\tthan\ttoo\tvery\ts\tt\tcan\twill\tjust\tdon\tdon't\tshould\tshould've\tnow\td\tll\tm\to\tre\tve\ty\tain\taren\taren't\tcouldn\tcouldn't\tdidn\tdidn't\tdoesn\tdoesn't\thadn\thadn't\thasn\thasn't\thaven\thaven't\tisn\tisn't\tma\tmightn\tmightn't\tmustn\tmustn't\tneedn\tneedn't\tshan\tshan't\tshouldn\tshouldn't\twasn\twasn't\tweren\tweren't\twon\twon't\twouldn\twouldn't">
+            <input id="sc_tokens" value="( women laughing . car , nevada license # ovk 195 , drives . two women inside car . ) [ [ charlotte ] ] : club hot ! [ [ lisa ] ] : 're warming , girl . ( lisa turns car charlotte n't recognize . ) [ [ charlotte ] ] : wait , wait , wait . n't think right way . [ [ lisa ] ] : ( turns look charlotte ) 's shortcut . ( laughs . ) [ [ charlotte ] ] : shortcut ? ( car hits something . ) [ [ charlotte ] ] : stop . stop car . [ [ lisa ] ] : pothole . ( charlotte looks back . lisa looks mirror . ) [ [ charlotte ] ] : think hit someone . ( tires screech stops car . )">
+            <input id="stp_words" value="i me my myself we our ours ourselves you you're you've you'll you'd your yours youhey them their theirs themselves what which who whom this that that'll these those am is are was were be been being have has had having do does did doing a an the and but if or because as until while of at by for with about against between into through during before after above below to from up down in out on off over under again further then once here there when where why how all any both each few more most other some such no nor not only own same so than too very s t can will just don don't should should've now d ll m o re ve y ain aren aren't couldn couldn't didn didn't doesn doesn't hadn hadn't hasn hasn't haven haven't isn isn't ma mightn mightn't mustn mustn't needn needn't shan shan't shouldn shouldn't wasn wasn't weren weren't won won't wouldn wouldn't">
             <input id="tmp_video_url" value="https://csivideosdata.s3.ap-southeast-1.amazonaws.com/season1/S01E20.mp4">
         </div>
 

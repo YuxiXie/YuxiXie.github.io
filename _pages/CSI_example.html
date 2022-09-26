@@ -251,6 +251,7 @@
             return is_valid;
         }
         function check_complete_Q5() {
+            document.getElementById('tmp').innerHTML = document.getElementById("Q5").value;
             var is_valid = (document.getElementById("Q5").value.length > 0);
             var sc_tokens = document.getElementById('sc_tokens').value.split("\t");
             var stp_words = document.getElementById('stp_words').value.split("\t");

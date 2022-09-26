@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <!-- <link rel="stylesheet" href="https://www.w3schools.com/lib/w3schools30.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+    <link rel="stylesheet" href="https://vlcsr.comp.nus.edu.sg/static/css/grid_new.css">
+    <link rel="stylesheet" href="https://vlcsr.comp.nus.edu.sg/static/css/content.css">
+    <script src="https://vlcsr.comp.nus.edu.sg/static/js/video_play.js"></script>
+    <script src="https://vlcsr.comp.nus.edu.sg/static/js/annotated_times.js"></script>
+    <script src="https://vlcsr.comp.nus.edu.sg/static/js/layouts.js"></script>
+    <script type="text/javascript">
+        function align_timestamp() {
+            var height = window.getComputedStyle(document.getElementById("left_block")).getPropertyValue("height");
+            document.getElementById("right_block").style = "margin-top:-" + height.toString() + ";";
+            document.getElementById("annotation_block").style = "height:" + (parseFloat(height) * 0.85) + "px;";
+            on_video_update();            
+            var vid = document.getElementById("main_video");
+            vid.addEventListener("timeupdate", function(event) {
+                var start_time = document.getElementById('start_time').innerText.split(":");
+                var btn = document.getElementById("RfL");
+                start_time = parseInt(start_time[0]) * 60 + parseInt(start_time[1]);
+                if (start_time - vid.currentTime == 0) {
+                    btn.disabled = true;
+                    btn.className = "btn btn-default";
+                } else {
+                    btn.disabled = false;
+                    btn.className = "btn btn-warning";
+                }
+
+                var end_time = document.getElementById('end_time').innerText.split(":");
+                var end_btn = document.getElementById('RfE');
+                end_time = parseInt(end_time[0]) * 60 + parseInt(end_time[1]);
+                if (vid.currentTime - end_time < 0.2 && vid.currentTime - end_time >= 0) {
+                    vid.pause();
+                    end_btn.disabled = true;
+                    end_btn.className = "btn btn-default";
+                } else {
+                    end_btn.disabled = false;
+                    end_btn.className = "btn btn-warning";
+                }
+                
+                var min_fr = parseInt(document.getElementById('num-fr').value);
+                for (var i = 0; i < min_fr; i++) {
+                    enable_copy('Q4'+ i.toString());
+                }
+            });
+        }
+        function resume_video() {
+            var start_time = document.getElementById('start_time').innerText.split(":");
+            start_time = parseInt(start_time[0]) * 60 + parseInt(start_time[1]);
+            
+            document.getElementById("main_video").currentTime = start_time;
+
+            var btn = document.getElementById("RfL");
+            btn.disabled = true;
+            btn.className = "btn btn-default";
+        }
+        function jump_to_end() {
+            var end_time = document.getElementById('end_time').innerText.split(":");
+            end_time = parseInt(end_time[0]) * 60 + parseInt(end_time[1]);
+            
+            document.getElementById("main_video").currentTime = end_time;
+
+            var btn = document.getElementById("RfE");
+            btn.disabled = true;
+            btn.className = "btn btn-default";
+        }
+    </script>
+    <script type="text/javascript">
+        function draw_frames(MS, fr_id) {
+            var start_time = document.getElementById('start_time').innerText.split(":");
+            start_time = parseInt(start_time[0]) * 60 + parseInt(start_time[1]);
+            var end_time = document.getElementById('end_time').innerText.split(":");
+            end_time = parseInt(end_time[0]) * 60 + parseInt(end_time[1]);
+            document.getElementById('Q6_' + fr_id).checked = false;
+
+            if (MS >= start_time && MS <= end_time) {
+                var copy_video = document.createElement("video");
+                copy_video.src = document.getElementById("tmp_video_url").value;
+
+                //setTimeout(() => { 
+                copy_video.addEventListener('loadeddata', function () {
+                    var canvas = document.getElementById("canvas" + fr_id);
+                    canvas.width = copy_video.videoWidth * 0.25;
+                    canvas.height = copy_video.videoHeight * 0.25;
+
+                    copy_video.pause();
+                    copy_video.currentTime = MS;
+                    copy_video.pause();
+                    setTimeout(() => { 
+                        canvas.getContext('2d').drawImage(copy_video, 
+                                                          0, 0, copy_video.videoWidth, copy_video.videoHeight,
+                                                          0, 0, canvas.width, canvas.height);
+                    }, 3000);
+                })
+                //}, 3000);
+
+                document.getElementById('ct' + fr_id).style = "display:;padding:8px;text-align:center;border-bottom:1px solid #e9ecef;";
+                document.getElementById('cvs' + fr_id).style = "display:;padding:8px;text-align:center;border-bottom:1px solid #e9ecef;";
+                document.getElementById('canvas' + fr_id).style = "display:;border:1px solid darkgray;";
+            } else {
+                document.getElementById('cvs' + fr_id).style = "display:none;";
+                document.getElementById('ct' + fr_id).style = "display:none;";
+                document.getElementById('canvas' + fr_id).style = "display:none;"
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        function copy_and_check(input_id) {
+            copy_to(input_id);
+            check_complete_Q4(input_id);
+        }
+        function add_frame() {
+            var num_fr = parseInt(document.getElementById('num-fr').value);
+            var max_fr = parseInt(document.getElementById('max-fr').value);
+            if (max_fr > num_fr) {
+                document.getElementById('toadd_' + num_fr).style = "display:;";
+                document.getElementById('num-fr').value = num_fr + 1;
+
+                if (max_fr == num_fr + 1) {
+                    document.getElementById('toadd').style = "display:none;";
+                }
+
+                change_next_button(false);
+            }
+        }
+        function remove_frame(fr_id) {
+            var num_fr = parseInt(document.getElementById('num-fr').value);
+            var min_fr = parseInt(document.getElementById('min-fr').value);
+            var frames = [];
+            for (var i = min_fr; i < num_fr; i++) {
+                var MM = document.getElementById('Q4' + i + '_MM').value;
+                var SS = document.getElementById('Q4' + i + '_SS').value;
+                
+                if (i == num_fr - 1) {
+                    document.getElementById('Q4' + i + '_MM').value = "";
+                    document.getElementById('Q4' + i + '_SS').value = "";
+                    document.getElementById('toadd_' + i).style = "display:none;"
+                }
+                if (i != parseInt(fr_id)) {
+                    frames.push(MM + '-' + SS);
+                }
+            }
+            for (var i = min_fr; i < num_fr - 1; i++) {
+                var MS = frames[i - min_fr].split("-");
+                document.getElementById('Q4' + i + '_MM').value = MS[0];
+                document.getElementById('Q4' + i + '_SS').value = MS[1];
+            }
+            
+            for (var i = parseInt(fr_id); i < num_fr; i++) {
+                var v = check_complete_Q4('Q4' + i);
+            }
+            
+            document.getElementById('num-fr').value = num_fr - 1; 
+            document.getElementById('toadd').style = "display:;";
+
+            check_complete('Q5');
+        }
+    </script>
+    <script type="text/javascript">
+        var tokenizer = require( 'wink-tokenizer' );
+        var tok = tokenizer();
+        // check whether the form is complete to submit, if yes, enable the submit button
+        function check_complete(qid) {
+            var valid_Q4 = check_complete_Q4(qid);
+            var valid_Q1 = check_complete_Q1();
+            var valid_Q2 = check_complete_Q2();
+            var valid_Q3 = check_complete_Q3();
+            var valid_Q5 = check_complete_Q5();
+            var valid_Q6 = check_complete_Q6();
+            change_next_button(valid_Q1 && valid_Q2  && valid_Q3 && valid_Q4 && valid_Q5 && valid_Q6);
+        }
+        function check_complete_Q1() {
+            var is_valid = false;
+            for (var i=0; i<5; i++ ) {
+                var is_check = document.getElementById("Q1_" + i.toString()).checked
+                if(is_check == true){
+                    is_valid = true
+                }
+            }
+            console.log(is_valid);
+            return is_valid;
+        }
+        function check_complete_Q2() {
+            var is_valid = (document.getElementById("Q2").value.length > 0);
+            console.log(is_valid);
+            return is_valid;
+        }
+        function check_complete_Q3() {
+            var is_valid = false;
+            var n_emotions = parseInt(document.getElementById("n_emotions").value);
+            for (var i=0; i<=n_emotions; i++ ) {
+                var is_check = document.getElementById("Q3_" + i.toString()).checked;
+                if(is_check == true){
+                    is_valid = true;
+                    break;
+                }
+            }
+            if (document.getElementById("Q3_" + n_emotions.toString()).checked) {
+                document.getElementById("Q3_" + n_emotions.toString() + "_txt_field").style = 'display:';
+                is_valid = (is_valid && document.getElementById("Q3_" + n_emotions.toString() + "_txt").value.length > 0);
+            } else {
+                document.getElementById("Q3_" + n_emotions.toString() + "_txt_field").style = 'display:none';
+            }
+            console.log(is_valid);
+            return is_valid;
+        }
+        function check_complete_Q4(qid) {
+            var fr_id = -1;
+            if (qid.charAt(1) == '4') {
+                fr_id = parseInt(qid.charAt(2));
+            }
+
+            var start_time = document.getElementById('start_time').innerText.split(":");
+            start_time = parseInt(start_time[0]) * 60 + parseInt(start_time[1]);
+            var end_time = document.getElementById('end_time').innerText.split(":");
+            end_time = parseInt(end_time[0]) * 60 + parseInt(end_time[1]);
+
+            var prev_value = start_time - 1e-6;
+            var is_valid = true;
+            var Q4_value = 0;
+
+            var num_fr = parseInt(document.getElementById('num-fr').value);
+            for (var i = 0; i < num_fr; i++) {
+                check_available_annotation('Q4'+ i.toString());
+                Q4_value = check_timestamp('Q4'+ i.toString());
+                
+                if (i == fr_id) {
+                    draw_frames(Q4_value, fr_id);
+                }
+
+                if (Q4_value <= prev_value) {
+                    is_valid = false;
+                } else {
+                    prev_value = Q4_value;
+                }
+            }
+            
+            if (Q4_value > end_time) {
+                is_valid = false;
+            }
+            
+            console.log(is_valid);
+            return is_valid;
+        }
+        function check_complete_Q5() {
+            var is_valid = (document.getElementById("Q5").value.length > 0);
+            var sc_tokens = document.getElementById('sc_tokens').value.split("\t");
+            var stp_words = document.getElementById('stp_words').value.split("\t");
+            
+            if (is_valid) {
+                var tokens = document.getElementById("Q5").value.trim().split(/\W+/);
+                var cnt = 0;
+                var sum = 0;
+                for (var i = 0; i < tokens.length; i++) {
+                    var token = tokens[i].toLowerCase();
+                    if (!stp_words.includes(token) && token.trim().length > 0) {
+                        cnt += 1
+                        if (sc_tokens.includes(token)) {
+                            sum = sum + 1;
+                        }
+                    }
+                }
+                var tmp = 1;
+                if (cnt > tmp) {
+                    tmp = cnt;
+                }
+                document.getElementById('Q5_or').value = (sum / tmp * 100).toPrecision(5).toString();
+
+                var rate = parseFloat(document.getElementById('Q5_or').value);
+                if (rate >= 50) {
+                    is_valid = false;
+                }
+            }
+            console.log(is_valid);
+            return is_valid;
+        }
+        function check_complete_Q6() {
+            var is_valid = false;
+            var n_frames = parseInt(document.getElementById("num-fr").value);
+            var checked_cnt = 0;
+            var min_cnt = Math.floor((parseInt(document.getElementById('min-fr').value) + 1) / 2)
+
+            for (var i = 0; i <= n_frames; i++) {
+                var is_check = document.getElementById("Q6_" + i.toString()).checked;
+                if (is_check == true) {
+                    checked_cnt += 1;
+                    if (checked_cnt >= min_cnt) {
+                        is_valid = true;
+                        break;
+                    }
+                }
+            }
+            
+            console.log(is_valid);
+            return is_valid;
+        }
+    </script>
+    <script type="text/javascript">
+        var current_question = 1
+        // when click the next button
+        function next_button() {
+            switch_to_submit();
+        }
+    </script>
+    <script type="text/javascript">
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        history.pushState(null, null, document.URL);
+        window.addEventListener('popstate', function () {
+            history.pushState(null, null, document.URL);
+        });
+        window.addEventListener('keydown', function(e) {
+            if (e.keyIdentifier=='U+000A'||e.keyIdentifier=='Enter'||e.keyCode==13) {
+                if (e.target.nodeName=='INPUT'&&e.target.type=='text') {
+                    e.preventDefault();
+                    return false;
+                }
+            }
+        }, true);
+    </script>
+</head>
+
+<body>
+    <div class="top-block">
+        <header>
+            <span class="status">Designed by XYX</span>
+        </header>
+        <main class="site-content">
+            <div class="row">
+                <h3>
+                    <span class="badge badge-pill">Current User: EXAMPLES </span>
+                </h3>
+            </div>
+
+            <h5 align="right">CLIP ID: 0<br>Number of Completed Annotations (Samples): 0</h5>
+
+            <h4><span class="badge badge-pill badge-info">Instruction:</span></h4>
+            <h5>
+                For each video clip (labeled by its start and end times), 
+                please read the corresponding block of transcripts 
+                to understand what is happening 
+                and what the people are talking about in the scene.  
+            </h5>
+
+            <h4><span class="badge badge-pill badge-info">Episode: S01E20 - Sounds of Silence</span> </h4>
+            <h5>Clip Start Time: <span id="start_time"><code>00:14</code></span></h5>
+            <h5>Clip End Time: <span id="end_time"><code>00:32</code></span></h5>
+            <h5>Clip Duration: <span id="clip_duration"><code>18</code> seconds</span></h5>
+        
+        </main>
+    </div>
+
+    <div id="left_block" class="left-block" style="height:auto;">
+        <h4><span class="badge badge-pill badge-info">Video:</span></h4>
+        <h5>
+            <video id="main_video" style="width:calc(50% - 25px);" controls controlsList="nodownload" onloadstart="resume_video()" oncanplay="align_timestamp()" ontimeupdate="align_timestamp()">
+                <source src="https://csivideosdata.s3.ap-southeast-1.amazonaws.com/season1/S01E20.mp4" type="video/mp4">
+                Sorry, your browser doesn't support embedded videos.
+            </video>
+            <br/>
+            <input type="button" id="backward" value="◄◄" class="btn btn-warning" style="background-color:#FFA500;color:white;" onclick="playback()">
+            <input type="button" id="play_pause" value="Play" class="btn btn-success" onclick="play_pause()">
+            <input type="button" id="forward" value="►►" class="btn btn-warning" style="background-color:#FFA500;color:white;" onclick="playfor()">
+            &nbsp;
+            <input type="button" id="RfL" class="btn btn-warning" value="Resume from Start [00:14]🕓" onclick="resume_video()">
+            <input type="button" id="RfE" class="btn btn-warning" value="Jump to End [00:32]🕓" onclick="jump_to_end()">
+            &nbsp;
+            <input type="button" style="display:none;" id="PiP" value="Enter Picture-in-Picture Mode 👁‍🗨" class="btn btn-primary" onclick="picture_in_picture()">
+        </h5>
+        <h5>
+            <div style="float:left;">
+                <label for="label">⏱ Current Timestamp (<code>MM</code> : <code>SS.SSS</code>) </label>
+                <input type="number" id="timestamp_MM" min="0" disabled style="width:3em;text-align:right;">
+                <strong>:</strong>
+                <input type="number" step="0.001" id="timestamp_SS" min="0" max="59.999" disabled style="width:4.5em;text-align:left;">
+            </div>
+        </h5>
+        <h5>
+            <div style="float:left;">
+                <label for="label">⏰ Jump to timestamp → </label>
+                <input type="number" id="customized_timestamp_MM" min="0" placeholder="MM" style="width:3em;text-align:right;" oninput="check_available()">
+                <strong>:</strong> 
+                <input type="number" step="0.001" id="customized_timestamp_SS" min="0" max="59.999" placeholder="SS.SSS" style="width:4.5em;text-align:left;" onchange="check_available()">
+                <input type="button" id="customized_timestamp_submit" value=" GO " disabled=true class="btn-default" onclick="change_timestamp()">
+            </div>
+        </h5>
+
+        <div style="display:none;">
+            <input id="n_emotions" value="13">
+            <input id="min-fr" value="2">
+            <input id="num-fr" value="2">
+            <input id="max-fr" value="4">
+            <input id="sc_tokens" value="(\twomen\tlaughing\t.\tcar\t,\tnevada\tlicense\t#\tovk\t195\t,\tdrives\t.\ttwo\twomen\tinside\tcar\t.\t)\t[\t[\tcharlotte\t]\t]\t:\tclub\thot\t!\t[\t[\tlisa\t]\t]\t:\t're\twarming\t,\tgirl\t.\t(\tlisa\tturns\tcar\tcharlotte\tn't\trecognize\t.\t)\t[\t[\tcharlotte\t]\t]\t:\twait\t,\twait\t,\twait\t.\tn't\tthink\tright\tway\t.\t[\t[\tlisa\t]\t]\t:\t(\tturns\tlook\tcharlotte\t)\t's\tshortcut\t.\t(\tlaughs\t.\t)\t[\t[\tcharlotte\t]\t]\t:\tshortcut\t?\t(\tcar\thits\tsomething\t.\t)\t[\t[\tcharlotte\t]\t]\t:\tstop\t.\tstop\tcar\t.\t[\t[\tlisa\t]\t]\t:\tpothole\t.\t(\tcharlotte\tlooks\tback\t.\tlisa\tlooks\tmirror\t.\t)\t[\t[\tcharlotte\t]\t]\t:\tthink\thit\tsomeone\t.\t(\ttires\tscreech\tstops\tcar\t.\t)">
+            <input id="stp_words" value="i\tme\tmy\tmyself\twe\tour\tours\tourselves\tyou\tyou're\tyou've\tyou'll\tyou'd\tyour\tyours\tyouhey\tthem\ttheir\ttheirs\tthemselves\twhat\twhich\twho\twhom\tthis\tthat\tthat'll\tthese\tthose\tam\tis\tare\twas\twere\tbe\tbeen\tbeing\thave\thas\thad\thaving\tdo\tdoes\tdid\tdoing\ta\tan\tthe\tand\tbut\tif\tor\tbecause\tas\tuntil\twhile\tof\tat\tby\tfor\twith\tabout\tagainst\tbetween\tinto\tthrough\tduring\tbefore\tafter\tabove\tbelow\tto\tfrom\tup\tdown\tin\tout\ton\toff\tover\tunder\tagain\tfurther\tthen\tonce\there\tthere\twhen\twhere\twhy\thow\tall\tany\tboth\teach\tfew\tmore\tmost\tother\tsome\tsuch\tno\tnor\tnot\tonly\town\tsame\tso\tthan\ttoo\tvery\ts\tt\tcan\twill\tjust\tdon\tdon't\tshould\tshould've\tnow\td\tll\tm\to\tre\tve\ty\tain\taren\taren't\tcouldn\tcouldn't\tdidn\tdidn't\tdoesn\tdoesn't\thadn\thadn't\thasn\thasn't\thaven\thaven't\tisn\tisn't\tma\tmightn\tmightn't\tmustn\tmustn't\tneedn\tneedn't\tshan\tshan't\tshouldn\tshouldn't\twasn\twasn't\tweren\tweren't\twon\twon't\twouldn\twouldn't">
+            <input id="tmp_video_url" value="https://csivideosdata.s3.ap-southeast-1.amazonaws.com/season1/S01E20.mp4">
+        </div>
+
+        <h4><span class="badge badge-pill badge-info">Transcripts:</span></h4>
+
+        <div class="scrollbar-block scrollbar-block-2" style="width:calc(50% - 25px);height:250px;box-shadow:inset 0 0 5px 5px #bbdede;">
+            <div class="transcript-block">
+                <h5>
+                    <div style="width:55px;float:left;">
+                        <span class="badge badge-pill badge-info" style="background-color:white;color:#17a2b8;">start</span>
+                    </div>
+                    <div style="width:auto;padding:0.05rem 3.45rem;line-height:1.7rem">
+                        • (Women are laughing. A car, Nevada license #OVK 195, drives by. There are two women inside the car.)<br/>
+                    </div>
+                    
+                    <div id="button_for_more" style="width:300px;padding:0.05rem 3.45rem;line-height:1.7rem;">
+                        <input type="button" value="...(more)" class="button-style" onclick="more_transcripts()">
+                    </div>
+                    <div id="more_contents" style="display:none">
+                        • [[Charlotte]]: That club was hot!<br/>
+                        • [[Lisa]]: We're just warming up, my girl.<br/>
+                        • (LISA turns the car and CHARLOTTE doesn't recognize where they are.)<br/>
+                        • [[Charlotte]]: Wait, wait, wait. I don't think this is the right way.<br/>
+                        • [[Lisa]]: (turns to look at CHARLOTTE) It's a shortcut.<br/>
+                        • (She laughs.)<br/>
+                        • [[Charlotte]]: A shortcut to where?<br/>
+                        • (The car hits over something.)<br/>
+                        • [[Charlotte]]: Stop. Stop the car.<br/>
+                        • [[Lisa]]: It was just a pothole.<br/>
+                        • (CHARLOTTE looks back. LISA looks in the mirror.)<br/>
+                        • [[Charlotte]]: I think you hit someone.<br/>
+                    </div>
+
+                    <div style="width:55px;float:left;">
+                        <span class="badge badge-pill badge-info" style="background-color:white;color:#17a2b8;">end</span>
+                    </div>
+                    <div style="width:auto;padding:0.05rem 3.45rem;line-height:1.7rem">
+                        • (The tires screech as she stops the car.)<br/>
+                    </div>
+                    <div id="button_for_hide" style="display:none">
+                        <input type="button" value="↑ collapse ↑" class="button-style" onclick="hide_transcripts()">
+                    </div>
+                </h5>
+            </div>
+        </div>
+    </div>
+
+    <div id="right_block" class="right-block">
+        <h4><span class="badge badge-pill badge-info">Annotations:</span></h4>
+        <h5>
+            For each character who appears in the scene (i.e., name in the transcript), please answer the following questions. 
+        </h5>
+
+        <form class="form-signin" method="get" action="https://yuxixie.github.io/_pages/CSI_example.html">
+            
+            <div style="width:auto;height:auto;background-color:#e9ecef;box-shadow:inset 0 0 5px 5px #9a9ea3;">
+                
+                <div id="annotation_block" class="scrollbar-block scrollbar-block-2" style="width:calc(50% - 25px);box-shadow:inset 0 0 5px 5px #9a9ea3;">
+                    <div class="annotation-block" style="background-color:transparent;box-shadow:inset 0 0 5px 5px #9a9ea3;">
+                        
+                        <h5><span class="badge badge-pill badge-secondary">Character: Charlotte</span></h5>
+
+                        <div class="row" id="question1" style = "display:">
+                            <h5>
+                                Q1: Please choose the most likely age category of <code>Charlotte</code>.
+                            </h5>
+                            <fieldset id="group_Q1">
+                                <script type="text/javascript">
+                                    var indexes = [1, 2, 3, 4, 0];
+                                    var choices = ['Infant or Child (<12)', 'Child, Teenager or Youth (10~25)', 'Youth or Middle-Age (25~55)', 'Middle/Old-Age (>50)', 'N.A.'];
+                                    for (var i = 0; i < choices.length; i++) {
+                                        document.write('<div class="custom-control custom-radio custom-control-inline"> <input type="radio" class="custom-control-input" id="Q1_'
+                                            + i + '" value="' + indexes[i] + '" name="Q1" onclick="check_complete(\'Q1\')"> <label class="custom-control-label" for="Q1_'
+                                            + i + '"> <h6>' + choices[i] + '</h6> </label> </div>');
+                                    }
+                                    //document.getElementById("Q1_2").checked = true;
+                                </script>
+                            </fieldset>
+                        </div>
+
+                        <hr/>
+
+                        <div class="row" id="question2" style = "display:">
+                            <h5>
+                                Q2: Please identify the occupation (if applicable) or the role (otherwise) of <code>Charlotte</code> in the clip.
+                            </h5>
+                            <div class="custom-control custom-control-inline">
+                                <fieldset>
+                                    <input type="text" style="width:300px;" id="Q2" name="Q2" oninput="check_complete('Q2')" onchange="check_complete('Q2')">
+                                </fieldset>
+                            </div>
+                            <h6>
+                               &emsp; e.g. 1) occupation: doctor, officer; 2) role: driver, the girl who sits besides the driver
+                            </h6>
+                        </div>
+
+                        <hr/>
+
+                        <div class="row" id="question3" style = "display:">
+                            <h5>
+                                Q3 
+                                <div class="mytooltip">
+                                    💬
+                                    <span class="tooltiptext" style="top:-280%;left:-105%;width:620px;">
+                                        The choices are shuffled so the orders are not the same among different users.<br/>
+                                        We provide 13 primary emotions. <br/>
+                                        Please type in the bar if you find <u>other emotions</u> (<code>Others</code>) which are not in options.
+                                    </span>
+                                </div>
+                                : Please select all the emotion(s) of <code>Charlotte</code> within the duration of the clip.
+                            </h5>
+                            <fieldset id="group_Q3">
+                                <script type="text/javascript">
+                                    var indexes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+                                    var emotions = ['Anger', 'Boredom', 'Calmness', 'Disgust', 'Doubt', 'Entrancement', 'Fear', 'Interest', 'Joy', 'Sadness', 'Shame', 'Surprise', 'Sympathy'];
+                                    var tips = [
+                                        ['wrath, outrage,', 'fury, violence,', 'irritability,', 'hostility,', 'resentment'],
+                                        ['blahs, doldrums,', 'ennui, weariness,', 'listlessness,', 'restlessness'],
+                                        ['aplomb, composure,', 'coolness, placidity,', 'equilibrium,', 'repose, serenity,', 'tranquilness'],
+                                        ['contempt, scorn,', 'disdain, aversion,', 'distaste, revulsion'],
+                                        ['uncertainty,', 'confusion, distrust'],
+                                        ['brooding, reverie,', 'contemplation,', 'daydreaming,', 'cogitation,', 'detachment'],
+                                        ['anxiety, dread,', 'fright, panic,', 'apprehension,', 'nervousness'],
+                                        ['trust, kindness,', 'affection, devotion,', 'acceptance, love,', 'anticipation,', 'friendliness'],
+                                        ['enjoyment, bliss,', 'happiness, relief,', 'delight, pride,', 'thrill, ecstasy'],
+                                        ['grief, sorrow,', 'gloom, despair,', 'melancholy,', 'loneliness,', 'depression'],
+                                        ['regret, guilt,', 'embarrassment,', 'chagrin, remorse'],
+                                        ['astound, shock,', 'astonishment,', 'wonder, amazement'],
+                                        ['commiseration,', 'compassion, feeling']
+                                    ];
+                                    
+                                    for (var i = 0; i < indexes.length; i++) {
+                                        document.write('<div class="custom-control custom-checkbox custom-control-inline"> <input type="checkbox" class="custom-control-input" id="Q3_'
+                                            + i + '" value="' + indexes[i] + '" name="Q3" onclick="check_complete(\'Q3\')"> <label class="custom-control-label" for="Q3_' + i + '"><h6>' 
+                                            + emotions[i] + ' <div class="xtooltip"> <strong> ⓘ </strong> <span class="tooltiptext" style="font-size:small;width:130px;color:#17a2b8;'
+                                            + 'background-color:white;border-color:#17a2b8;text-align:center;top:105%;left:-60px;padding:0px 1px">' 
+                                            + tips[i].join('\n') + '</span> </div> </h6> </label> </div>');
+                                    }
+        
+                                    //document.getElementById('Q3_2').checked = true;
+                                    //document.getElementById('Q3_3').checked = true;
+                                    //document.getElementById('Q3_5').checked = true;
+                                </script>
+                                <div class="custom-control custom-checkbox custom-control-inline">
+                                    <input type="checkbox" class="custom-control-input" id="Q3_13" value="0" name="Q3" onclick="check_complete('Q3')">
+                                    <label class="custom-control-label" for="Q3_13">
+                                        <h6>
+                                            Others
+                                        </h6>
+                                        <div class="mytooltip">
+                                            <strong>ⓘ</strong>
+                                            <span class="tooltiptext" style="width:200px;color:#17a2b8;background-color:white;border-color:#17a2b8;text-align:bottom;top:105%;left:-60px;">Please enter other emotions in the textbox</span>
+                                        </div>
+                                    </label>
+                                </div>
+                                     
+                                <div class="custom-control custom-radio custom-control-inline" id="Q3_13_txt_field" style="display:none">
+                                    <strong>Please enter additional emotion(s): </strong> &nbsp;
+                                    <input type="text" style="width:200px;" id="Q3_13_txt" name="Q3_13_txt" oninput="check_complete('Q3')" onchange="check_complete('Q3')">
+                                </div>
+                            </fieldset>
+                        </div>
+
+                        <hr/>
+
+                        <div class="row" id="question4" style = "display:">
+                            <h5>Q4 
+                                <div class="mytooltip">
+                                    💬
+                                    <span class="tooltiptext" style="top:-600%;left:-105%;width:690px;">
+                                        Tips: <br/>
+                                        (i) Exact alignment between frames and emotions is not compulsory;<br/>
+                                        (ii) The frames should be arranged in the order of time;<br/>
+                                        (iii) The frames should be relatively evenly-distributed in the clip;<br/>
+                                        (iv) You may <u>copy from the current timestamp</u> from the video instead of entering numbers;<br/>
+                                        (v) The frames which contain complementary information to the transcripts are preferred;<br/>
+                                        (vi) You can <u>resume from here</u> to check whether the timestamp is at the right position.
+                                    </span>
+                                </div>
+                                : Please select <code>2~4</code> different frames in the order of timestamps (in <code>MM</code> : <code>SS.SSS</code> format), 
+                                which can cover <u>the character development (i.e., the changes of emotional or motional states)</u> of <code>Charlotte</code> 
+                                within the clip duration.
+                            </h5>
+
+                            <div class="custom-control custom-control-inline">
+                                <fieldset>
+                                    {% for index in range(2) %}
+                                    <p>
+                                        <strong>frame {{index + 1}}:</strong>
+                                        <input id="Q4{{index}}_MM" name="Q4{{index}}_MM" type="number" min="0" placeholder="MM" style="text-align:right;width:3.5em" onchange="check_complete('Q4{{index}}')">
+                                        <strong>:</strong> 
+                                        <input id="Q4{{index}}_SS" name="Q4{{index}}_SS" type="number" step="0.001" min="0" max="59.999"  placeholder="SS.SSS" style="text-align:left;width:4.5em" onchange="check_complete('Q4{{index}}')">
+                                        <strong>   </strong> 
+                                        <input type="button" id="Q4{{index}}_copy" value="copy from current timestamp" class="btn-primary" style="background-color:mediumpurple;cursor: pointer;" onclick="copy_and_check('Q4{{index}}')">
+                                        <strong>   </strong> 
+                                        <input type="button" id="Q4{{index}}_resume" value="resume from here" disabled=true class="btn-default" onclick="resume_from('Q4{{index}}')">
+                                    </p>
+                                    {% endfor %}
+
+                                    {% for index in range(2, 4) %}
+                                    <p id="toadd_{{index}}" style="display:none;">
+                                        <strong>frame {{index + 1}}:</strong>
+                                        <input id="Q4{{index}}_MM" name="Q4{{index}}_MM" type="number" min="0" placeholder="MM" style="text-align:right;width:3.5em" onchange="check_complete('Q4{{index}}')">
+                                        <strong>:</strong> 
+                                        <input id="Q4{{index}}_SS" name="Q4{{index}}_SS" type="number" step="0.001" min="0" max="59.999"  placeholder="SS.SSS" style="text-align:left;width:4.5em" onchange="check_complete('Q4{{index}}')">
+                                        &nbsp;
+                                        <input type="button" id="Q4{{index}}_copy" value="copy from current timestamp" class="btn-primary" style="background-color:mediumpurple;cursor: pointer;" onclick="copy_and_check('Q4{{index}}')">
+                                        &nbsp;
+                                        <input type="button" id="Q4{{index}}_resume" value="resume from here" disabled=true class="btn-default" onclick="resume_from('Q4{{index}}')">
+                                        &nbsp;
+                                        <input type="button" id="Q4{{index}}_remove" value="━" class="btn-sm btn-danger" style="padding:0px 6px;border-radius:70%;" onclick="remove_frame('{{index}}')">
+                                    </p>
+                                    {% endfor %}
+
+                                    <p id="toadd">
+                                        <input type="button" id="my-plus" value="✚" class="btn-sm btn-success" style="padding:0px 4px;border-radius:70%;" onclick="add_frame()">
+                                        &nbsp;
+                                        <input disabled type="number" min="0" placeholder="MM" style="text-align:right;width:3.5em">
+                                        <strong>:</strong>
+                                        <input disabled type="number" step="0.001" min="0" max="59.999"  placeholder="SS.SSS" style="text-align:left;width:4.5em">
+                                        &nbsp;
+                                        <input type="button" value=" copy from current timestamp " disabled class="btn-default">
+                                        &nbsp;
+                                        <input type="button" value=" resume from here " disabled class="btn-default">
+                                    </p>
+                                </fieldset>
+                            </div>
+
+                        </div>
+
+                        <div class="row" id="question6" style = "display:">
+                            <h5>Q4-Check
+                                <div class="mytooltip">
+                                    💬
+                                    <span class="tooltiptext" style="top:-370%;left:-105%;width:620px;">
+                                        Tips: <br/>
+                                        <code>recognizable</code> means the frames contain the character's <br/>
+                                        1) facial expressions; 2) actions; or 3) iconic interactions with other things/people. <br/>
+                                        Also, there should be at least <code>1</code> frame(s) 
+                                        which meet the above requirements.
+                                    </span>
+                                </div>
+                                : Below is the frame(s) you've selected in Q4, 
+                                please check all the frame(s) which contain the (recognizable) character 
+                                <code>Charlotte</code>. 
+                                (You may need to wait for a few seconds for the frames to be loaded.)
+                            </h5>
+                            
+                            <div class="custom-control custom-checkbox custom-control-inline">
+                                <fieldset id="group_Q6">
+                                    <table style="border-collapse:collapse;width:100%;">
+                                    {% for index in range(2) %}
+                                        <tr>
+                                            <th id="ct{{index * 2}}" style="display:none;">
+                                                Frame {{index * 2 + 1}}
+                                            </th>
+                                            <th id="ct{{index * 2 + 1}}" style="display:none;">
+                                                Frame {{index * 2 + 2}}
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <td id="cvs{{index * 2}}" style="display:none;" class="mycontainer">
+                                                <input type="checkbox" id="Q6_{{index * 2}}" name="Q6" value="{{index * 2}}" onclick="check_complete('Q6')" onchange="check_complete('Q6')">
+                                                <label for="Q6_{{index * 2}}"><canvas id="canvas{{index * 2}}" class="canvas"></canvas></label>
+                                            </td>
+                                            <td id="cvs{{index * 2 + 1}}" style="display:none;" class="mycontainer">
+                                                <input type="checkbox" id="Q6_{{index * 2 + 1}}" name="Q6" value="{{index * 2 + 1}}" onclick="check_complete('Q6')" onchange="check_complete('Q6')">
+                                                <label for="Q6_{{index * 2 + 1}}"><canvas id="canvas{{index * 2 + 1}}" class="canvas"></canvas></label>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </table>
+                                </fieldset>
+                            </div>
+                        </div>
+
+                        <hr/>
+
+                        <div class="row" id="question5" style = "display:">
+                            <h5>
+                                Q5 
+                                <div class="mytooltip">
+                                    💬
+                                    <span class="tooltiptext" style="top:-450%;left:-105%;width:690px">
+                                        Tips: <br/>
+                                        (i) The character <code>Charlotte</code> should be in your answer;<br/>
+                                        (ii) You may include related emotion(s) you've labeled in Q3;<br/>
+                                        (iii) Please keep a low word <code>overlap-rate</code> with the transcripts (avoid directly copy & paste); <br/>
+                                        (iv) Specifically, your answer should be complete sentence(s) for others to easily understand.
+                                    </span>
+                                </div>
+                                : Based on your above annotations, please answer the reasoning question. 
+                                Please also make sure that your answer starts with the text span in front of 
+                                the input bar.
+                            </h5>
+                            <h5>
+                                <div style="display:;padding:0rem 2rem;">
+                                    <span style="background-color:white;color:#17a2b8;font-size:75%;font-weight:700;line-height:1;text-align:center;white-space:nowrap;vertical-align:baseline;border-radius:.25rem;display:inline-block;padding:.25em .4em;">effect</span>
+                                    ❔ What is probably caused/enabled by the event that <u>LISA turns the car and CHARLOTTE doesn't recognize where they are</u>?
+                                </div>
+                            </h5>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <fieldset>
+                                    <p>
+                                        <code>Overlap-Rate</code> of Your Answer on Transcripts 
+                                        <input type="text" disabled style="width:5rem;" id="Q5_or" name="__Q5">
+                                        % (Please keep it < 50%)
+                                    </p>
+                                </fieldset>
+                            </div>
+                            <br/>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <fieldset>
+                                    <p>
+                                        Charlotte&nbsp;
+                                        <input type="text" style="width:500px;" id="Q5" name="Q5" oninput="check_complete('Q5')" onchange="check_complete('Q5')">
+                                    </p>
+                                </fieldset>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- <button id='next' disabled=false class="btn btn-primary btn-lg btn-block" onclick="next_button()" type="button"><h3>Next</h3></button> -->
+            <p><h5 id="submit_warning" style="display:none;">⚠ You cannot change the above inputs once you've submited.</h5></p>
+            <button id='submit' style = "display:none;" class="btn btn-primary btn-lg btn-block" type="submit"><h3>Submit</h3></button>
+            <input type="button" id="next" value="Next" disabled=true class="btn btn-default btn-lg btn-block" onclick="next_button()">
+            <br/>
+        </form>
+
+    </div>
+
+</body>
+</html>

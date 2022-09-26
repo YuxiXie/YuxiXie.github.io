@@ -532,8 +532,8 @@
                                     
                                     for (var i = 0; i < indexes.length; i++) {
                                         document.write('<div class="custom-control custom-checkbox custom-control-inline"> <input type="checkbox" class="custom-control-input" id="Q3_'
-                                            + i + '" value="' + indexes[i] + '" name="Q3" onclick="check_complete(\'Q3\')"> <label class="custom-control-label" for="Q3_' + i + '"><h6>' 
-                                            + emotions[i] + ' <div class="xtooltip"> <strong> ⓘ </strong> <span class="tooltiptext" style="font-size:small;width:130px;color:#17a2b8;background-color:white;border-color:#17a2b8;text-align:center;top:105%;left:-60px;padding:0px 1px">' 
+                                            + i + '" value="' + indexes[i] + '" name="Q3" onclick="check_complete(\'Q3\')" onchange="check_complete(\'Q3\')"> <label class="custom-control-label" for="Q3_' + i + '"><h6>' 
+                                            + emotions[i] + ' <div class="mytooltip"> <strong> ⓘ </strong> <span class="tooltiptext" style="font-size:small;width:130px;color:#17a2b8;background-color:white;border-color:#17a2b8;text-align:center;top:105%;left:-60px;padding:0px 1px">' 
                                             + tips[i].join('\n') + '</span> </div> </h6> </label> </div>');
                                     }
         
@@ -546,11 +546,11 @@
                                     <label class="custom-control-label" for="Q3_13">
                                         <h6>
                                             Others
+                                            <div class="mytooltip">
+                                                <strong>ⓘ</strong>
+                                                <span class="tooltiptext" style="width:200px;color:#17a2b8;background-color:white;border-color:#17a2b8;text-align:bottom;top:105%;left:-60px;">Please enter other emotions in the textbox</span>
+                                            </div>
                                         </h6>
-                                        <div class="mytooltip">
-                                            <strong>ⓘ</strong>
-                                            <span class="tooltiptext" style="font-size:small;width:130px;color:#17a2b8;background-color:white;border-color:#17a2b8;text-align:center;top:105%;left:-60px;padding:0px 1px">Please enter other emotions in the textbox</span>
-                                        </div>
                                     </label>
                                 </div>
                                      
@@ -584,33 +584,51 @@
 
                             <div class="custom-control custom-control-inline">
                                 <fieldset>
-                                    {% for index in range(2) %}
                                     <p>
-                                        <strong>frame {{index + 1}}:</strong>
-                                        <input id="Q4{{index}}_MM" name="Q4{{index}}_MM" type="number" min="0" placeholder="MM" style="text-align:right;width:3.5em" onchange="check_complete('Q4{{index}}')">
+                                        <strong>frame 1:</strong>
+                                        <input id="Q40_MM" name="Q40_MM" type="number" min="0" placeholder="MM" style="text-align:right;width:3.5em" onchange="check_complete('Q40')">
                                         <strong>:</strong> 
-                                        <input id="Q4{{index}}_SS" name="Q4{{index}}_SS" type="number" step="0.001" min="0" max="59.999"  placeholder="SS.SSS" style="text-align:left;width:4.5em" onchange="check_complete('Q4{{index}}')">
+                                        <input id="Q40_SS" name="Q40_SS" type="number" step="0.001" min="0" max="59.999"  placeholder="SS.SSS" style="text-align:left;width:4.5em" onchange="check_complete('Q40')">
                                         <strong>   </strong> 
-                                        <input type="button" id="Q4{{index}}_copy" value="copy from current timestamp" class="btn-primary" style="background-color:mediumpurple;cursor: pointer;" onclick="copy_and_check('Q4{{index}}')">
+                                        <input type="button" id="Q40_copy" value="copy from current timestamp" class="btn-primary" style="background-color:mediumpurple;cursor: pointer;" onclick="copy_and_check('Q40')">
                                         <strong>   </strong> 
-                                        <input type="button" id="Q4{{index}}_resume" value="resume from here" disabled=true class="btn-default" onclick="resume_from('Q4{{index}}')">
+                                        <input type="button" id="Q40_resume" value="resume from here" disabled=true class="btn-default" onclick="resume_from('Q40')">
                                     </p>
-                                    {% endfor %}
-
-                                    {% for index in range(2, 4) %}
-                                    <p id="toadd_{{index}}" style="display:none;">
-                                        <strong>frame {{index + 1}}:</strong>
-                                        <input id="Q4{{index}}_MM" name="Q4{{index}}_MM" type="number" min="0" placeholder="MM" style="text-align:right;width:3.5em" onchange="check_complete('Q4{{index}}')">
+                                    <p>
+                                        <strong>frame 2:</strong>
+                                        <input id="Q41_MM" name="Q41_MM" type="number" min="0" placeholder="MM" style="text-align:right;width:3.5em" onchange="check_complete('Q41')">
                                         <strong>:</strong> 
-                                        <input id="Q4{{index}}_SS" name="Q4{{index}}_SS" type="number" step="0.001" min="0" max="59.999"  placeholder="SS.SSS" style="text-align:left;width:4.5em" onchange="check_complete('Q4{{index}}')">
-                                        &nbsp;
-                                        <input type="button" id="Q4{{index}}_copy" value="copy from current timestamp" class="btn-primary" style="background-color:mediumpurple;cursor: pointer;" onclick="copy_and_check('Q4{{index}}')">
-                                        &nbsp;
-                                        <input type="button" id="Q4{{index}}_resume" value="resume from here" disabled=true class="btn-default" onclick="resume_from('Q4{{index}}')">
-                                        &nbsp;
-                                        <input type="button" id="Q4{{index}}_remove" value="━" class="btn-sm btn-danger" style="padding:0px 6px;border-radius:70%;" onclick="remove_frame('{{index}}')">
+                                        <input id="Q41_SS" name="Q41_SS" type="number" step="0.001" min="0" max="59.999"  placeholder="SS.SSS" style="text-align:left;width:4.5em" onchange="check_complete('Q41')">
+                                        <strong>   </strong> 
+                                        <input type="button" id="Q41_copy" value="copy from current timestamp" class="btn-primary" style="background-color:mediumpurple;cursor: pointer;" onclick="copy_and_check('Q41')">
+                                        <strong>   </strong> 
+                                        <input type="button" id="Q41_resume" value="resume from here" disabled=true class="btn-default" onclick="resume_from('Q41')">
                                     </p>
-                                    {% endfor %}
+                                    
+                                    <p id="toadd_2" style="display:none;">
+                                        <strong>frame 3:</strong>
+                                        <input id="Q42_MM" name="Q42_MM" type="number" min="0" placeholder="MM" style="text-align:right;width:3.5em" onchange="check_complete('Q42')">
+                                        <strong>:</strong> 
+                                        <input id="Q42_SS" name="Q42_SS" type="number" step="0.001" min="0" max="59.999"  placeholder="SS.SSS" style="text-align:left;width:4.5em" onchange="check_complete('Q42')">
+                                        &nbsp;
+                                        <input type="button" id="Q42_copy" value="copy from current timestamp" class="btn-primary" style="background-color:mediumpurple;cursor: pointer;" onclick="copy_and_check('Q42')">
+                                        &nbsp;
+                                        <input type="button" id="Q42_resume" value="resume from here" disabled=true class="btn-default" onclick="resume_from('Q42')">
+                                        &nbsp;
+                                        <input type="button" id="Q42_remove" value="━" class="btn-sm btn-danger" style="padding:0px 6px;border-radius:70%;" onclick="remove_frame('2')">
+                                    </p>
+                                    <p id="toadd_3" style="display:none;">
+                                        <strong>frame 4:</strong>
+                                        <input id="Q43_MM" name="Q43_MM" type="number" min="0" placeholder="MM" style="text-align:right;width:3.5em" onchange="check_complete('Q43')">
+                                        <strong>:</strong> 
+                                        <input id="Q43_SS" name="Q43_SS" type="number" step="0.001" min="0" max="59.999"  placeholder="SS.SSS" style="text-align:left;width:4.5em" onchange="check_complete('Q43')">
+                                        &nbsp;
+                                        <input type="button" id="Q43_copy" value="copy from current timestamp" class="btn-primary" style="background-color:mediumpurple;cursor: pointer;" onclick="copy_and_check('Q43')">
+                                        &nbsp;
+                                        <input type="button" id="Q43_resume" value="resume from here" disabled=true class="btn-default" onclick="resume_from('Q43')">
+                                        &nbsp;
+                                        <input type="button" id="Q43_remove" value="━" class="btn-sm btn-danger" style="padding:0px 6px;border-radius:70%;" onclick="remove_frame('3')">
+                                    </p>
 
                                     <p id="toadd">
                                         <input type="button" id="my-plus" value="✚" class="btn-sm btn-success" style="padding:0px 4px;border-radius:70%;" onclick="add_frame()">

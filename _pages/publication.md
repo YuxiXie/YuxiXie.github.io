@@ -21,6 +21,10 @@ See also my [Google Scholar Profile](https://scholar.google.com/citations?user=L
 **Yuxi Xie**, Guanzhen Li, Min-Yen Kan  
 [[paper](https://arxiv.org/abs/2305.14740)] [[website](https://github.com/YuxiXie/ECHo)]
 
+**Automatic Model Selection with Large Language Models for Reasoning** `EMNLP 2023 (Findings)`  
+Xu Zhao, **Yuxi Xie**, Kenji Kawaguchi, Junxian He, Qizhe Xie  
+[[paper](https://arxiv.org/abs/2305.14333)] [[code](https://github.com/xuzhao0/model-selection-reasoning)]
+
 ### 2021
 **CANVASEMB: Learning Layout Representation with Large-scale Pre-training for Graphic Design** `ACM MM 2021`    
 **Yuxi Xie**, Danqing Huang, Jinpeng Wang, Chin-Yew Lin   

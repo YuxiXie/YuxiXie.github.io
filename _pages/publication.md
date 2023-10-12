@@ -13,11 +13,11 @@ See also my [Google Scholar Profile](https://scholar.google.com/citations?user=L
 ---
 
 ### 2023
-**Self-Evaluation Guided Beam Search for Reasoning** `NeurIPS 2023`
+**Self-Evaluation Guided Beam Search for Reasoning** `NeurIPS 2023`    
 **Yuxi Xie**, Kenji Kawaguchi, Yiran Zhao, Xu Zhao, Min-Yen Kan, Junxian He, Qizhe Xie
 [[paper](https://arxiv.org/abs/2305.00633) [code](https://github.com/YuxiXie/SelfEval-Guided-Decoding) [website](https://guideddecoding.github.io/)]
 
-**ECHo: A Visio-Linguistic Dataset for Event Causality Inference via Human-Centric Reasoning** `EMNLP 2023 (Findings)`
+**ECHo: A Visio-Linguistic Dataset for Event Causality Inference via Human-Centric Reasoning** `EMNLP 2023 (Findings)`    
 **Yuxi Xie**, Guanzhen Li, Min-Yen Kan
 [[paper](https://arxiv.org/abs/2305.14740) [website](https://github.com/YuxiXie/ECHo)]
 

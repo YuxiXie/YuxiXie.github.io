@@ -17,11 +17,11 @@ See also my [Google Scholar Profile](https://scholar.google.com/citations?user=L
 **Yuxi Xie**, Kenji Kawaguchi, Yiran Zhao, Xu Zhao, Min-Yen Kan, Junxian He, Qizhe Xie  
 [[paper](https://arxiv.org/abs/2305.00633)] [[code](https://github.com/YuxiXie/SelfEval-Guided-Decoding)] [[website](https://guideddecoding.github.io/)]
 
-**ECHo: A Visio-Linguistic Dataset for Event Causality Inference via Human-Centric Reasoning** `EMNLP 2023 (Findings)`    
+**ECHo: A Visio-Linguistic Dataset for Event Causality Inference via Human-Centric Reasoning** `EMNLP Findings 2023`    
 **Yuxi Xie**, Guanzhen Li, Min-Yen Kan  
 [[paper](https://arxiv.org/abs/2305.14740)] [[website](https://github.com/YuxiXie/ECHo)]
 
-**Automatic Model Selection with Large Language Models for Reasoning** `EMNLP 2023 (Findings)`  
+**Automatic Model Selection with Large Language Models for Reasoning** `EMNLP Findings 2023`  
 Xu Zhao, **Yuxi Xie**, Kenji Kawaguchi, Junxian He, Qizhe Xie  
 [[paper](https://arxiv.org/abs/2305.14333)] [[code](https://github.com/xuzhao0/model-selection-reasoning)]
 

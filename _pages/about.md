@@ -10,7 +10,7 @@ redirect_from:
 
 ---
 
-My name is Yuxi /ˈyoo'ʃiː/. I am a third-year Ph.D. student in [WING](https://wing.comp.nus.edu.sg/) at [National University of Singapore](https://www.nus.edu.sg/). I am fortunate to be advised by [Prof. Min-Yen Kan](https://www.comp.nus.edu.sg/~kanmy/). 
+My name is Yuxi /'jʊ'ʃiː/. I am a third-year Ph.D. student in [WING](https://wing.comp.nus.edu.sg/) at [National University of Singapore](https://www.nus.edu.sg/). I am fortunate to be advised by [Prof. Min-Yen Kan](https://www.comp.nus.edu.sg/~kanmy/). 
 
 Prior to that, I worked with [Prof. Yansong Feng](https://sites.google.com/site/ysfeng/home) at [Wangxuan Institute of Computer Technology](https://www.icst.pku.edu.cn/) and received B.S. in Data Science and Big Data Technology from the [School of Electronics Engineering and Computer Science](https://eecs.pku.edu.cn/) at [Peking University](https://www.pku.edu.cn/).
 

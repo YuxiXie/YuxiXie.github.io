@@ -9,6 +9,7 @@ author_profile: true
 {% include toc %}
 
 See also my [Google Scholar Profile](https://scholar.google.com/citations?user=LNLECx0AAAAJ&hl).
+* indicates equal contributions.
 
 ---
 
@@ -48,7 +49,7 @@ Kaixin Li, Qisheng Hu, James Xu Zhao, Hui Chen, **Yuxi Xie**, Tiedong Liu, Micha
 
 ### 2023
 **Self-Evaluation Guided Beam Search for Reasoning** `NeurIPS 2023`    
-**Yuxi Xie**, Kenji Kawaguchi, Yiran Zhao, Xu Zhao, Min-Yen Kan, Junxian He, Qizhe Xie  
+**Yuxi Xie**, Kenji Kawaguchi, Yiran Zhao, Xu Zhao, Min-Yen Kan\*, Junxian He\*, Qizhe Xie\*  
 [[paper](https://arxiv.org/abs/2305.00633)] [[code](https://github.com/YuxiXie/SelfEval-Guided-Decoding)] [[website](https://guideddecoding.github.io/)]
 
 **ECHo: A Visio-Linguistic Dataset for Event Causality Inference via Human-Centric Reasoning** `EMNLP Findings 2023`    

@@ -9,7 +9,7 @@ author_profile: true
 {% include toc %}
 
 See also my [Google Scholar Profile](https://scholar.google.com/citations?user=LNLECx0AAAAJ&hl).
-* indicates equal contributions.
+\* indicates equal contributions.
 
 ---
 

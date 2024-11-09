@@ -27,7 +27,7 @@ Antonis Antoniades, Albert Örwall, Kexun Zhang, **Yuxi Xie**, Anirudh Goyal, Wi
 [[paper](https://arxiv.org/pdf/2411.02712v1)] [[code](https://github.com/YuxiXie/V-DPO)]
 
 **Advancing Adversarial Suffix Transfer Learning on Aligned Large Language Models** `EMNLP 2024`    
-Hongfu Liu*, **Yuxi Xie***, Ye Wang, Michael Shieh    
+Hongfu Liu\*, **Yuxi Xie\***, Ye Wang, Michael Shieh    
 [[paper](https://www.arxiv.org/abs/2408.14866)] [[code](https://github.com/Waffle-Liu/DeGCG)]
 
 **MVP-Bench: Can Large Vision-Language Models Conduct Multi-level Visual Perception Like Humans?** `EMNLP Findings 2024`    
@@ -39,7 +39,7 @@ Guanzhen Li, **Yuxi Xie***, Min-Yen Kan
 [[paper](https://arxiv.org/abs/2405.00451)] [[code](https://github.com/YuxiXie/MCTS-DPO)]
 
 **Prompt Optimization via Adversarial In-Context Learning** `ACL 2024`    
-Do Xuan Long*, Yiran Zhao*, Hannah Brown*, **Yuxi Xie**, James Xu Zhao, Nancy F. Chen, Kenji Kawaguchi, Michael Shieh, Junxian He    
+Do Xuan Long\*, Yiran Zhao\*, Hannah Brown\*, **Yuxi Xie**, James Xu Zhao, Nancy F. Chen, Kenji Kawaguchi, Michael Shieh, Junxian He    
 [[paper](https://openreview.net/forum?id=Uwog84Xnlr)]
 
 **InstructCoder: Instruction Tuning Large Language Models for Code Editing** `ACL SRM Workshop 2024`    

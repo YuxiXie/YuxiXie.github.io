@@ -31,7 +31,7 @@ Hongfu Liu\*, **Yuxi Xie\***, Ye Wang, Michael Shieh
 [[paper](https://www.arxiv.org/abs/2408.14866)] [[code](https://github.com/Waffle-Liu/DeGCG)]
 
 **MVP-Bench: Can Large Vision-Language Models Conduct Multi-level Visual Perception Like Humans?** `EMNLP Findings 2024`    
-Guanzhen Li, **Yuxi Xie***, Min-Yen Kan
+Guanzhen Li, **Yuxi Xie***, Min-Yen Kan    
 [[paper](https://arxiv.org/abs/2410.04345)] [[code](https://github.com/GuanzhenLi/MVP-Bench)]
 
 **Monte Carlo Tree Search Boosts Reasoning via Iterative Preference Learning** `NeurIPS Workshop of System 2 Reasoning at Scale 2024`    

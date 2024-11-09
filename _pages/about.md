@@ -12,7 +12,7 @@ redirect_from:
 
 My name is Yuxi /'jʊ'ʃiː/. I am a fourth-year Ph.D. student in [WING](https://wing.comp.nus.edu.sg/) at [National University of Singapore](https://www.nus.edu.sg/). I am fortunate to be advised by [Prof. Min-Yen Kan](https://www.comp.nus.edu.sg/~kanmy/). 
 
-I am currently visiting the Natural Language Processing Group, University of California, Santa Barbara (UCSB) in AY 2024/2025, where I am fortunate to be advised by [Prof. William Yang Wang](https://sites.cs.ucsb.edu/~william/).
+I am currently visiting the [Natural Language Processing Group](https://nlp.cs.ucsb.edu/), [University of California, Santa Barbara (UCSB)](https://www.ucsb.edu/) in AY 2024/2025, where I am fortunate to be advised by [Prof. William Yang Wang](https://sites.cs.ucsb.edu/~william/).
 
 Prior to that, I worked with [Prof. Yansong Feng](https://sites.google.com/site/ysfeng/home) at [Wangxuan Institute of Computer Technology](https://www.icst.pku.edu.cn/) and received B.S. in Data Science and Big Data Technology from the [School of Electronics Engineering and Computer Science](https://eecs.pku.edu.cn/) at [Peking University](https://www.pku.edu.cn/).
 

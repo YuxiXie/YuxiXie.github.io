@@ -12,6 +12,40 @@ See also my [Google Scholar Profile](https://scholar.google.com/citations?user=L
 
 ---
 
+### 2024
+
+**COrAL: Order-Agnostic Language Modeling for Efficient Iterative Refinement** `NeurIPS AFM Workshop 2024`    
+**Yuxi Xie**, Anirudh Goyal, Xiaobao Wu, Xunjian Yin, Xiao Xu, Min-Yen Kan, Liangming Pan, William Yang Wang    
+[[paper](https://arxiv.org/abs/2410.09675)] [[code](https://github.com/YuxiXie/COrAL)]
+
+**SWE-Search: Enhancing Software Agents with Monte Carlo Tree Search and Iterative Refinement** `preprint`    
+Antonis Antoniades, Albert Örwall, Kexun Zhang, **Yuxi Xie**, Anirudh Goyal, William Yang Wang    
+[[paper](https://arxiv.org/abs/2410.20285) [code](https://github.com/aorwall/moatless-tree-search)]
+
+**V-DPO: Mitigating Hallucination in Large Vision Language Models via Vision-Guided Direct Preference Optimization** `EMNLP Findings 2024`    
+**Yuxi Xie**, Guanzhen Li, Xiao Xu, Min-Yen Kan    
+[[paper](https://arxiv.org/pdf/2411.02712v1)] [[code](https://github.com/YuxiXie/V-DPO)]
+
+**Advancing Adversarial Suffix Transfer Learning on Aligned Large Language Models** `EMNLP 2024`    
+Hongfu Liu*, **Yuxi Xie***, Ye Wang, Michael Shieh    
+[[paper](https://www.arxiv.org/abs/2408.14866)] [[code](https://github.com/Waffle-Liu/DeGCG)]
+
+**MVP-Bench: Can Large Vision-Language Models Conduct Multi-level Visual Perception Like Humans?** `EMNLP Findings 2024`    
+Guanzhen Li, **Yuxi Xie***, Min-Yen Kan
+[[paper](https://arxiv.org/abs/2410.04345)] [[code](https://github.com/GuanzhenLi/MVP-Bench)]
+
+**Monte Carlo Tree Search Boosts Reasoning via Iterative Preference Learning** `NeurIPS Workshop of System 2 Reasoning at Scale 2024`    
+**Yuxi Xie**, Anirudh Goyal, Wenyue Zheng, Min-Yen Kan, Timothy P Lillicrap, Kenji Kawaguchi, Michael Shieh    
+[[paper](https://arxiv.org/abs/2405.00451)] [[code](https://github.com/YuxiXie/MCTS-DPO)]
+
+**Prompt Optimization via Adversarial In-Context Learning** `ACL 2024`    
+Do Xuan Long*, Yiran Zhao*, Hannah Brown*, **Yuxi Xie**, James Xu Zhao, Nancy F. Chen, Kenji Kawaguchi, Michael Shieh, Junxian He    
+[[paper](https://openreview.net/forum?id=Uwog84Xnlr)]
+
+**InstructCoder: Instruction Tuning Large Language Models for Code Editing** `ACL SRM Workshop 2024`    
+Kaixin Li, Qisheng Hu, James Xu Zhao, Hui Chen, **Yuxi Xie**, Tiedong Liu, Michael Shieh, Junxian He    
+[[paper](https://arxiv.org/abs/2310.20329)]
+
 ### 2023
 **Self-Evaluation Guided Beam Search for Reasoning** `NeurIPS 2023`    
 **Yuxi Xie**, Kenji Kawaguchi, Yiran Zhao, Xu Zhao, Min-Yen Kan, Junxian He, Qizhe Xie  

@@ -20,7 +20,7 @@ See also my [Google Scholar Profile](https://scholar.google.com/citations?user=L
 
 **SWE-Search: Enhancing Software Agents with Monte Carlo Tree Search and Iterative Refinement** `preprint`    
 Antonis Antoniades, Albert Örwall, Kexun Zhang, **Yuxi Xie**, Anirudh Goyal, William Yang Wang    
-[[paper](https://arxiv.org/abs/2410.20285) [code](https://github.com/aorwall/moatless-tree-search)]
+[[paper](https://arxiv.org/abs/2410.20285)] [[code](https://github.com/aorwall/moatless-tree-search)]
 
 **V-DPO: Mitigating Hallucination in Large Vision Language Models via Vision-Guided Direct Preference Optimization** `EMNLP Findings 2024`    
 **Yuxi Xie**, Guanzhen Li, Xiao Xu, Min-Yen Kan    

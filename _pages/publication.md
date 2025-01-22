@@ -13,15 +13,21 @@ See also my [Google Scholar Profile](https://scholar.google.com/citations?user=L
 
 ---
 
+### 2025
+
+**AntiLeak-Bench: Preventing Data Contamination by Automatically Constructing Benchmarks with Updated Real-World Knowledge** `preprint`    
+Xiaobao Wu, Liangming Pan, Yuxi Xie, Ruiwen Zhou, Shuai Zhao, Yubo Ma, Mingzhe Du, Rui Mao, Anh Tuan Luu, William Yang Wang    
+[[paper](https://arxiv.org/abs/2412.13670)] 
+
+**SWE-Search: Enhancing Software Agents with Monte Carlo Tree Search and Iterative Refinement** `ICLR 2025`    
+Antonis Antoniades, Albert Örwall, Kexun Zhang, **Yuxi Xie**, Anirudh Goyal, William Yang Wang    
+[[paper](https://arxiv.org/abs/2410.20285)] [[code](https://github.com/aorwall/moatless-tree-search)]
+
 ### 2024
 
 **COrAL: Order-Agnostic Language Modeling for Efficient Iterative Refinement** `NeurIPS AFM Workshop 2024`    
 **Yuxi Xie**, Anirudh Goyal, Xiaobao Wu, Xunjian Yin, Xiao Xu, Min-Yen Kan, Liangming Pan, William Yang Wang    
 [[paper](https://arxiv.org/abs/2410.09675)] [[code](https://github.com/YuxiXie/COrAL)]
-
-**SWE-Search: Enhancing Software Agents with Monte Carlo Tree Search and Iterative Refinement** `preprint`    
-Antonis Antoniades, Albert Örwall, Kexun Zhang, **Yuxi Xie**, Anirudh Goyal, William Yang Wang    
-[[paper](https://arxiv.org/abs/2410.20285)] [[code](https://github.com/aorwall/moatless-tree-search)]
 
 **V-DPO: Mitigating Hallucination in Large Vision Language Models via Vision-Guided Direct Preference Optimization** `EMNLP Findings 2024`    
 **Yuxi Xie**, Guanzhen Li, Xiao Xu, Min-Yen Kan    

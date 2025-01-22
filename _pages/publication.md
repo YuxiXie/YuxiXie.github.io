@@ -16,8 +16,12 @@ See also my [Google Scholar Profile](https://scholar.google.com/citations?user=L
 ### 2025
 
 **AntiLeak-Bench: Preventing Data Contamination by Automatically Constructing Benchmarks with Updated Real-World Knowledge** `preprint`    
-Xiaobao Wu, Liangming Pan, Yuxi Xie, Ruiwen Zhou, Shuai Zhao, Yubo Ma, Mingzhe Du, Rui Mao, Anh Tuan Luu, William Yang Wang    
+Xiaobao Wu, Liangming Pan, **Yuxi Xie**, Ruiwen Zhou, Shuai Zhao, Yubo Ma, Mingzhe Du, Rui Mao, Anh Tuan Luu, William Yang Wang    
 [[paper](https://arxiv.org/abs/2412.13670)] 
+
+**Exploring Multi-Grained Concept Annotations for Multimodal Large Language Models** `preprint`    
+Xiao Xu, Tianhao Niu, **Yuxi Xie**, Libo Qin, Wanxiang Che, Min-Yen Kan    
+[[paper](https://arxiv.org/abs/2412.05939)] 
 
 **SWE-Search: Enhancing Software Agents with Monte Carlo Tree Search and Iterative Refinement** `ICLR 2025`    
 Antonis Antoniades, Albert Örwall, Kexun Zhang, **Yuxi Xie**, Anirudh Goyal, William Yang Wang    

@@ -14,7 +14,7 @@ My name is Yuxi /'jʊ'ʃiː/. I am a final-year Ph.D. student in [WING](https://
 
 I am currently visiting the [Natural Language Processing Group](https://nlp.cs.ucsb.edu/), [University of California, Santa Barbara (UCSB)](https://www.ucsb.edu/) in AY 2024/2025, where I am fortunate to be advised by [Prof. William Yang Wang](https://sites.cs.ucsb.edu/~william/).
 
-<font color="#008000" size=10>I am actively seeking full-time industry positions. Please feel free to email me if you're interested!</font>
+<b><font color="#008000" size=8>I am actively seeking full-time industry positions. Please feel free to email me if you're interested!</font></b>
 
 Prior to that, I worked with [Prof. Yansong Feng](https://sites.google.com/site/ysfeng/home) at [Wangxuan Institute of Computer Technology](https://www.icst.pku.edu.cn/) and received B.S. in Data Science and Big Data Technology from the [School of Electronics Engineering and Computer Science](https://eecs.pku.edu.cn/) at [Peking University](https://www.pku.edu.cn/).
 

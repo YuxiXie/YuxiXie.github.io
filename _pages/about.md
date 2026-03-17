@@ -22,4 +22,4 @@ I've also been interested in Natural Language Generation, especially about gener
 
 My name written in Chinese is 谢雨汐.
 
-Contact: `yuxixie [at] comp.nus.edu.sg` or `xieyuxi [at] u.nus.edu` or `yuxi_xie [at] ucsb.edu`
+Contact: `xieyuxi [at] u.nus.edu` or `yuxi.sigrid.xie [at] gmail.com`

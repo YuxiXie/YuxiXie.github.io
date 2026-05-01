@@ -10,7 +10,7 @@ locale                   : "sg"
 title                    : "Yuxi Xie"
 title_separator          : "-"
 name                     : &name "Yuxi Xie"
-description              : &description "CS Ph.D. Candidate at NUS"
+description              : &description "Ph.D. in CS"
 url                      : https://YuxiXie.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : "YuxiXie/YuxiXie.github.io"
@@ -82,12 +82,12 @@ analytics:
 author:
   name             : "Yuxi Xie"
   avatar           : "yuxixie.jpg"
-  bio              : "CS Ph.D. Candidate"
-  location         : "Singapore"
+  bio              : "Ph.D. in CS"
+  location         : "Shanghai"
   employer         :
   pubmed           : # "https://www.ncbi.nlm.nih.gov/pubmed/?term=john+snow"
   googlescholar    : "https://scholar.google.com/citations?user=LNLECx0AAAAJ&hl"
-  email            : "xieyuxi@u.nus.edu"
+  email            : "yuxi.sigrid.xie@gmail.com"
   researchgate     :  # example: "https://www.researchgate.net/profile/yourprofile"
   uri              :
   bitbucket        :

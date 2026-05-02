@@ -10,6 +10,9 @@ author_profile: true
 
 Education
 ---
+* **Ph.D. in Computer Science** <span style="float:right;">Jan. 2021 - May. 2026</span>
+  *School of Computing, National University of Singapore* (SoC-NUS)
+
 * **B.S. in Data Science and Big Data Technology** <span style="float:right;">Sep. 2016 - Jul. 2020</span>     
   *School of Electronics Engineering and Computer Science, Peking University* (EECS-PKU)   
 
